@@ -46,7 +46,6 @@ public class Main extends Activity implements OnClickListener {
 		PendingIntent pintent = PendingIntent.getService(Main.this, 0,
 				periodicService, 0);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// check which button is clicked
 		if (view.getId() == btnStart.getId()) {
 			// get frequency
 			long frequency = Integer
@@ -63,5 +62,6 @@ public class Main extends Activity implements OnClickListener {
 			am.cancel(pintent);
 			Log.d(TAG, "Cancel button Clicked --> cancel alarm service");
 		}
+
 	}
 }

@@ -40,28 +40,34 @@ public class Main extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		// construct intent for launching periodic service
-		Intent periodicService = new Intent(Main.this, PeriodicService.class);
-		// construct pending intent in order used
-		PendingIntent pintent = PendingIntent.getService(Main.this, 0,
-				periodicService, 0);
-		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// check which button is clicked
+
 		if (view.getId() == btnStart.getId()) {
-			// get frequency
-			long frequency = Integer
-					.valueOf(editTextFrequency.getText().toString());
+			// construct intent for launching periodic service
+			Intent periodicService = new Intent(Main.this,
+					PeriodicService.class);
+
+			// construct pending intent in order used
+			PendingIntent pintent = PendingIntent.getService(Main.this, 0,
+					periodicService, 0);
+			long frequency = Integer.valueOf(editTextFrequency.getText()
+					.toString());
+
 			// make sure frequency is good otherwise use default value
 			frequency = (frequency > 0) ? (frequency * 1000) : DEFAULT_PERIOD;
-			// set periodic service
+
+			// setup an alarm based on user input information
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			// set repeating alarm
 			am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, frequency,
 					frequency, pintent);
 			Log.d(TAG, "Alarm is set: frequency: " + frequency / 1000
 					+ " milliseconds");
 		} else if (view.getId() == btnCancel.getId()) {
 			// cancel alarm service
-			am.cancel(pintent);
+
 			Log.d(TAG, "Cancel button Clicked --> cancel alarm service");
 		}
+
 	}
+
 }

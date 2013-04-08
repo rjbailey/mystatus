@@ -63,5 +63,6 @@ public class Main extends Activity implements OnClickListener {
 			am.cancel(pintent);
 			Log.d(TAG, "Cancel button Clicked --> cancel alarm service");
 		}
+
 	}
 }

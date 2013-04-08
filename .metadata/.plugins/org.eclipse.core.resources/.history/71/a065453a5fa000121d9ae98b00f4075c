@@ -42,15 +42,15 @@ public class Main extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		// construct intent for launching periodic service
 		Intent periodicService = new Intent(Main.this, PeriodicService.class);
+
 		// construct pending intent in order used
 		PendingIntent pintent = PendingIntent.getService(Main.this, 0,
 				periodicService, 0);
+		long frequency = Integer
+				.valueOf(editTextFrequency.getText().toString());
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// check which button is clicked
 		if (view.getId() == btnStart.getId()) {
-			// get frequency
-			long frequency = Integer
-					.valueOf(editTextFrequency.getText().toString());
+
 			// make sure frequency is good otherwise use default value
 			frequency = (frequency > 0) ? (frequency * 1000) : DEFAULT_PERIOD;
 			// set periodic service
@@ -63,5 +63,6 @@ public class Main extends Activity implements OnClickListener {
 			am.cancel(pintent);
 			Log.d(TAG, "Cancel button Clicked --> cancel alarm service");
 		}
+
 	}
 }
