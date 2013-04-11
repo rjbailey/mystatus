@@ -1,0 +1,35 @@
+type: datatype to save
+name: of value
+label: phrase to ask user
+hint: sublabel
+relevant, required, constraint: expressions can define for a question
+relevant: blank, always relevant, always displayed
+	w/condition, if evaluates to true: will show
+required: if true: wont let you move beyond question w/o value
+constraint: on value in cell
+calculation
+
+deviceid: of phone
+calculate: count-selected($(_______))
+
+aggregate: server where data goes
+	server on google cloud
+
+choices:
+	multiple values for survey responses
+	labels: multiple values so can be translated
+
+settings: form_title, form_id, public_key
+
+can set up data to be encrypted:
+	shows up as one column
+	can only export it
+	have to bring to machine with key to unlock it
+	Briefcase app for unpacking
+	
+ODK Validate
+	checks features added arent screwy
+	if have trouble running through phone, run through this first
+ODK Survey
+
+Mitch: 603

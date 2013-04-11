@@ -1,0 +1,81 @@
+Notes
+4/9/13
+
+Needs:
+
+not have to hit submit when going through the survey
+should be submit if fill out a question
+
+done with one survey, automatically go into another
+
+ODK once finished with survey checks for component/callback to go back
+to in our app
+
+
+
+
+Questions:
+Will the app user have to have ODK Collect installed to use it?
+Or can we have it inside our app?
+
+Security: hide ODK in our app
+
+For Amy:
+	Goals 
+	
+	
+	
+From meeting:
+	how often to trigger (some randomness?)
+	
+	TODO:
+	connecting ODK:
+		when app asks about survey, question patient if want to do it first
+		launch Collect if do
+		when collect finishes (could finish in diff ways: complete form, finalize, close)
+		ODK returns pointer to file with answers stored
+			get an Intent with results
+		if dont complete form:
+			want to remind to finish or suggest finish now
+			could have to change odk to do that
+			ASK MITCH!!!
+			msunt@cs??
+		start app then start totally diff (dont close)
+			setup timeout
+			if dont get back after ___ min, do something?
+	check out reminder apps, to not reinvent UI
+	
+	no way to hide that we have a depression survey in collect
+	can just encrypt results or use google service
+	
+	Viewing information
+		connection to database service that does this already
+		ODK can directly go and put data using its API instead of aggregate
+		OR
+		go to aggregate, set it up to send to other service
+	
+	Maybe dont want to work too much on physicians web app
+	
+	Forms shouldnt display name, (level of indirection)
+
+	How secure does this have to be
+	
+	Correspondence at server
+		when downloads to device, doesnt know patient info, just knows formX needs to be filled every ___
+		when form 1 is on phone, want to encrypt contents not just change name
+		does the form need to stay on phone?
+		The Guardian project (way to encrypt contents of SQLite database on phone)
+			forms on database, guardian finds there, gets, unencrpyt, loads to collect as new form, then clean collect
+			Guardian Android Database Encryption
+		
+	Maybe use database as filesystem using Guardian as encryption	
+		
+	Next week: approach on phone
+		how to keep secure
+		will those things proposed work
+		where will data go (can push to aggregate for now as ex but want as encrypted mode at least)
+		dont deal with password system right now
+		where are forms
+		where is data
+		what is getting returned
+		

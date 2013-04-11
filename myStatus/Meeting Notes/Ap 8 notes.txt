@@ -1,0 +1,42 @@
+481K Notes for week of Apr 8th
+
+Accomplished:
+	app that generates a notification to take a survey
+Need:
+	mobile app
+		Login screen
+		notify patient to fill out surveys
+		get updated surveys
+		get new surveys
+		goals
+		contact physician
+		history/progress
+		info
+		
+	database
+		store patient info (survey responses)
+		store surveys
+		store info, patient specific
+		
+	web interface (physician uses)
+		read survey responses
+		read patient info
+		create surveys for patients to use
+		assign surveys
+		graphing mood over time
+		
+	surveys: notifications to physician if patient isnt following through
+		need tree structure
+		
+	ODK sending to other databases
+	
+	
+Surveys:
+	general depression
+		daily: mood
+		bi-weekly: PHQ-9 (formal depression survey)
+	medication
+		daily: did you take it?
+		weekly: side effects
+		monthly: did you fill out prescription?
+		
