@@ -20,7 +20,7 @@ import android.util.Log;
  */
 public class NotificationService extends Service {
 
-	private final String TAG = "mystatus.NotificationService";
+	private static final String TAG = "mystatus.NotificationService";
 
 	private static final int NOTIFICATION_ID = 0;
 
@@ -32,9 +32,9 @@ public class NotificationService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.w(TAG, "Generating notification");
-		Notification collectNotification = createSurveyNotification();
+		Notification surveyNotification = createSurveyNotification();
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.notify(NOTIFICATION_ID, collectNotification);
+		nm.notify(NOTIFICATION_ID, surveyNotification);
 
 		return super.onStartCommand(intent, flags, startId);
 	}
