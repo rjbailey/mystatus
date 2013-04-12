@@ -22,8 +22,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="SurveysActivity" android:parentActivityName="edu.washington.cs.mystatus.MainActivity"></activity>
-        <activity android:name="SettingsActivity" android:parentActivityName="edu.washington.cs.mystatus.MainActivity"></activity>
+        <activity
+            android:name="SurveysActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+        </activity>
+        <activity
+            android:name="SettingsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+        </activity>
+
+        <service
+            android:name="edu.washington.cs.mystatus.NotificationService"
+            android:enabled="true" >
+        </service>
     </application>
 
 </manifest>
