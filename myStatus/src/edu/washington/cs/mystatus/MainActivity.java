@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-	private static final String TAG = "myStatus";
+	private static final String TAG = "mystatus.MainActivity";
 
 	private Button mSurveyBtn;
 	private Button mHistoryBtn;
