@@ -67,11 +67,13 @@ public class SettingsActivity extends Activity {
 				new Intent(this, NotificationService.class), 0);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+		// Get the desired period between notifications from the mNotificationFrequency field
 		long frequency;
 		try {
 			frequency = Long.parseLong(mNotificationFrequency.getText().toString());
 		} catch (NumberFormatException e) {
 			frequency = DEFAULT_NOTIFICATION_PERIOD;
+			mNotificationFrequency.setText(Long.toString(frequency));
 		}
 		if (frequency <= 0 || frequency > MAX_NOTIFICATION_PERIOD) {
 			frequency = DEFAULT_NOTIFICATION_PERIOD;
