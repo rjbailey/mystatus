@@ -1,8 +1,0 @@
-ODK collect intent Details capture from Logcat through TAG ActivityManager
-
-
-act=android.intent.action.EDIT 
-dat=content://org.odk.collect.android.provider.odk.forms/forms/1 
-cmp=org.odk.collect.android/.activities.FormEntryActivity
-
-
