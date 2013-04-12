@@ -10,6 +10,14 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+/**
+ * NotificationService is responsible for generating survey reminder
+ * notifications when appropriate.
+ * 
+ * @author Jake Bailey (rjacob@cs.washington.edu)
+ * @author Chuong Dao (chuongd@cs.washington.edu)
+ * @see OdkProxy
+ */
 public class NotificationService extends Service {
 
 	private final String TAG = "mystatus.NotificationService";

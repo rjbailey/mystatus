@@ -6,6 +6,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * SurveysActivity should provide a list of all surveys which currently need a
+ * response. Surveys needing a response are those surveys that the user has
+ * subscribed to, but not responded to within their set period (i.e., if a
+ * survey requires a response every N days, and it has been N days since the
+ * user last responded to it, it will appear in the list).
+ * 
+ * @author Jake Bailey (rjacob@cs.washington.edu)
+ */
 public class SurveysActivity extends Activity {
 
 	private static final String TAG = "mystatus.SurveysActivity";

@@ -9,6 +9,7 @@ import android.net.Uri;
  * between the core myStatus features and ODK Collect features.
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
+ * @author Chuong Dao (chuongd@cs.washington.edu)
  */
 public class OdkProxy {
 
