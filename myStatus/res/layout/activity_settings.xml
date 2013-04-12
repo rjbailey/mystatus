@@ -22,19 +22,18 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/notification_frequency_message"
+            android:id="@+id/notification_period_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/notification_frequency"
+            android:text="@string/notification_period"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/notification_frequency"
+            android:id="@+id/notification_period"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number" />
-
     </LinearLayout>
 
 </LinearLayout>

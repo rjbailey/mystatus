@@ -15,7 +15,7 @@
 
     <string name="settings_title">Notification Settings</string>
     <string name="notification_enable">Enable notifications</string>
-    <string name="notification_frequency">Notify every X seconds:</string>
+    <string name="notification_period">Notify every X seconds:</string>
     <string name="notification_title">myStatus Alert</string>
     <string name="notification_message">Tap here to check in with myStatus</string>
 

@@ -31,7 +31,7 @@ public class SettingsActivity extends Activity {
 	private static final long MAX_NOTIFICATION_PERIOD = 86400; // number of seconds per day
 
 	private CheckBox mEnableNotificationsBox;
-	private EditText mNotificationFrequency;
+	private EditText mNotificationPeriod;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class SettingsActivity extends Activity {
 		setContentView(R.layout.activity_settings);
 
 		mEnableNotificationsBox = (CheckBox) findViewById(R.id.notification_checkbox);
-		mNotificationFrequency = (EditText) findViewById(R.id.notification_frequency);
+		mNotificationPeriod = (EditText) findViewById(R.id.notification_period);
 
 		mEnableNotificationsBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -52,13 +52,13 @@ public class SettingsActivity extends Activity {
 			}
 		});
 
-		mNotificationFrequency.setText(Long.toString(DEFAULT_NOTIFICATION_PERIOD));
+		mNotificationPeriod.setText(Long.toString(DEFAULT_NOTIFICATION_PERIOD));
 	}
 
 	/**
 	 * Sets a repeating AlarmManager alarm that triggers NotificationService to
-	 * generate a survey notification. The frequency with which the notification
-	 * will appear is determined by the mNotificationFrequency text field, which
+	 * generate a survey notification. The period with which the notification
+	 * will appear is determined by the mNotificationPeriod text field, which
 	 * represents the notification period in seconds.
 	 */
 	private void enableNotifications() {
@@ -67,23 +67,23 @@ public class SettingsActivity extends Activity {
 				new Intent(this, NotificationService.class), 0);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-		// Get the desired period between notifications from the mNotificationFrequency field
-		long frequency;
+		// Parse and validate the desired period between notifications
+		long period;
 		try {
-			frequency = Long.parseLong(mNotificationFrequency.getText().toString());
+			period = Long.parseLong(mNotificationPeriod.getText().toString());
 		} catch (NumberFormatException e) {
-			frequency = DEFAULT_NOTIFICATION_PERIOD;
-			mNotificationFrequency.setText(Long.toString(frequency));
+			period = DEFAULT_NOTIFICATION_PERIOD;
+			mNotificationPeriod.setText(Long.toString(period));
 		}
-		if (frequency <= 0 || frequency > MAX_NOTIFICATION_PERIOD) {
-			frequency = DEFAULT_NOTIFICATION_PERIOD;
-			mNotificationFrequency.setText(Long.toString(frequency));
+		if (period <= 0 || period > MAX_NOTIFICATION_PERIOD) {
+			period = DEFAULT_NOTIFICATION_PERIOD;
+			mNotificationPeriod.setText(Long.toString(period));
 		}
 		// Convert from seconds to milliseconds
-		long freqMillis = frequency * 1000;
+		long freqMillis = period * 1000;
 
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, freqMillis, freqMillis, notifyIntent);
-		Log.d(TAG, "Notifying every " + frequency + " seconds");
+		Log.d(TAG, "Notifying every " + period + " seconds");
 	}
 
 	/**
