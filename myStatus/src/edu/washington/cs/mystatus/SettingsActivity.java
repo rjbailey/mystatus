@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CheckBox;
@@ -24,9 +25,9 @@ import android.widget.EditText;
  * @see NotificationService
  */
 public class SettingsActivity extends Activity {
-
+	
 	private static final String TAG = "mystatus.SettingsActivity";
-
+	
 	private static final long DEFAULT_NOTIFICATION_PERIOD = 5; // 5 seconds
 	private static final long MAX_NOTIFICATION_PERIOD = 86400; // number of seconds per day
 
@@ -38,17 +39,29 @@ public class SettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		boolean isChecked = settings.getBoolean("settings_checked", false);
+		
 		mEnableNotificationsBox = (CheckBox) findViewById(R.id.notification_checkbox);
 		mNotificationPeriod = (EditText) findViewById(R.id.notification_period);
 
+		mEnableNotificationsBox.setChecked(isChecked);
+		
 		mEnableNotificationsBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+				SharedPreferences.Editor editor = prefs.edit();
 				if (isChecked) {
+					// set preference
+					editor.putBoolean("settings_checked", true);
 					enableNotifications();
 				} else {
+					// set preference
+					editor.putBoolean("settings_checked", false);
 					disableNotifications();
 				}
+				editor.commit();
 			}
 		});
 
