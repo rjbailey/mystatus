@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.view.View.OnKeyListener;
 
 /**
  * SettingsActivity provides a UI for managing notification settings.
@@ -21,6 +24,7 @@ import android.widget.EditText;
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  * @author Chuong Dao (chuongd@cs.washington.edu)
+ * @author Emily Chien (eechien@cs.washington.edu)
  * @see AlarmManager
  * @see NotificationService
  */
@@ -41,6 +45,7 @@ public class SettingsActivity extends Activity {
 
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		boolean isChecked = settings.getBoolean("settings_checked", false);
+		long notDefault = settings.getLong("notification_period", DEFAULT_NOTIFICATION_PERIOD);
 		
 		mEnableNotificationsBox = (CheckBox) findViewById(R.id.notification_checkbox);
 		mNotificationPeriod = (EditText) findViewById(R.id.notification_period);
@@ -65,7 +70,24 @@ public class SettingsActivity extends Activity {
 			}
 		});
 
-		mNotificationPeriod.setText(Long.toString(DEFAULT_NOTIFICATION_PERIOD));
+		mNotificationPeriod.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+						(keyCode == KeyEvent.KEYCODE_ENTER)) {
+					SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+					SharedPreferences.Editor editor = prefs.edit();
+					
+					editor.putLong("notification_period", Long.parseLong(mNotificationPeriod.getText().toString()));
+					editor.commit();
+					return true;
+				}
+				return false;
+			}
+			
+		});
+		
+		mNotificationPeriod.setText(Long.toString(notDefault));
 	}
 
 	/**
