@@ -31,4 +31,5 @@
 	<string name="new_goals">Set a new goal?</string>
 	<string name="remove_goals">Remove a goal?</string>
 	<string name="remove_goal_prompt">Which goal would you like to remove?</string>
+	<string name="select_dropdown">Select</string>
 </resources>
