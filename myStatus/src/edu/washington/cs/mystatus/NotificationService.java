@@ -47,7 +47,7 @@ public class NotificationService extends Service {
 	private Notification createSurveyNotification() {
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
-				OdkProxy.createSurveyIntent(), 0);
+				OdkProxy.createSurveyIntent(this), 0);
 
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)

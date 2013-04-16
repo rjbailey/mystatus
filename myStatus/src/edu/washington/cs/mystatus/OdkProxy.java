@@ -1,6 +1,10 @@
 package edu.washington.cs.mystatus;
 
-import android.content.ComponentName;
+import org.odk.collect.android.activities.FormChooserList;
+import org.odk.collect.android.activities.FormDownloadList;
+import org.odk.collect.android.activities.FormEntryActivity;
+
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -13,8 +17,6 @@ import android.net.Uri;
  */
 public class OdkProxy {
 
-	private static final String ODK_COLLECT_PACKAGE = "org.odk.collect.android";
-	private static final String ODK_COLLECT_CMP = "org.odk.collect.android.activities.FormEntryActivity";
 	private static final String ODK_FORMS_URI = "content://org.odk.collect.android.provider.odk.forms/forms/1";
 
 	/**
@@ -23,10 +25,27 @@ public class OdkProxy {
 	 * 
 	 * @return An Intent which launches an ODK Collect FormEntryActivity.
 	 */
-	public static Intent createSurveyIntent() {
-		return new Intent("android.intent.action.EDIT")
-				.setComponent(new ComponentName(ODK_COLLECT_PACKAGE, ODK_COLLECT_CMP))
+	public static Intent createSurveyIntent(Context context) {
+		return new Intent(context, FormEntryActivity.class)
 				.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 				.setData(Uri.parse(ODK_FORMS_URI));
+	}
+
+	/**
+	 * Create an Intent for Collect's FormChooserList.
+	 * 
+	 * @return An Intent which launches the ODK Collect FormChooserList.
+	 */
+	public static Intent createFormChooserIntent(Context context) {
+		return new Intent(context, FormChooserList.class);
+	}
+
+	/**
+	 * Create an Intent for Collect's FormDownloadList.
+	 * 
+	 * @return An Intent which launches the ODK Collect FormDownloadList.
+	 */
+	public static Intent createFormDownloadIntent(Context context) {
+		return new Intent(context, FormDownloadList.class);
 	}
 }

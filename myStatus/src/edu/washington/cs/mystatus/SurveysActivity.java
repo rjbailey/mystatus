@@ -43,6 +43,6 @@ public class SurveysActivity extends Activity {
 	 */
 	private void startSurvey() {
 		Log.w(TAG, "Starting ODK Collect survey...");
-		startActivityForResult(OdkProxy.createSurveyIntent(), 0);
+		startActivityForResult(OdkProxy.createSurveyIntent(this), 0);
 	}
 }
