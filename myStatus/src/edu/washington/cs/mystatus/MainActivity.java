@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Goals button clicked");
+				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
 			}
 		});
 

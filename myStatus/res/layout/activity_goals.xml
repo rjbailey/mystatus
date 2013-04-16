@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".GoalsActivity" >
+
+    <TextView
+        android:id="@+id/goals_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/goals_title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <TextView
+            android:id="@+id/new_goals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_goals"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+       	<Spinner
+	        android:id="@+id/goal_options"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:entries="@array/goal_arrays"
+	        android:prompt="@string/goal_prompt" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <TextView
+            android:id="@+id/remove_goals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_goals"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <Spinner
+            android:id="@+id/remove_goals_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/set_goals_list"
+            android:prompt="@string/remove_goal_prompt" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <TextView
+            android:id="@+id/set_goals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_goals"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <ListView
+            android:id="@+id/set_goals_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            
+    </LinearLayout>
+    
+</LinearLayout>

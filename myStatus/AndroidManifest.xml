@@ -41,11 +41,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="SurveysActivity"
+            android:name="edu.washington.cs.mystatus.SurveysActivity"
             android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
         </activity>
         <activity
-            android:name="SettingsActivity"
+            android:name="edu.washington.cs.mystatus.SettingsActivity"
             android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
         </activity>
 
@@ -54,6 +54,7 @@
             android:enabled="true" >
         </service>
 
+<<<<<<< HEAD
         <!-- ODK Collect components -->
 
         <provider
@@ -191,6 +192,12 @@
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
+=======
+        <activity
+            android:name="edu.washington.cs.mystatus.GoalsActivity"
+            android:label="@string/title_activity_goals" >
+        </activity>
+>>>>>>> Started Goals UI
     </application>
 
 </manifest>
