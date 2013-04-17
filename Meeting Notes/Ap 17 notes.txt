@@ -1,0 +1,10 @@
+For next week: (by priority)
+	1. Open up surveys: ask odk what are all the surveys and what are recent survey results
+		which ones need to be filled out today	
+	2. Remove finalized but not set, layer of abstraction
+		remove button
+		try to send to next form to fill out, straight into it (queue?)
+	3. Tell odk aggregate that its a new version of same survey
+	
+	
+(Google Play services downloaded for maps)
