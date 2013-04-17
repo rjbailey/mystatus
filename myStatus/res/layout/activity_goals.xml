@@ -33,7 +33,8 @@
         <ListView
             android:id="@+id/set_goals_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:entries="@array/set_goals_list" />
             
     </LinearLayout>
     
@@ -80,9 +81,7 @@
         <Spinner
             android:id="@+id/remove_goals_options"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/set_goals_list"
-            android:prompt="@string/remove_goal_prompt" />
+            android:layout_height="wrap_content" />
         
         <Button
             android:id="@+id/remove_goal_choice"
