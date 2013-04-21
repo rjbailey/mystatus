@@ -1,6 +1,6 @@
 For next week: (by priority)
 	1. Open up surveys: ask odk what are all the surveys and what are recent survey results
-		which ones need to be filled out today	
+		which ones need to be filled out today
 	2. Remove finalized but not set, layer of abstraction
 		remove button
 		try to send to next form to fill out, straight into it (queue?)
@@ -8,3 +8,31 @@ For next week: (by priority)
 	
 	
 (Google Play services downloaded for maps)
+
+Meeting with profs:
+Inside ODK Collect: looks in ODK directory for forms
+	want it not to find form, but pointer into database where form stored
+	want to ask database to give form unencrypted w/key
+	modification to form reading
+	ODK gets xml but also rebuilds internal model of form everytime, slow because of this
+	w/short forms, not big hit, could eliminate caching
+	w/big forms, about 50 questions, noticably slower
+	cache model, when pull, look for cached model
+	throw away xml, store model?
+	manage in forms subdirectory
+		empty filename?
+		or put extra table in forms database
+Go to Amy with collect (mock) forms and goals
+	with sample of what can have in there
+	make sure her image is the same as ours
+	anything linked to these questions (audio, video, etc)
+How notifications generated, how specified
+Notifications:
+xform metadata
+read John Froehlich-MyExperience before Friday
+	experience sampling
+	built in time, how much time between forms, and location
+build schedule
+	grouping
+Get help from Rosemary on design
+	have one person go to her meeting
