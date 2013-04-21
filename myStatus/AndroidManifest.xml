@@ -54,9 +54,12 @@
             android:enabled="true" >
         </service>
 
-<<<<<<< HEAD
-        <!-- ODK Collect components -->
+        <activity
+            android:name="edu.washington.cs.mystatus.GoalsActivity"
+            android:label="@string/title_activity_goals" >
+        </activity>
 
+        <!-- ODK Collect components -->
         <provider
             android:name="org.odk.collect.android.provider.FormsProvider"
             android:authorities="org.odk.collect.android.provider.odk.forms" />
@@ -192,12 +195,6 @@
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
-=======
-        <activity
-            android:name="edu.washington.cs.mystatus.GoalsActivity"
-            android:label="@string/title_activity_goals" >
-        </activity>
->>>>>>> Started Goals UI
     </application>
 
 </manifest>
