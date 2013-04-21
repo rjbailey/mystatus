@@ -21,6 +21,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryCaption;
@@ -203,7 +205,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// must be at the beginning of any activity that can be called from an
 		// external intent
 		try {
@@ -258,6 +259,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		String waitingXPath = null;
 		String instancePath = null;
 		Boolean newForm = true;
+		// get all the old states
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(KEY_FORMPATH)) {
 				mFormPath = savedInstanceState.getString(KEY_FORMPATH);
@@ -317,7 +319,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 			// Not a restart from a screen orientation change (or other).
 			Collect.getInstance().setFormController(null);
-
+			// load the form from the database
 			Intent intent = getIntent();
 			if (intent != null) {
 				Uri uri = intent.getData();

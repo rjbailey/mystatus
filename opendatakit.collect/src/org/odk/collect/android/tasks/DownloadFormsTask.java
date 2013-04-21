@@ -77,7 +77,7 @@ public class DownloadFormsTask extends
     @Override
     protected HashMap<FormDetails, String> doInBackground(ArrayList<FormDetails>... values) {
         ArrayList<FormDetails> toDownload = values[0];
-
+        
         int total = toDownload.size();
         int count = 1;
     	Collect.getInstance().getActivityLogger().logAction(this, "downloadForms", String.valueOf(total));

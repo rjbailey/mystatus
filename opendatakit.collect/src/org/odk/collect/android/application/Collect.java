@@ -21,6 +21,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.database.ActivityLogger;
 import org.odk.collect.android.logic.FormController;
@@ -173,7 +175,7 @@ public class Collect extends Application {
     @Override
     public void onCreate() {
         singleton = this;
-
+        SQLiteDatabase.loadLibs(this);
         // // set up logging defaults for apache http component stack
         // Log log;
         // log = LogFactory.getLog("org.opendatakit.httpclientandroidlib");

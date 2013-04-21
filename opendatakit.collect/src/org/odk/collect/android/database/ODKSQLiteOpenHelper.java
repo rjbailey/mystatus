@@ -16,8 +16,8 @@ package org.odk.collect.android.database;
 
 import java.io.File;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
@@ -42,7 +42,7 @@ import android.util.Log;
  */
 public abstract class ODKSQLiteOpenHelper {
     private static final String t = ODKSQLiteOpenHelper.class.getSimpleName();
-
+    private static final String KEY = "ODK-Secret";
     private final String mPath;
     private final String mName;
     private final CursorFactory mFactory;
@@ -50,6 +50,7 @@ public abstract class ODKSQLiteOpenHelper {
 
     private SQLiteDatabase mDatabase = null;
     private boolean mIsInitializing = false;
+    // add extra field for password
 
 
     /**
@@ -103,14 +104,20 @@ public abstract class ODKSQLiteOpenHelper {
 
         boolean success = false;
         SQLiteDatabase db = null;
-        // if (mDatabase != null) mDatabase.lock();
+        //if (mDatabase != null) mDatabase.lock();
         try {
             mIsInitializing = true;
             if (mName == null) {
-                db = SQLiteDatabase.create(null);
+                db = SQLiteDatabase.create(null, KEY);
+                //db = SQLiteDatabase.create(, password)
             } else {
-                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, mFactory);
+               // db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName,KEY, mFactory);
+                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, KEY, mFactory);
+            	
+                //SQLiteDatabase.openOrCreateDatabase(path, password, factory);
                 // db = mContext.openOrCreateDatabase(mName, 0, mFactory);
+       
+
             }
 
             int version = db.getVersion();
@@ -186,7 +193,7 @@ public abstract class ODKSQLiteOpenHelper {
             mIsInitializing = true;
             String path = mPath + File.separator + mName;
             // mContext.getDatabasePath(mName).getPath();
-            db = SQLiteDatabase.openDatabase(path, mFactory, SQLiteDatabase.OPEN_READONLY);
+            db = SQLiteDatabase.openDatabase(path, KEY, mFactory, SQLiteDatabase.OPEN_READONLY);
             if (db.getVersion() != mNewVersion) {
                 throw new SQLiteException("Can't upgrade read-only database from version "
                         + db.getVersion() + " to " + mNewVersion + ": " + path);

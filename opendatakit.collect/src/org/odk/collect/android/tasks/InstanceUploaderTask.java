@@ -535,7 +535,7 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
 					}
 
 	                if ( !uploadOneSubmission(urlString, id, instance, toUpdate, localContext, uriRemap, outcome) ) {
-	                	return outcome; // get credentials...
+	                	return null; // get credentials...
 	                }
 	            }
 	        }

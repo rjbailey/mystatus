@@ -14,6 +14,8 @@
 
 package org.odk.collect.android.activities;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DiskSyncListener;
@@ -55,6 +57,7 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	SQLiteDatabase.loadLibs(this);
         super.onCreate(savedInstanceState);
 
         // must be at the beginning of any activity that can be called from an external intent

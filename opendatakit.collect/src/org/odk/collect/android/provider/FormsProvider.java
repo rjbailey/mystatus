@@ -33,8 +33,10 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
+//import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteQueryBuilder;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -64,7 +66,6 @@ public class FormsProvider extends ContentProvider {
         // These exist in database versions 2 and 3, but not in 4...
         private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";
         private static final String MODEL_VERSION = "modelVersion";
-
         DatabaseHelper(String databaseName) {
             super(Collect.METADATA_PATH, databaseName, null, DATABASE_VERSION);
         }
