@@ -114,9 +114,14 @@ public class DownloadFormsTask extends
 	                if (alreadyExists.getCount() <= 0) {
 	                    // doesn't exist, so insert it
 	                    ContentValues v = new ContentValues();
+	                    
+	                    
 	                    v.put(FormsColumns.FORM_FILE_PATH, dl.getAbsolutePath());
-	
+	                    
 	                    HashMap<String, String> formInfo = FileUtils.parseXML(dl);
+	                    
+	                    
+	                    
 	                    v.put(FormsColumns.DISPLAY_NAME, formInfo.get(FileUtils.TITLE));
 	                    v.put(FormsColumns.JR_VERSION, formInfo.get(FileUtils.VERSION));
 	                    v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));
@@ -216,6 +221,8 @@ public class DownloadFormsTask extends
             f = new File(path);
             i++;
         }
+        
+        //instead of storing the xml forms
 
         downloadFile(f, url);
 
@@ -544,5 +551,5 @@ public class DownloadFormsTask extends
             mStateListener = sl;
         }
     }
-
+    
 }

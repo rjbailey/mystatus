@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Help button clicked");
+				startActivity(OdkProxy.createFormDownloadIntent(MainActivity.this));
 			}
 		});
 	}
