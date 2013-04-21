@@ -46,12 +46,13 @@ import java.io.File;
 public class Collect extends Application {
 
     // Storage paths
+	// added dots in front of all the data folder to hide it 
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
             + File.separator + ".odk";
-    public static final String FORMS_PATH = ODK_ROOT + File.separator + "forms";
-    public static final String INSTANCES_PATH = ODK_ROOT + File.separator + "instances";
+    public static final String FORMS_PATH = ODK_ROOT + File.separator + ".forms";
+    public static final String INSTANCES_PATH = ODK_ROOT + File.separator + ".instances";
     public static final String CACHE_PATH = ODK_ROOT + File.separator + ".cache";
-    public static final String METADATA_PATH = ODK_ROOT + File.separator + "metadata";
+    public static final String METADATA_PATH = ODK_ROOT + File.separator + ".metadata";
     public static final String TMPFILE_PATH = CACHE_PATH + File.separator + "tmp.jpg";
     public static final String TMPDRAWFILE_PATH = CACHE_PATH + File.separator + "tmpDraw.jpg";
     public static final String TMPXML_PATH = CACHE_PATH + File.separator + "tmp.xml";

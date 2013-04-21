@@ -35,6 +35,7 @@ import org.odk.collect.android.listeners.FormDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.EncryptUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.WebUtils;
 import org.opendatakit.httpclientandroidlib.HttpResponse;
@@ -213,11 +214,14 @@ public class DownloadFormsTask extends
         rootName = rootName.trim();
 
         // proposed name of xml file...
+        // Encrypt filename to hide informations
+        // @CD
+        rootName = EncryptUtils.encodeString(rootName);
         String path = Collect.FORMS_PATH + File.separator + rootName + ".xml";
         int i = 2;
         f = new File(path);
         while (f.exists()) {
-            path = Collect.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
+        	path = Collect.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
             f = new File(path);
             i++;
         }
