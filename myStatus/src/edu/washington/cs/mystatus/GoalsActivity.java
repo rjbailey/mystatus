@@ -1,24 +1,16 @@
 package edu.washington.cs.mystatus;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.ListView;
-import android.view.View.OnClickListener;
+import android.widget.Spinner;
 
 /**
  * GoalsActivity provides a UI for setting new goals, seeing active goals, and removing
@@ -46,8 +38,6 @@ public class GoalsActivity extends Activity {
 		setContentView(R.layout.activity_goals);
 		
 		setGlobalVariables();
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		String goalsPrefs = settings.getString("set_goals", null);
 		
 		//GsonBuilder gsonb = new GsonBuilder();
 		//gson = gsonb.create();
