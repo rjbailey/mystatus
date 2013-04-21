@@ -1,10 +1,18 @@
 package edu.washington.cs.mystatus;
 
-import android.app.Activity;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+
+import android.app.ListActivity;
+import android.content.ContentUris;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 /**
  * SurveysActivity should provide a list of all surveys which currently need a
@@ -15,34 +23,39 @@ import android.widget.Button;
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  */
-public class SurveysActivity extends Activity {
+public class SurveysActivity extends ListActivity {
 
 	private static final String TAG = "mystatus.SurveysActivity";
-
-	private Button mStartBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_surveys);
+		Log.d(TAG, "Surveys activity created.");
 
-		mStartBtn = (Button) findViewById(R.id.surveys_start);
+		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
+		Cursor c = getContentResolver()
+				.query(FormsColumns.CONTENT_URI, null, null, null, sortOrder);
 
-		mStartBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Survey button clicked");
-				startSurvey();
-			}
-		});
+		String[] data = new String[] {
+				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
+		};
+		int[] view = new int[] {
+				R.id.text1, R.id.text2, R.id.text3
+		};
+
+		// TODO: OdkProxy should generate and return this cursor adapter.
+		// It should also filter the results based on whether the surveys
+		// need a response.
+		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
+				this, R.layout.two_item, c, data, view);
+		setListAdapter(instances);
 	}
 
-	/**
-	 * Start the ODK Collect FormEntryActivity for the first survey in ODK
-	 * Collect's survey list.
-	 */
-	private void startSurvey() {
-		Log.w(TAG, "Starting ODK Collect survey...");
-		startActivityForResult(OdkProxy.createSurveyIntent(this), 0);
+	@Override
+	protected void onListItemClick(ListView listView, View view, int position, long id) {
+		long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
+		Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
+		startActivity(new Intent(Intent.ACTION_EDIT, formUri));
 	}
 }

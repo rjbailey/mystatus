@@ -14,7 +14,7 @@
     <string name="button_help">Get Help</string>
 
     <!-- Survey list -->
-    <string name="surveys_start">Start Survey</string>
+    <string name="no_surveys">No more surveys for today!</string>
 
     <!-- Settings -->
     <string name="settings_title">Notification Settings</string>
