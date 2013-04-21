@@ -40,11 +40,11 @@
         android:gravity="center" >
 
         <Button
-            android:id="@+id/button_settings"
+            android:id="@+id/button_manage_surveys"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/button_settings" />
+            android:text="@string/button_manage_surveys" />
 
         <Button
             android:id="@+id/button_goals"
