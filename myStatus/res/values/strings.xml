@@ -21,7 +21,14 @@
     <string name="notification_enable">Enable notifications</string>
     <string name="notification_period">Notify every X seconds:</string>
     <string name="notification_title">myStatus Alert</string>
-    <string name="notification_message">Tap here to check in with myStatus</string>
+    <string name="notification_message">Tap to check in with myStatus</string>
+    
+    <!-- Get Help -->
+    <string name="help_title">Need help?</string>
+    <string name="call_doctor">Call my doctor</string>
+    <string name="call_emergency_services">Call 911</string>
+    <string name="call_suicide_lifeline">Call Suicide Prevention Lifeline</string>
+    <string name="call_friend">Call a friend</string>
 
     <!-- Goals -->
     <string name="menu_settings">Settings</string>

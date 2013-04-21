@@ -48,6 +48,10 @@
             android:name="edu.washington.cs.mystatus.SettingsActivity"
             android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
         </activity>
+        <activity
+            android:name="HelpActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+        </activity>
 
         <service
             android:name="edu.washington.cs.mystatus.NotificationService"
