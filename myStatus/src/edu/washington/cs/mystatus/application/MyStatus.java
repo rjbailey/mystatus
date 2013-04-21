@@ -22,6 +22,9 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import edu.washington.cs.mystatus.R;
+
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.opendatakit.httpclientandroidlib.client.CookieStore;
 import org.opendatakit.httpclientandroidlib.client.CredentialsProvider;
 import org.opendatakit.httpclientandroidlib.client.protocol.ClientContext;
@@ -46,7 +49,7 @@ public class MyStatus extends Application {
 
     // Storage paths
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
-            + File.separator + "odk";
+            + File.separator + "mystatus";
     public static final String FORMS_PATH = ODK_ROOT + File.separator + "forms";
     public static final String INSTANCES_PATH = ODK_ROOT + File.separator + "instances";
     public static final String CACHE_PATH = ODK_ROOT + File.separator + ".cache";
@@ -194,6 +197,8 @@ public class MyStatus extends Application {
         PropertyManager mgr = new PropertyManager(this);
         mActivityLogger = new ActivityLogger(
                 mgr.getSingularProperty(PropertyManager.DEVICE_ID_PROPERTY));
+
+        SQLiteDatabase.loadLibs(this);
     }
 
 }

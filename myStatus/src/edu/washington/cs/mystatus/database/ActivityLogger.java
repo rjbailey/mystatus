@@ -27,8 +27,8 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteException;
 
 /**
  * Log all user interface activity into a SQLite database. Logging is disabled by default.

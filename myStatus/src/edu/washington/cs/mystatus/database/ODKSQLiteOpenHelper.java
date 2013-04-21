@@ -16,8 +16,8 @@ package edu.washington.cs.mystatus.database;
 
 import java.io.File;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
@@ -42,6 +42,7 @@ import android.util.Log;
  */
 public abstract class ODKSQLiteOpenHelper {
     private static final String t = ODKSQLiteOpenHelper.class.getSimpleName();
+    private static final String KEY = "ODK-Secret";
 
     private final String mPath;
     private final String mName;
@@ -107,9 +108,9 @@ public abstract class ODKSQLiteOpenHelper {
         try {
             mIsInitializing = true;
             if (mName == null) {
-                db = SQLiteDatabase.create(null);
+                db = SQLiteDatabase.create(null, KEY);
             } else {
-                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, mFactory);
+                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, KEY, mFactory);
                 // db = mContext.openOrCreateDatabase(mName, 0, mFactory);
             }
 
@@ -186,7 +187,7 @@ public abstract class ODKSQLiteOpenHelper {
             mIsInitializing = true;
             String path = mPath + File.separator + mName;
             // mContext.getDatabasePath(mName).getPath();
-            db = SQLiteDatabase.openDatabase(path, mFactory, SQLiteDatabase.OPEN_READONLY);
+            db = SQLiteDatabase.openDatabase(path, KEY, mFactory, SQLiteDatabase.OPEN_READONLY);
             if (db.getVersion() != mNewVersion) {
                 throw new SQLiteException("Can't upgrade read-only database from version "
                         + db.getVersion() + " to " + mNewVersion + ": " + path);
