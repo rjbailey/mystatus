@@ -1,5 +1,7 @@
 package edu.washington.cs.mystatus;
 
+import org.odk.collect.android.activities.FormChooserList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +42,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Survey button clicked");
-				startActivity(new Intent(MainActivity.this, SurveysActivity.class));
+				//startActivity(new Intent(MainActivity.this, SurveysActivity.class));
+				startActivity(new Intent(MainActivity.this, FormChooserList.class));
 			}
 		});
 
