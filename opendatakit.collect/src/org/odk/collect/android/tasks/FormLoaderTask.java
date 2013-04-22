@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.tasks;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -42,6 +43,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.FormLoaderListener;
 import org.odk.collect.android.logic.FileReferenceFactory;
 import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.utilities.EncryptUtils;
 import org.odk.collect.android.utilities.FileUtils;
 
 import android.content.Intent;
@@ -162,17 +164,22 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             // no binary, read from xml
             try {
                 Log.i(t, "Attempting to load from: " + formXml.getAbsolutePath());
-                fis = new FileInputStream(formXml);
-                fd = XFormUtils.getFormFromInputStream(fis);
+                //fis = new FileInputStream(formXml);
+                byte [] data = EncryptUtils.decryptedFiletoByteArray(formXml);
+                ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                //fd = XFormUtils.getFormFromInputStream(fis);
+                fd = XFormUtils.getFormFromInputStream(bis);
                 if (fd == null) {
                     mErrorMsg = "Error reading XForm file";
                 } else {
                     serializeFormDef(fd, formPath);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                mErrorMsg = e.getMessage();
-            } catch (XFormParseException e) {
+            } 
+            //catch (FileNotFoundException e) {
+              //  e.printStackTrace();
+                //mErrorMsg = e.getMessage();
+            //} 
+        	catch (XFormParseException e) {
                 mErrorMsg = e.getMessage();
                 e.printStackTrace();
             } catch (Exception e) {

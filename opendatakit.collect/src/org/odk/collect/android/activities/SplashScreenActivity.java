@@ -17,6 +17,7 @@ package org.odk.collect.android.activities;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.utilities.EncryptUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +37,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -125,9 +127,18 @@ public class SplashScreenActivity extends Activity {
             o.inJustDecodeBounds = true;
 
             FileInputStream fis = new FileInputStream(f);
-            BitmapFactory.decodeStream(fis, null, o);
+            // Decrypt the file first before decode
+            // @CD
+            byte [] decryptedData = EncryptUtils.decryptedFiletoByteArray(f);
+            ByteArrayInputStream bis = new ByteArrayInputStream(decryptedData);
+            //BitmapFactory.decodeStream(fis, null, o);
+            BitmapFactory.decodeStream(bis, null, o);
+            //BitmapFactory.decodeS
             try {
                 fis.close();
+                // close it
+                // @CD
+                bis.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -147,9 +158,17 @@ public class SplashScreenActivity extends Activity {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             fis = new FileInputStream(f);
-            b = BitmapFactory.decodeStream(fis, null, o2);
+            // Decrypt the file first before decode
+            // @CD
+            decryptedData = EncryptUtils.decryptedFiletoByteArray(f);
+            bis = new ByteArrayInputStream(decryptedData);
+            //b = BitmapFactory.decodeStream(fis, null, o2);
+            b = BitmapFactory.decodeStream(bis, null, o2);
             try {
                 fis.close();
+                // close the byte stream
+                // @CD
+                bis.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

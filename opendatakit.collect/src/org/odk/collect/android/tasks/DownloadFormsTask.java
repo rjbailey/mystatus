@@ -120,10 +120,11 @@ public class DownloadFormsTask extends
 
 						HashMap<String, String> formInfo = FileUtils
 								.parseXML(dl);
-						
+
 						// we can encrypted the file right here
 						// @CD
 						EncryptUtils.encryptedData(dl);
+
 						v.put(FormsColumns.DISPLAY_NAME,
 								formInfo.get(FileUtils.TITLE));
 						v.put(FormsColumns.JR_VERSION,
@@ -523,6 +524,10 @@ public class DownloadFormsTask extends
 
 					if (!mediaFile.exists()) {
 						downloadFile(mediaFile, toDownload.downloadUrl);
+						// encrypted media file here
+						// @CD
+						EncryptUtils.encryptedData(mediaFile);
+						
 					} else {
 						String currentFileHash = FileUtils
 								.getMd5Hash(mediaFile);
@@ -535,6 +540,9 @@ public class DownloadFormsTask extends
 							// with the new one
 							mediaFile.delete();
 							downloadFile(mediaFile, toDownload.downloadUrl);
+							// encrytped mediaFile here
+							// @CD
+							EncryptUtils.encryptedData(mediaFile);
 						} else {
 							// exists, and the hash is the same
 							// no need to download it again
