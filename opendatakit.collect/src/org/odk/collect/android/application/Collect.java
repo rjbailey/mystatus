@@ -58,8 +58,8 @@ public class Collect extends Application {
     public static final String TMPXML_PATH = CACHE_PATH + File.separator + "tmp.xml";
     public static final String LOG_PATH = ODK_ROOT + File.separator + "log";
     
-    // adding key for encrypted data
-
+    // adding random key for encrypted data
+    public static final String KEY_ENCRYPT_DATA = "OPKQJENANSKJDJVASSD123452";
     public static final String DEFAULT_FONTSIZE = "21";
 
     // share all session cookies across all sessions...
