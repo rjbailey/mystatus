@@ -50,7 +50,11 @@
             android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
         </activity>
         <activity
-            android:name="HelpActivity"
+            android:name="edu.washington.cs.mystatus.GoalsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.HelpActivity"
             android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
         </activity>
 
@@ -58,11 +62,6 @@
             android:name="edu.washington.cs.mystatus.NotificationService"
             android:enabled="true" >
         </service>
-
-        <activity
-            android:name="edu.washington.cs.mystatus.GoalsActivity"
-            android:label="@string/title_activity_goals" >
-        </activity>
 
         <!-- ODK Collect components -->
         <provider
