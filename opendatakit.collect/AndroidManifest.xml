@@ -42,24 +42,24 @@
         android:smallScreens="true" />
 
     <application
-        android:name="org.odk.collect.android.application.Collect"
+        android:name="edu.washington.cs.mystatus.application.Collect"
         android:icon="@drawable/notes"
         android:label="@string/app_name"
         android:theme="@style/Collect" >
         <provider
-            android:name="org.odk.collect.android.provider.FormsProvider"
+            android:name="edu.washington.cs.mystatus.providers.FormsProvider"
             android:authorities="org.odk.collect.android.provider.odk.forms" />
         <provider
-            android:name="org.odk.collect.android.provider.InstanceProvider"
+            android:name="edu.washington.cs.mystatus.providers.InstanceProvider"
             android:authorities="org.odk.collect.android.provider.odk.instances" />
 
         <activity
-            android:name=".activities.MainMenuActivity"
+            android:name="edu.washington.cs.mystatus.activities.MainMenuActivity"
             android:configChanges="orientation"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".activities.FormEntryActivity"
+            android:name="edu.washington.cs.mystatus.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" >
@@ -74,10 +74,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DrawActivity"
+            android:name="edu.washington.cs.mystatus.activities.DrawActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.InstanceChooserList"
+            android:name="edu.washington.cs.mystatus.activities.InstanceChooserList"
             android:label="@string/app_name" />
 
         <intent-filter>
@@ -90,10 +90,10 @@
         </intent-filter>
 
         <activity
-            android:name=".activities.InstanceChooserTabs"
+            android:name="edu.washington.cs.mystatus.activities.InstanceChooserTabs"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormChooserList"
+            android:name="edu.washington.cs.mystatus.activities.FormChooserList"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -106,40 +106,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.FormManagerList"
+            android:name="edu.washington.cs.mystatus.activities.FormManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormDownloadList"
+            android:name="edu.washington.cs.mystatus.activities.FormDownloadList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.DataManagerList"
+            android:name="edu.washington.cs.mystatus.activities.DataManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FileManagerTabs"
+            android:name="edu.washington.cs.mystatus.activities.FileManagerTabs"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.InstanceUploaderList"
+            android:name="edu.washington.cs.mystatus.activities.InstanceUploaderList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.InstanceUploaderActivity"
+            android:name="edu.washington.cs.mystatus.activities.InstanceUploaderActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.PreferencesActivity"
+            android:name="edu.washington.cs.mystatus.preferences.PreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.AdminPreferencesActivity"
+            android:name="edu.washington.cs.mystatus.preferences.AdminPreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormHierarchyActivity"
+            android:name="edu.washington.cs.mystatus.activities.FormHierarchyActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPointActivity"
+            android:name="edu.washington.cs.mystatus.activities.GeoPointActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPointMapActivity"
+            android:name="edu.washington.cs.mystatus.activities.GeoPointMapActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name="edu.washington.cs.mystatus.activities.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
@@ -151,7 +151,7 @@
         </activity>
         <!-- Enable Shortcuts for Command Actions -->
         <activity
-            android:name=".activities.AndroidShortcuts"
+            android:name="edu.washington.cs.mystatus.activities.AndroidShortcuts"
             android:label="ODK Form"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
@@ -161,7 +161,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".receivers.NetworkReceiver"
+            android:name="edu.washington.cs.mystatus.receivers.NetworkReceiver"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
