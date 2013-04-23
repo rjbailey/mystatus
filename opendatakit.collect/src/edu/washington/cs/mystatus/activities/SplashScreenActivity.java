@@ -14,9 +14,9 @@
 
 package edu.washington.cs.mystatus.activities;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 
 import android.app.Activity;
@@ -57,7 +57,7 @@ public class SplashScreenActivity extends Activity {
 
         // must be at the beginning of any activity that can be called from an external intent
         try {
-            Collect.createODKDirs();
+            MyStatus.createODKDirs();
         } catch (RuntimeException e) {
             createErrorDialog(e.getMessage(), EXIT);
             return;
@@ -199,7 +199,7 @@ public class SplashScreenActivity extends Activity {
 
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-	    Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
+	    MyStatus.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
         mAlertDialog = new AlertDialog.Builder(this).create();
         mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
         mAlertDialog.setMessage(errorMsg);
@@ -208,7 +208,7 @@ public class SplashScreenActivity extends Activity {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON1:
-                	    Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "OK");
+                	    MyStatus.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "OK");
                         if (shouldExit) {
                             finish();
                         }
@@ -224,12 +224,12 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onStart() {
     	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStart(this); 
     }
     
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStop(this); 
     	super.onStop();
     }
 

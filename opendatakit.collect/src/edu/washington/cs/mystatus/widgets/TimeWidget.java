@@ -19,7 +19,7 @@ import org.javarosa.core.model.data.TimeData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.DateTime;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -72,7 +72,7 @@ public class TimeWidget extends QuestionWidget {
         mTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-            	Collect.getInstance().getActivityLogger().logInstanceAction(TimeWidget.this, "onTimeChanged", 
+            	MyStatus.getInstance().getActivityLogger().logInstanceAction(TimeWidget.this, "onTimeChanged", 
             			String.format("%1$02d:%2$02d",hourOfDay, minute), mPrompt.getIndex());
 			}
 		});

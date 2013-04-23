@@ -20,7 +20,7 @@ import java.util.LinkedList;
 
 import org.javarosa.core.model.FormIndex;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.logic.FormController;
 
 import android.app.Activity;
@@ -46,8 +46,8 @@ public final class ActivityLogger {
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 		
 		DatabaseHelper() {
-			super(Collect.LOG_PATH, DATABASE_NAME, null, DATABASE_VERSION);
-			new File(Collect.LOG_PATH).mkdirs();
+			super(MyStatus.LOG_PATH, DATABASE_NAME, null, DATABASE_VERSION);
+			new File(MyStatus.LOG_PATH).mkdirs();
 		}
 
 		@Override
@@ -113,7 +113,7 @@ public final class ActivityLogger {
     
 	public ActivityLogger(String deviceId) {
 		this.mDeviceId = deviceId;
-		mLoggingEnabled = new File(Collect.LOG_PATH, ENABLE_LOGGING).exists();
+		mLoggingEnabled = new File(MyStatus.LOG_PATH, ENABLE_LOGGING).exists();
         open();
 	}
 	
@@ -146,7 +146,7 @@ public final class ActivityLogger {
     	if ( index == cachedXPathIndex ) return cachedXPathValue;
     	
     	cachedXPathIndex = index;
-    	cachedXPathValue = Collect.getInstance().getFormController().getXPath(index);
+    	cachedXPathValue = MyStatus.getInstance().getFormController().getXPath(index);
     	return cachedXPathValue;
     }
 
@@ -192,7 +192,7 @@ public final class ActivityLogger {
 	
 	    	String idx = "";
 	    	String instancePath = "";
-	    	FormController formController = Collect.getInstance().getFormController();
+	    	FormController formController = MyStatus.getInstance().getFormController();
 	    	if ( formController != null ) {
 	    		idx = getXPath(formController.getFormIndex());
 	    		instancePath = formController.getInstancePath().getAbsolutePath();
@@ -256,7 +256,7 @@ public final class ActivityLogger {
     public void logInstanceAction(Object t, String context, String action) {
     	FormIndex index = null;
     	String instancePath = null;
-    	FormController formController = Collect.getInstance().getFormController();
+    	FormController formController = MyStatus.getInstance().getFormController();
     	if ( formController != null ) {
     		index = formController.getFormIndex();
 	    	instancePath = formController.getInstancePath().getAbsolutePath();
@@ -266,7 +266,7 @@ public final class ActivityLogger {
 
     public void logInstanceAction(Object t, String context, String action, FormIndex index) {
     	String instancePath = null;
-    	FormController formController = Collect.getInstance().getFormController();
+    	FormController formController = MyStatus.getInstance().getFormController();
     	if ( formController != null ) {
     		index = formController.getFormIndex();
 	    	instancePath = formController.getInstancePath().getAbsolutePath();

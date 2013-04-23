@@ -17,10 +17,10 @@ package edu.washington.cs.mystatus.widgets;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
@@ -64,7 +64,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 	public VideoWidget(Context context, FormEntryPrompt prompt) {
 		super(context, prompt);
 
-		mInstanceFolder = Collect.getInstance().getFormController()
+		mInstanceFolder = MyStatus.getInstance().getFormController()
 				.getInstancePath().getParent();
 
 		setOrientation(LinearLayout.VERTICAL);
@@ -85,7 +85,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 		mCaptureButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(VideoWidget.this, "captureButton",
 								"click", mPrompt.getIndex());
@@ -94,7 +94,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 				i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
 						Video.Media.EXTERNAL_CONTENT_URI.toString());
 				try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
 					((Activity) getContext()).startActivityForResult(i,
 							FormEntryActivity.VIDEO_CAPTURE);
@@ -104,7 +104,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 							getContext().getString(R.string.activity_not_found,
 									"capture video"), Toast.LENGTH_SHORT)
 							.show();
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(null);
 				}
 
@@ -124,7 +124,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 		mChooseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(VideoWidget.this, "chooseButton",
 								"click", mPrompt.getIndex());
@@ -134,7 +134,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 				// new Intent(Intent.ACTION_PICK,
 				// android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
 				try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
 					((Activity) getContext()).startActivityForResult(i,
 							FormEntryActivity.VIDEO_CHOOSER);
@@ -144,7 +144,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 							getContext().getString(R.string.activity_not_found,
 									"choose video "), Toast.LENGTH_SHORT)
 							.show();
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(null);
 				}
 
@@ -163,7 +163,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 		mPlayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(VideoWidget.this, "playButton",
 								"click", mPrompt.getIndex());
@@ -288,7 +288,7 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 		}
 
 		mBinaryName = newVideo.getName();
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override
@@ -302,13 +302,13 @@ public class VideoWidget extends QuestionWidget implements IBinaryWidget {
 	@Override
 	public boolean isWaitingForBinaryData() {
 		return mPrompt.getIndex().equals(
-				Collect.getInstance().getFormController()
+				MyStatus.getInstance().getFormController()
 						.getIndexWaitingForData());
 	}
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override

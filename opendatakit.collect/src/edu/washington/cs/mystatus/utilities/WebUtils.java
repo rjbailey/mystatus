@@ -59,7 +59,7 @@ import org.opendatakit.httpclientandroidlib.params.HttpParams;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 import org.xmlpull.v1.XmlPullParser;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 
 import android.content.SharedPreferences;
@@ -104,14 +104,14 @@ public final class WebUtils {
 	}
 
 	public static final void clearAllCredentials() {
-		CredentialsProvider credsProvider = Collect.getInstance()
+		CredentialsProvider credsProvider = MyStatus.getInstance()
 				.getCredentialsProvider();
 		Log.i(t, "clearAllCredentials");
 		credsProvider.clear();
 	}
 
 	public static final boolean hasCredentials(String userEmail, String host) {
-		CredentialsProvider credsProvider = Collect.getInstance()
+		CredentialsProvider credsProvider = MyStatus.getInstance()
 				.getCredentialsProvider();
 		List<AuthScope> asList = buildAuthScopes(host);
 		boolean hasCreds = true;
@@ -131,7 +131,7 @@ public final class WebUtils {
 	 * @param host
 	 */
 	private static final void clearHostCredentials(String host) {
-		CredentialsProvider credsProvider = Collect.getInstance()
+		CredentialsProvider credsProvider = MyStatus.getInstance()
 				.getCredentialsProvider();
 		Log.i(t, "clearHostCredentials: " + host);
 		List<AuthScope> asList = buildAuthScopes(host);
@@ -163,7 +163,7 @@ public final class WebUtils {
 	}
 
 	private static final void addCredentials(Credentials c, String host) {
-		CredentialsProvider credsProvider = Collect.getInstance()
+		CredentialsProvider credsProvider = MyStatus.getInstance()
 				.getCredentialsProvider();
 		List<AuthScope> asList = buildAuthScopes(host);
 		for (AuthScope a : asList) {
@@ -212,7 +212,7 @@ public final class WebUtils {
 
 	public static final void setGoogleHeaders(HttpRequest req) {
 		SharedPreferences settings =
-                PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getApplicationContext());
+                PreferenceManager.getDefaultSharedPreferences(MyStatus.getInstance().getApplicationContext());
 		String protocol = settings.getString(PreferencesActivity.KEY_PROTOCOL, PreferencesActivity.PROTOCOL_ODK_DEFAULT);
 
 		if ( protocol.equals(PreferencesActivity.PROTOCOL_GOOGLE) ) {
@@ -346,7 +346,7 @@ public final class WebUtils {
 				WebUtils.discardEntityBytes(response);
             	if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
             		// clear the cookies -- should not be necessary?
-            		Collect.getInstance().getCookieStore().clear();
+            		MyStatus.getInstance().getCookieStore().clear();
             	}
 				String webError = response.getStatusLine().getReasonPhrase()
 						+ " (" + statusCode + ")";

@@ -19,9 +19,9 @@ import java.io.File;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.widgets.QuestionWidget;
 
@@ -153,7 +153,7 @@ public class MediaLayout extends RelativeLayout {
 
                 @Override
                 public void onClick(View v) {
-                	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onClick", "playVideoPrompt"+mSelectionDesignator, mIndex);
+                	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onClick", "playVideoPrompt"+mSelectionDesignator, mIndex);
                 	MediaLayout.this.playVideo();
                 }
 
@@ -193,7 +193,7 @@ public class MediaLayout extends RelativeLayout {
 
                                 @Override
                                 public void onClick(View v) {
-                                	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onClick", "showImagePromptBigImage"+mSelectionDesignator, mIndex);
+                                	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onClick", "showImagePromptBigImage"+mSelectionDesignator, mIndex);
 
                                     Intent i = new Intent("android.intent.action.VIEW");
                                     i.setDataAndType(Uri.fromFile(bigImage), "image/*");

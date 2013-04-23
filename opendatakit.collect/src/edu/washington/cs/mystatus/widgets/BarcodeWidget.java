@@ -17,10 +17,10 @@ package edu.washington.cs.mystatus.widgets;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -66,13 +66,13 @@ public class BarcodeWidget extends QuestionWidget implements IBinaryWidget {
 		mGetBarcodeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "recordBarcode", "click",
 								mPrompt.getIndex());
 				Intent i = new Intent("com.google.zxing.client.android.SCAN");
 				try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
 					((Activity) getContext()).startActivityForResult(i,
 							FormEntryActivity.BARCODE_CAPTURE);
@@ -82,7 +82,7 @@ public class BarcodeWidget extends QuestionWidget implements IBinaryWidget {
 							getContext().getString(
 									R.string.barcode_scanner_error),
 							Toast.LENGTH_SHORT).show();
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(null);
 				}
 			}
@@ -127,7 +127,7 @@ public class BarcodeWidget extends QuestionWidget implements IBinaryWidget {
 	@Override
 	public void setBinaryData(Object answer) {
 		mStringAnswer.setText((String) answer);
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override
@@ -141,13 +141,13 @@ public class BarcodeWidget extends QuestionWidget implements IBinaryWidget {
 	@Override
 	public boolean isWaitingForBinaryData() {
 		return mPrompt.getIndex().equals(
-				Collect.getInstance().getFormController()
+				MyStatus.getInstance().getFormController()
 						.getIndexWaitingForData());
 	}
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override

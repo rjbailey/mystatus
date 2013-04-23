@@ -19,11 +19,11 @@ import java.io.File;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.DrawActivity;
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
@@ -67,7 +67,7 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
 		super(context, prompt);
 		
 		mInstanceFolder = 
-				Collect.getInstance().getFormController().getInstancePath().getParent();
+				MyStatus.getInstance().getFormController().getInstancePath().getParent();
 
 		setOrientation(LinearLayout.VERTICAL);
 		
@@ -90,7 +90,7 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
         mSignButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "signButton", "click",
 								mPrompt.getIndex());
@@ -139,7 +139,7 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   	Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewImage", 
+                   	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "viewImage", 
                 			"click", mPrompt.getIndex());
                    	launchSignatureActivity();
                 }
@@ -160,17 +160,17 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
         	i.putExtra(DrawActivity.REF_IMAGE, Uri.fromFile(f));
         }
     	i.putExtra(DrawActivity.EXTRA_OUTPUT, 
-    			Uri.fromFile(new File(Collect.TMPFILE_PATH)));
+    			Uri.fromFile(new File(MyStatus.TMPFILE_PATH)));
     	
     	try {
-	    	Collect.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
+	    	MyStatus.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
 	    	((Activity) getContext()).startActivityForResult(i, FormEntryActivity.SIGNATURE_CAPTURE);
     	}
     	catch (ActivityNotFoundException e) {
             Toast.makeText(getContext(),
                 getContext().getString(R.string.activity_not_found, "signature capture"),
                 Toast.LENGTH_SHORT).show();
-        	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+        	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
         }
 	}
 	
@@ -236,7 +236,7 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
             Log.e(t, "NO IMAGE EXISTS at: " + newImage.getAbsolutePath());
         }
 
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override
@@ -250,12 +250,12 @@ public class SignatureWidget extends QuestionWidget implements IBinaryWidget {
 
 	@Override
 	public boolean isWaitingForBinaryData() {
-		return mPrompt.getIndex().equals(Collect.getInstance().getFormController().getIndexWaitingForData());
+		return mPrompt.getIndex().equals(MyStatus.getInstance().getFormController().getIndexWaitingForData());
 	}
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 	
 	@Override

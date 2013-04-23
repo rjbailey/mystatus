@@ -18,7 +18,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.content.Context;
 import android.text.Editable;
@@ -113,7 +113,7 @@ public class StringWidget extends QuestionWidget {
 			@Override
 			public void afterTextChanged(Editable s) {
 				if (!s.toString().equals(oldText)) {
-					Collect.getInstance().getActivityLogger()
+					MyStatus.getInstance().getActivityLogger()
 						.logInstanceAction(this, "answerTextChanged", s.toString(),	getPrompt().getIndex());
 				}
 			}

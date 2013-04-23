@@ -16,9 +16,9 @@ package edu.washington.cs.mystatus.widgets;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -145,10 +145,10 @@ public class ExPrinterWidget extends QuestionWidget implements IBinaryWidget {
             @Override
             public void onClick(View v) {
                 try {
-                	Collect.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
                 	firePrintingActivity(intentName);
                 } catch (ActivityNotFoundException e) {
-                	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
                     Toast.makeText(getContext(),
                     		errorString, Toast.LENGTH_SHORT)
                             .show();
@@ -164,7 +164,7 @@ public class ExPrinterWidget extends QuestionWidget implements IBinaryWidget {
 
         String s = mPrompt.getAnswerText();
 
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchPrinter",
+       	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "launchPrinter",
        			intentName, mPrompt.getIndex());
        	Intent i = new Intent(intentName);
        	((Activity) getContext()).startActivity(i);
@@ -224,7 +224,7 @@ public class ExPrinterWidget extends QuestionWidget implements IBinaryWidget {
      */
     @Override
     public void setBinaryData(Object answer) {
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
     @Override
@@ -236,12 +236,12 @@ public class ExPrinterWidget extends QuestionWidget implements IBinaryWidget {
 
     @Override
     public boolean isWaitingForBinaryData() {
-        return mPrompt.getIndex().equals(Collect.getInstance().getFormController().getIndexWaitingForData());
+        return mPrompt.getIndex().equals(MyStatus.getInstance().getFormController().getIndexWaitingForData());
     }
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
     @Override

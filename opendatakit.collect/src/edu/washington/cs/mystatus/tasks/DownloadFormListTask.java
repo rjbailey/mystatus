@@ -18,9 +18,9 @@ import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormListDownloaderListener;
 import edu.washington.cs.mystatus.logic.FormDetails;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
@@ -63,23 +63,23 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
         SharedPreferences settings =
-            PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getBaseContext());
+            PreferenceManager.getDefaultSharedPreferences(MyStatus.getInstance().getBaseContext());
         String downloadListUrl =
             settings.getString(PreferencesActivity.KEY_SERVER_URL,
-                Collect.getInstance().getString(R.string.default_server_url));
+                MyStatus.getInstance().getString(R.string.default_server_url));
         // NOTE: /formlist must not be translated! It is the well-known path on the server.
-        String formListUrl = Collect.getInstance().getApplicationContext().getString(R.string.default_odk_formlist);
+        String formListUrl = MyStatus.getInstance().getApplicationContext().getString(R.string.default_odk_formlist);
         String downloadPath = settings.getString(PreferencesActivity.KEY_FORMLIST_URL, formListUrl);
         downloadListUrl += downloadPath;
 
-    	Collect.getInstance().getActivityLogger().logAction(this, formListUrl, downloadListUrl);
+    	MyStatus.getInstance().getActivityLogger().logAction(this, formListUrl, downloadListUrl);
 
         // We populate this with available forms from the specified server.
         // <formname, details>
         HashMap<String, FormDetails> formList = new HashMap<String, FormDetails>();
 
         // get shared HttpContext so that authentication and cookies are retained.
-        HttpContext localContext = Collect.getInstance().getHttpContext();
+        HttpContext localContext = MyStatus.getInstance().getHttpContext();
         HttpClient httpclient = WebUtils.createHttpClient(WebUtils.CONNECTION_TIMEOUT);
 
         DocumentFetchResult result =
@@ -103,7 +103,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
                 Log.e(t, "Parsing OpenRosa reply -- " + error);
                 formList.put(
                     DL_ERROR_MSG,
-                    new FormDetails(Collect.getInstance().getString(
+                    new FormDetails(MyStatus.getInstance().getString(
                         R.string.parse_openrosa_formlist_failed, error)));
                 return formList;
             }
@@ -113,7 +113,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
                 Log.e(t, "Parsing OpenRosa reply -- " + error);
                 formList.put(
                     DL_ERROR_MSG,
-                    new FormDetails(Collect.getInstance().getString(
+                    new FormDetails(MyStatus.getInstance().getString(
                         R.string.parse_openrosa_formlist_failed, error)));
                 return formList;
             }
@@ -200,7 +200,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
                     formList.clear();
                     formList.put(
                         DL_ERROR_MSG,
-                        new FormDetails(Collect.getInstance().getString(
+                        new FormDetails(MyStatus.getInstance().getString(
                             R.string.parse_openrosa_formlist_failed, error)));
                     return formList;
                 }
@@ -243,7 +243,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
                         formList.clear();
                         formList.put(
                             DL_ERROR_MSG,
-                            new FormDetails(Collect.getInstance().getString(
+                            new FormDetails(MyStatus.getInstance().getString(
                                 R.string.parse_legacy_formlist_failed, error)));
                         return formList;
                     }

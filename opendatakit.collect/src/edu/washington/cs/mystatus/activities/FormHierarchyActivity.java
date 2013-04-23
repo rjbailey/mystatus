@@ -18,10 +18,10 @@ import org.javarosa.core.model.FormIndex;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.adapters.HierarchyListAdapter;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.logic.HierarchyElement;
 
@@ -63,7 +63,7 @@ public class FormHierarchyActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hierarchy_layout);
 
-        FormController formController = Collect.getInstance().getFormController();
+        FormController formController = MyStatus.getInstance().getFormController();
         
         // We use a static FormEntryController to make jumping faster.
         mStartIndex = formController.getFormIndex();
@@ -77,7 +77,7 @@ public class FormHierarchyActivity extends ListActivity {
         jumpPreviousButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton", "click");
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton", "click");
                 goUpLevel();
             }
         });
@@ -86,8 +86,8 @@ public class FormHierarchyActivity extends ListActivity {
         jumpBeginningButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "jumpToBeginning", "click");
-                Collect.getInstance().getFormController().jumpToIndex(FormIndex
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "jumpToBeginning", "click");
+                MyStatus.getInstance().getFormController().jumpToIndex(FormIndex
                         .createBeginningOfFormIndex());
                 setResult(RESULT_OK);
                 finish();
@@ -98,8 +98,8 @@ public class FormHierarchyActivity extends ListActivity {
         jumpEndButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "jumpToEnd", "click");
-                Collect.getInstance().getFormController().jumpToIndex(FormIndex.createEndOfFormIndex());
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "jumpToEnd", "click");
+                MyStatus.getInstance().getFormController().jumpToIndex(FormIndex.createEndOfFormIndex());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -128,24 +128,24 @@ public class FormHierarchyActivity extends ListActivity {
     @Override
     protected void onStart() {
     	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStart(this); 
     }
     
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStop(this); 
     	super.onStop();
     }
 
     private void goUpLevel() {
-    	Collect.getInstance().getFormController().stepToOuterScreenEvent();
+    	MyStatus.getInstance().getFormController().stepToOuterScreenEvent();
 
         refreshView();
     }
 
 
     private String getCurrentPath() {
-    	FormController formController = Collect.getInstance().getFormController();
+    	FormController formController = MyStatus.getInstance().getFormController();
         FormIndex index = formController.getFormIndex();
         // move to enclosing group...
         index = formController.stepIndexOut(index);
@@ -167,7 +167,7 @@ public class FormHierarchyActivity extends ListActivity {
 
 
     public void refreshView() {
-    	FormController formController = Collect.getInstance().getFormController();
+    	FormController formController = MyStatus.getInstance().getFormController();
         // Record the current index so we can return to the same place if the user hits 'back'.
         FormIndex currentIndex = formController.getFormIndex();
 
@@ -330,7 +330,7 @@ public class FormHierarchyActivity extends ListActivity {
 
         switch (h.getType()) {
             case EXPANDED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "COLLAPSED", h.getFormIndex());
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "COLLAPSED", h.getFormIndex());
                 h.setType(COLLAPSED);
                 ArrayList<HierarchyElement> children = h.getChildren();
                 for (int i = 0; i < children.size(); i++) {
@@ -340,7 +340,7 @@ public class FormHierarchyActivity extends ListActivity {
                 h.setColor(Color.WHITE);
                 break;
             case COLLAPSED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "EXPANDED", h.getFormIndex());
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "EXPANDED", h.getFormIndex());
                 h.setType(EXPANDED);
                 ArrayList<HierarchyElement> children1 = h.getChildren();
                 for (int i = 0; i < children1.size(); i++) {
@@ -352,17 +352,17 @@ public class FormHierarchyActivity extends ListActivity {
                 h.setColor(Color.WHITE);
                 break;
             case QUESTION:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "QUESTION-JUMP", index);
-                Collect.getInstance().getFormController().jumpToIndex(index);
-            	if ( Collect.getInstance().getFormController().indexIsInFieldList() ) {
-            		Collect.getInstance().getFormController().stepToPreviousScreenEvent();
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "QUESTION-JUMP", index);
+                MyStatus.getInstance().getFormController().jumpToIndex(index);
+            	if ( MyStatus.getInstance().getFormController().indexIsInFieldList() ) {
+            		MyStatus.getInstance().getFormController().stepToPreviousScreenEvent();
             	}
                 setResult(RESULT_OK);
                 finish();
                 return;
             case CHILD:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "REPEAT-JUMP", h.getFormIndex());
-                Collect.getInstance().getFormController().jumpToIndex(h.getFormIndex());
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick", "REPEAT-JUMP", h.getFormIndex());
+                MyStatus.getInstance().getFormController().jumpToIndex(h.getFormIndex());
                 setResult(RESULT_OK);
                 refreshView();
                 return;
@@ -380,8 +380,8 @@ public class FormHierarchyActivity extends ListActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onKeyDown", "KEYCODE_BACK.JUMP", mStartIndex);
-                Collect.getInstance().getFormController().jumpToIndex(mStartIndex);
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onKeyDown", "KEYCODE_BACK.JUMP", mStartIndex);
+                MyStatus.getInstance().getFormController().jumpToIndex(mStartIndex);
         }
         return super.onKeyDown(keyCode, event);
     }

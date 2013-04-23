@@ -25,9 +25,9 @@ import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.AdvanceToNextListener;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.views.ExpandedHeightGridView;
@@ -289,7 +289,7 @@ public class GridWidget extends QuestionWidget {
                     }
                 }
                 selected[position] = true;
-               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select",
+               	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select",
             			mItems.get(position).getValue(), mPrompt.getIndex());
                 imageViews[position].setBackgroundColor(Color.rgb(orangeRedVal, orangeGreenVal,
                     orangeBlueVal));

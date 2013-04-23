@@ -48,7 +48,7 @@ import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.logic.FormController.InstanceMetadata;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
@@ -279,7 +279,7 @@ public class EncryptionUtils {
 	 */
 	public static EncryptedFormInformation getEncryptedFormInformation(Uri mUri, InstanceMetadata instanceMetadata) {
 		
-		ContentResolver cr = Collect.getInstance().getContentResolver();
+		ContentResolver cr = MyStatus.getInstance().getContentResolver();
 		
 		// fetch the form information
 		String formId;

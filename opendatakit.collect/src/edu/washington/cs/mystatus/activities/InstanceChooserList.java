@@ -14,9 +14,9 @@
 
 package edu.washington.cs.mystatus.activities;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 
@@ -51,7 +51,7 @@ public class InstanceChooserList extends ListActivity {
         
         // must be at the beginning of any activity that can be called from an external intent
         try {
-            Collect.createODKDirs();
+            MyStatus.createODKDirs();
         } catch (RuntimeException e) {
             createErrorDialog(e.getMessage(), EXIT);
             return;
@@ -98,7 +98,7 @@ public class InstanceChooserList extends ListActivity {
             ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
                 c.getLong(c.getColumnIndex(InstanceColumns._ID)));
 
-        Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", instanceUri.toString());
+        MyStatus.getInstance().getActivityLogger().logAction(this, "onListItemClick", instanceUri.toString());
 
         String action = getIntent().getAction();
         if (Intent.ACTION_PICK.equals(action)) {
@@ -128,17 +128,17 @@ public class InstanceChooserList extends ListActivity {
     @Override
     protected void onStart() {
     	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStart(this); 
     }
     
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStop(this); 
     	super.onStop();
     }
     
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
+        MyStatus.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
 
         mAlertDialog = new AlertDialog.Builder(this).create();
         mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
@@ -148,7 +148,7 @@ public class InstanceChooserList extends ListActivity {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON1:
-                        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", 
+                        MyStatus.getInstance().getActivityLogger().logAction(this, "createErrorDialog", 
                         		shouldExit ? "exitApplication" : "OK");
                         if (shouldExit) {
                             finish();

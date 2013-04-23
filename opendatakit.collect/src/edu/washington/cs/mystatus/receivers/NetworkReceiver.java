@@ -40,7 +40,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
 					uploadForms(context);
 				}
 			}
-		} else if (action.equals("org.odk.collect.android.FormSaved")) {
+		} else if (action.equals("edu.washington.cs.mystatus.FormSaved")) {
 			ConnectivityManager connectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo ni = connectivityManager.getActiveNetworkInfo();

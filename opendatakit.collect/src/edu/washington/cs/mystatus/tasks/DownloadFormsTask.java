@@ -29,14 +29,14 @@ import java.util.List;
 
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 import org.opendatakit.httpclientandroidlib.HttpResponse;
 import org.opendatakit.httpclientandroidlib.HttpStatus;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
 import edu.washington.cs.mystatus.logic.FormDetails;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
@@ -81,7 +81,7 @@ public class DownloadFormsTask extends
 
         int total = toDownload.size();
         int count = 1;
-    	Collect.getInstance().getActivityLogger().logAction(this, "downloadForms", String.valueOf(total));
+    	MyStatus.getInstance().getActivityLogger().logAction(this, "downloadForms", String.valueOf(total));
 
         HashMap<FormDetails, String> result = new HashMap<FormDetails, String>();
 
@@ -107,7 +107,7 @@ public class DownloadFormsTask extends
                         dl.getAbsolutePath()
                     };
                     String selection = FormsColumns.FORM_FILE_PATH + "=?";
-                    alreadyExists = Collect.getInstance()
+                    alreadyExists = MyStatus.getInstance()
                             .getContentResolver()
                             .query(FormsColumns.CONTENT_URI, projection, selection, selectionArgs,
                                 null);
@@ -124,16 +124,16 @@ public class DownloadFormsTask extends
 	                    v.put(FormsColumns.SUBMISSION_URI, formInfo.get(FileUtils.SUBMISSIONURI));
 	                    v.put(FormsColumns.BASE64_RSA_PUBLIC_KEY, formInfo.get(FileUtils.BASE64_RSA_PUBLIC_KEY));
 	                    uri =
-	                        Collect.getInstance().getContentResolver()
+	                        MyStatus.getInstance().getContentResolver()
 	                                .insert(FormsColumns.CONTENT_URI, v);
-	                	Collect.getInstance().getActivityLogger().logAction(this, "insert", dl.getAbsolutePath());
+	                	MyStatus.getInstance().getActivityLogger().logAction(this, "insert", dl.getAbsolutePath());
 
 	                } else {
 	                    alreadyExists.moveToFirst();
 	                    uri =
 	                        Uri.withAppendedPath(FormsColumns.CONTENT_URI,
 	                            alreadyExists.getString(alreadyExists.getColumnIndex(FormsColumns._ID)));
-	                	Collect.getInstance().getActivityLogger().logAction(this, "refresh", dl.getAbsolutePath());
+	                	MyStatus.getInstance().getActivityLogger().logAction(this, "refresh", dl.getAbsolutePath());
 	                }
                 } finally {
                 	if ( alreadyExists != null ) {
@@ -145,7 +145,7 @@ public class DownloadFormsTask extends
                 	String formMediaPath = null;
                 	Cursor c = null;
                 	try {
-                		c = Collect.getInstance().getContentResolver()
+                		c = MyStatus.getInstance().getContentResolver()
                                 .query(uri, null, null, null, null);
 	                    if (c.getCount() > 0) {
 	                        // should be exactly 1
@@ -182,7 +182,7 @@ public class DownloadFormsTask extends
             }
             count++;
             if (message.equalsIgnoreCase("")) {
-                message = Collect.getInstance().getString(R.string.success);
+                message = MyStatus.getInstance().getString(R.string.success);
             }
             result.put(fd, message);
         }
@@ -209,11 +209,11 @@ public class DownloadFormsTask extends
         rootName = rootName.trim();
 
         // proposed name of xml file...
-        String path = Collect.FORMS_PATH + File.separator + rootName + ".xml";
+        String path = MyStatus.FORMS_PATH + File.separator + rootName + ".xml";
         int i = 2;
         f = new File(path);
         while (f.exists()) {
-            path = Collect.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
+            path = MyStatus.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
             f = new File(path);
             i++;
         }
@@ -232,7 +232,7 @@ public class DownloadFormsTask extends
 
         Cursor c = null;
         try {
-        	c = Collect.getInstance().getContentResolver()
+        	c = MyStatus.getInstance().getContentResolver()
                     .query(FormsColumns.CONTENT_URI, projection, selection, selectionArgs, null);
 	        if (c.getCount() > 0) {
 	            // Should be at most, 1
@@ -284,7 +284,7 @@ public class DownloadFormsTask extends
         final int MAX_ATTEMPT_COUNT = 2;
         while ( !success && ++attemptCount <= MAX_ATTEMPT_COUNT ) {
 	        // get shared HttpContext so that authentication and cookies are retained.
-	        HttpContext localContext = Collect.getInstance().getHttpContext();
+	        HttpContext localContext = MyStatus.getInstance().getHttpContext();
 	
 	        HttpClient httpclient = WebUtils.createHttpClient(WebUtils.CONNECTION_TIMEOUT);
 	
@@ -300,10 +300,10 @@ public class DownloadFormsTask extends
 	            	WebUtils.discardEntityBytes(response);
 	            	if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
 	            		// clear the cookies -- should not be necessary?
-	            		Collect.getInstance().getCookieStore().clear();
+	            		MyStatus.getInstance().getCookieStore().clear();
 	            	}
 	                String errMsg =
-	                    Collect.getInstance().getString(R.string.file_fetch_failed, downloadUrl,
+	                    MyStatus.getInstance().getString(R.string.file_fetch_failed, downloadUrl,
 	                        response.getStatusLine().getReasonPhrase(), statusCode);
 	                Log.e(t, errMsg);
 	                throw new Exception(errMsg);
@@ -376,12 +376,12 @@ public class DownloadFormsTask extends
         if (fd.manifestUrl == null)
             return null;
 
-        publishProgress(Collect.getInstance().getString(R.string.fetching_manifest, fd.formName),
+        publishProgress(MyStatus.getInstance().getString(R.string.fetching_manifest, fd.formName),
             Integer.valueOf(count).toString(), Integer.valueOf(total).toString());
 
         List<MediaFile> files = new ArrayList<MediaFile>();
         // get shared HttpContext so that authentication and cookies are retained.
-        HttpContext localContext = Collect.getInstance().getHttpContext();
+        HttpContext localContext = MyStatus.getInstance().getHttpContext();
 
         HttpClient httpclient = WebUtils.createHttpClient(WebUtils.CONNECTION_TIMEOUT);
 
@@ -392,10 +392,10 @@ public class DownloadFormsTask extends
             return result.errorMessage;
         }
 
-        String errMessage = Collect.getInstance().getString(R.string.access_error, fd.manifestUrl);
+        String errMessage = MyStatus.getInstance().getString(R.string.access_error, fd.manifestUrl);
 
         if (!result.isOpenRosaResponse) {
-            errMessage += Collect.getInstance().getString(R.string.manifest_server_error);
+            errMessage += MyStatus.getInstance().getString(R.string.manifest_server_error);
             Log.e(t, errMessage);
             return errMessage;
         }
@@ -404,14 +404,14 @@ public class DownloadFormsTask extends
         Element manifestElement = result.doc.getRootElement();
         if (!manifestElement.getName().equals("manifest")) {
             errMessage +=
-                Collect.getInstance().getString(R.string.root_element_error,
+                MyStatus.getInstance().getString(R.string.root_element_error,
                     manifestElement.getName());
             Log.e(t, errMessage);
             return errMessage;
         }
         String namespace = manifestElement.getNamespace();
         if (!isXformsManifestNamespacedElement(manifestElement)) {
-            errMessage += Collect.getInstance().getString(R.string.root_namespace_error, namespace);
+            errMessage += MyStatus.getInstance().getString(R.string.root_namespace_error, namespace);
             Log.e(t, errMessage);
             return errMessage;
         }
@@ -463,7 +463,7 @@ public class DownloadFormsTask extends
                 }
                 if (filename == null || downloadUrl == null || hash == null) {
                     errMessage +=
-                        Collect.getInstance().getString(R.string.manifest_tag_error,
+                        MyStatus.getInstance().getString(R.string.manifest_tag_error,
                             Integer.toString(i));
                     Log.e(t, errMessage);
                     return errMessage;
@@ -484,7 +484,7 @@ public class DownloadFormsTask extends
                 }
                 ++mediaCount;
                 publishProgress(
-                    Collect.getInstance().getString(R.string.form_download_progress, fd.formName,
+                    MyStatus.getInstance().getString(R.string.form_download_progress, fd.formName,
                         mediaCount, files.size()), Integer.valueOf(count).toString(), Integer
                             .valueOf(total).toString());
                 try {

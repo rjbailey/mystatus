@@ -19,12 +19,12 @@ import java.text.DecimalFormat;
 import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
 import edu.washington.cs.mystatus.activities.GeoPointActivity;
 import edu.washington.cs.mystatus.activities.GeoPointMapActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -101,7 +101,7 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
 		mViewButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "showLocation", "click",
 								mPrompt.getIndex());
@@ -155,7 +155,7 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
 		mGetLocationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "recordLocation", "click",
 								mPrompt.getIndex());
@@ -166,7 +166,7 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
 					i = new Intent(getContext(), GeoPointActivity.class);
 				}
 				i.putExtra(ACCURACY_THRESHOLD, mAccuracyThreshold);
-				Collect.getInstance().getFormController()
+				MyStatus.getInstance().getFormController()
 						.setIndexWaitingForData(mPrompt.getIndex());
 				((Activity) getContext()).startActivityForResult(i,
 						FormEntryActivity.LOCATION_CAPTURE);
@@ -269,19 +269,19 @@ public class GeoPointWidget extends QuestionWidget implements IBinaryWidget {
 				+ truncateDouble(sa[2]) + "m\n"
 				+ getContext().getString(R.string.accuracy) + ": "
 				+ truncateDouble(sa[3]) + "m");
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override
 	public boolean isWaitingForBinaryData() {
 		return mPrompt.getIndex().equals(
-				Collect.getInstance().getFormController()
+				MyStatus.getInstance().getFormController()
 						.getIndexWaitingForData());
 	}
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override

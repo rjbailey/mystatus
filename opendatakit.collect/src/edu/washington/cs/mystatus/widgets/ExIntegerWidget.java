@@ -19,7 +19,7 @@ import org.javarosa.core.model.data.IntegerData;
 import org.javarosa.form.api.FormEntryPrompt;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -80,7 +80,7 @@ public class ExIntegerWidget extends ExStringWidget {
 
     @Override
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
+       	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
     			i.getAction(), mPrompt.getIndex());
         ((Activity) getContext()).startActivityForResult(i,
                 FormEntryActivity.EX_INT_CAPTURE);
@@ -108,7 +108,7 @@ public class ExIntegerWidget extends ExStringWidget {
     @Override
     public void setBinaryData(Object answer) {
     	mAnswer.setText( answer == null ? null : ((Integer) answer).toString());
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
 }

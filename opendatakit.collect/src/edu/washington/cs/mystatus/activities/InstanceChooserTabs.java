@@ -14,9 +14,9 @@
 
 package edu.washington.cs.mystatus.activities;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -68,7 +68,7 @@ public class InstanceChooserTabs extends TabActivity {
         LinearLayout ll = (LinearLayout) tabHost.getChildAt(0);
         TabWidget tw = (TabWidget) ll.getChildAt(0);
 
-        int fontsize = Collect.getQuestionFontsize();
+        int fontsize = MyStatus.getQuestionFontsize();
 
         RelativeLayout rls = (RelativeLayout) tw.getChildAt(0);
         TextView tvs = (TextView) rls.getChildAt(1);

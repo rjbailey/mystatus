@@ -21,7 +21,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -90,7 +90,7 @@ public class ExDecimalWidget extends ExStringWidget {
 
     @Override
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
+       	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
     			i.getAction(), mPrompt.getIndex());
         ((Activity) getContext()).startActivityForResult(i,
                 FormEntryActivity.EX_DECIMAL_CAPTURE);
@@ -118,7 +118,7 @@ public class ExDecimalWidget extends ExStringWidget {
     @Override
     public void setBinaryData(Object answer) {
     	mAnswer.setText( answer == null ? null : ((Double) answer).toString());
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
 }

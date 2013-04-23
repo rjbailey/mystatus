@@ -19,10 +19,10 @@ import java.io.File;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
@@ -71,7 +71,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         super(context, prompt);
 
         mInstanceFolder =
-                Collect.getInstance().getFormController().getInstancePath().getParent();
+                MyStatus.getInstance().getFormController().getInstancePath().getParent();
 
         setOrientation(LinearLayout.VERTICAL);
 
@@ -95,7 +95,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "captureButton", 
+               	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "captureButton", 
             			"click", mPrompt.getIndex());
                 mErrorTextView.setVisibility(View.GONE);
                 Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -110,16 +110,16 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
                 // if this gets modified, the onActivityResult in
                 // FormEntyActivity will also need to be updated.
                 i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(Collect.TMPFILE_PATH)));
+                    Uri.fromFile(new File(MyStatus.TMPFILE_PATH)));
                 try {
-                	Collect.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
                     ((Activity) getContext()).startActivityForResult(i,
                         FormEntryActivity.IMAGE_CAPTURE);
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(getContext(),
                         getContext().getString(R.string.activity_not_found, "image capture"),
                         Toast.LENGTH_SHORT).show();
-                	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
                 }
 
             }
@@ -138,14 +138,14 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         mChooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "chooseButton", 
+               	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "chooseButton", 
             			"click", mPrompt.getIndex());
                 mErrorTextView.setVisibility(View.GONE);
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.setType("image/*");
 
                 try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
                     ((Activity) getContext()).startActivityForResult(i,
                         FormEntryActivity.IMAGE_CHOOSER);
@@ -153,7 +153,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
                     Toast.makeText(getContext(),
                         getContext().getString(R.string.activity_not_found, "choose image"),
                         Toast.LENGTH_SHORT).show();
-                	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
                 }
 
             }
@@ -201,7 +201,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   	Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewButton", 
+                   	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "viewButton", 
                 			"click", mPrompt.getIndex());
                     Intent i = new Intent("android.intent.action.VIEW");
                     Uri uri = MediaUtils.getImageUriFromMediaProvider(mInstanceFolder + File.separator + mBinaryName);
@@ -286,7 +286,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
             Log.e(t, "NO IMAGE EXISTS at: " + newImage.getAbsolutePath());
         }
 
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
     @Override
@@ -300,13 +300,13 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
 
     @Override
     public boolean isWaitingForBinaryData() {
-    	return mPrompt.getIndex().equals(Collect.getInstance().getFormController().getIndexWaitingForData());
+    	return mPrompt.getIndex().equals(MyStatus.getInstance().getFormController().getIndexWaitingForData());
     }
 
 
     @Override
 	public void cancelWaitingForBinaryData() {
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 

@@ -14,7 +14,7 @@
 
 package edu.washington.cs.mystatus.utilities;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import android.content.Context;
 import android.database.Cursor;

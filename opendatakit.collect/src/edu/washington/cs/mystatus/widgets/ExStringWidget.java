@@ -17,10 +17,10 @@ package edu.washington.cs.mystatus.widgets;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -148,7 +148,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
             public void onClick(View v) {
                 Intent i = new Intent(intentName);
                 try {
-                	Collect.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(mPrompt.getIndex());
                 	fireActivity(i);
                 } catch (ActivityNotFoundException e) {
                     mHasExApp = false;
@@ -160,7 +160,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
                     }
                     mLaunchIntentButton.setEnabled(false);
                     mLaunchIntentButton.setFocusable(false);
-                	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+                	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
                     Toast.makeText(getContext(),
                     		errorString, Toast.LENGTH_SHORT)
                             .show();
@@ -175,7 +175,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
+       	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent", 
     			i.getAction(), mPrompt.getIndex());
         ((Activity) getContext()).startActivityForResult(i,
                 FormEntryActivity.EX_STRING_CAPTURE);
@@ -204,7 +204,7 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
     @Override
     public void setBinaryData(Object answer) {
     	mAnswer.setText((String) answer);
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
     }
 
     @Override
@@ -239,12 +239,12 @@ public class ExStringWidget extends QuestionWidget implements IBinaryWidget {
 
     @Override
     public boolean isWaitingForBinaryData() {
-        return mPrompt.getIndex().equals(Collect.getInstance().getFormController().getIndexWaitingForData());
+        return mPrompt.getIndex().equals(MyStatus.getInstance().getFormController().getIndexWaitingForData());
     }
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-    	Collect.getInstance().getFormController().setIndexWaitingForData(null);
+    	MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
     @Override

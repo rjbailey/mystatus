@@ -23,7 +23,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.widgets.IBinaryWidget;
 import edu.washington.cs.mystatus.widgets.QuestionWidget;
 import edu.washington.cs.mystatus.widgets.WidgetFactory;
@@ -137,7 +137,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
     }
     
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-    	Collect.getInstance().getActivityLogger().logScrollAction(this, t - oldt);
+    	MyStatus.getInstance().getActivityLogger().logScrollAction(this, t - oldt);
     }
 
     /**
@@ -184,7 +184,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         if (s.length() > 0) {
             TextView tv = new TextView(getContext());
             tv.setText(s.substring(0, s.length() - 3));
-            int questionFontsize = Collect.getQuestionFontsize();
+            int questionFontsize = MyStatus.getQuestionFontsize();
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionFontsize - 4);
             tv.setPadding(0, 0, 0, 5);
             mView.addView(tv, mLayout);

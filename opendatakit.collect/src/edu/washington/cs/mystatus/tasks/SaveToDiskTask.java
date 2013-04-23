@@ -23,7 +23,7 @@ import org.javarosa.core.model.FormDef;
 import org.javarosa.core.services.transport.payload.ByteArrayPayload;
 import org.javarosa.form.api.FormEntryController;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormSavedListener;
 import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
@@ -75,7 +75,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
     @Override
     protected Integer doInBackground(Void... nothing) {
 
-        FormController formController = Collect.getInstance().getFormController();
+        FormController formController = MyStatus.getInstance().getFormController();
 
         // validation failed, pass specific failure
         int validateStatus = formController.validateAnswers(mMarkCompleted);
@@ -87,7 +87,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
         	formController.postProcessInstance();
         }
 
-    	Collect.getInstance().getActivityLogger().logInstanceAction(this, "save", Boolean.toString(mMarkCompleted));
+    	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "save", Boolean.toString(mMarkCompleted));
 
     	// if there is a meta/instanceName field, be sure we are using the latest value
     	// just in case the validate somehow triggered an update.
@@ -114,7 +114,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
 
     private void updateInstanceDatabase(boolean incomplete, boolean canEditAfterCompleted) {
 
-        FormController formController = Collect.getInstance().getFormController();
+        FormController formController = MyStatus.getInstance().getFormController();
 
         // Update the instance database...
         ContentValues values = new ContentValues();
@@ -130,8 +130,8 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
         values.put(InstanceColumns.CAN_EDIT_WHEN_COMPLETE, Boolean.toString(canEditAfterCompleted));
 
         // If FormEntryActivity was started with an Instance, just update that instance
-        if (Collect.getInstance().getContentResolver().getType(mUri) == InstanceColumns.CONTENT_ITEM_TYPE) {
-            int updated = Collect.getInstance().getContentResolver().update(mUri, values, null, null);
+        if (MyStatus.getInstance().getContentResolver().getType(mUri) == InstanceColumns.CONTENT_ITEM_TYPE) {
+            int updated = MyStatus.getInstance().getContentResolver().update(mUri, values, null, null);
             if (updated > 1) {
                 Log.w(t, "Updated more than one entry, that's not good: " + mUri.toString());
             } else if (updated == 1) {
@@ -139,7 +139,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
             } else {
             	Log.e(t, "Instance doesn't exist but we have its Uri!! " + mUri.toString());
             }
-        } else if (Collect.getInstance().getContentResolver().getType(mUri) == FormsColumns.CONTENT_ITEM_TYPE) {
+        } else if (MyStatus.getInstance().getContentResolver().getType(mUri) == FormsColumns.CONTENT_ITEM_TYPE) {
             // If FormEntryActivity was started with a form, then it's likely the first time we're
             // saving.
             // However, it could be a not-first time saving if the user has been using the manual
@@ -151,7 +151,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
             		instancePath
             };
             int updated =
-                Collect.getInstance().getContentResolver()
+                MyStatus.getInstance().getContentResolver()
                         .update(InstanceColumns.CONTENT_URI, values, where, whereArgs);
             if (updated > 1) {
                 Log.w(t, "Updated more than one entry, that's not good: " + instancePath);
@@ -164,7 +164,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
                 Cursor c = null;
                 try {
                 	// retrieve the form definition...
-                	c = Collect.getInstance().getContentResolver().query(mUri, null, null, null, null);
+                	c = MyStatus.getInstance().getContentResolver().query(mUri, null, null, null, null);
 	                c.moveToFirst();
 	                String jrformid = c.getString(c.getColumnIndex(FormsColumns.JR_FORM_ID));
 	                String jrversion = c.getString(c.getColumnIndex(FormsColumns.JR_VERSION));
@@ -189,7 +189,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
                 		c.close();
                 	}
                 }
-                mUri = Collect.getInstance().getContentResolver()
+                mUri = MyStatus.getInstance().getContentResolver()
                 			.insert(InstanceColumns.CONTENT_URI, values);
             }
         }
@@ -202,7 +202,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
      * @return
      */
     public static File savepointFile(File instancePath) {
-        File tempDir = new File(Collect.CACHE_PATH);
+        File tempDir = new File(MyStatus.CACHE_PATH);
         File temp = new File(tempDir, instancePath.getName() + ".save");
         return temp;
     }
@@ -215,7 +215,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
      * @return
      */
     public static String blockingExportTempData() {
-        FormController formController = Collect.getInstance().getFormController();
+        FormController formController = MyStatus.getInstance().getFormController();
 
         long start = System.currentTimeMillis();
         File temp = savepointFile(formController.getInstancePath());
@@ -245,7 +245,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
      * @return
      */
     private boolean exportData(boolean markCompleted) {
-        FormController formController = Collect.getInstance().getFormController();
+        FormController formController = MyStatus.getInstance().getFormController();
 
         ByteArrayPayload payload;
         try {

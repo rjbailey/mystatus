@@ -17,7 +17,7 @@ package edu.washington.cs.mystatus.activities;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +44,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.InfoLogger;
 import edu.washington.cs.mystatus.widgets.GeoPointWidget;
 
@@ -119,7 +119,7 @@ public class GeoPointMapActivity extends MapActivity implements LocationListener
 
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "cancelLocation", "cancel");
+                MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "cancelLocation", "cancel");
                 finish();
             }
         });
@@ -185,7 +185,7 @@ public class GeoPointMapActivity extends MapActivity implements LocationListener
 
                 @Override
                 public void onClick(View v) {
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this, "acceptLocation", "OK");
+                    MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "acceptLocation", "OK");
                     returnLocation();
                 }
             });
@@ -203,7 +203,7 @@ public class GeoPointMapActivity extends MapActivity implements LocationListener
 
                 @Override
                 public void onClick(View v) {
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this, "showLocation", "onClick");
+                    MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "showLocation", "onClick");
                     mMapController.animateTo(mGeoPoint);
                 }
             });
@@ -214,12 +214,12 @@ public class GeoPointMapActivity extends MapActivity implements LocationListener
     @Override
     protected void onStart() {
     	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this);
+		MyStatus.getInstance().getActivityLogger().logOnStart(this);
     }
 
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this);
+		MyStatus.getInstance().getActivityLogger().logOnStop(this);
     	super.onStop();
     }
 

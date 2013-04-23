@@ -20,9 +20,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -96,7 +96,7 @@ public class AdminPreferencesActivity extends PreferenceActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case SAVE_PREFS_MENU:
-			File writeDir = new File(Collect.ODK_ROOT + "/settings");
+			File writeDir = new File(MyStatus.ODK_ROOT + "/settings");
 			if (!writeDir.exists()) {
 				if (!writeDir.mkdirs()) {
 					Toast.makeText(

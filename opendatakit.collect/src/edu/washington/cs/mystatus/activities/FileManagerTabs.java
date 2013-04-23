@@ -14,9 +14,9 @@
 
 package edu.washington.cs.mystatus.activities;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -63,7 +63,7 @@ public class FileManagerTabs extends TabActivity {
         LinearLayout ll = (LinearLayout) tabHost.getChildAt(0);
         TabWidget tw = (TabWidget) ll.getChildAt(0);
 
-        int fontsize = Collect.getQuestionFontsize();
+        int fontsize = MyStatus.getQuestionFontsize();
         
         RelativeLayout rllf = (RelativeLayout) tw.getChildAt(0);
         mTVFF = (TextView) rllf.getChildAt(1);
@@ -79,12 +79,12 @@ public class FileManagerTabs extends TabActivity {
     @Override
     protected void onStart() {
     	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStart(this); 
     }
     
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this); 
+		MyStatus.getInstance().getActivityLogger().logOnStop(this); 
     	super.onStop();
     }
 

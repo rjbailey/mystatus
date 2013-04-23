@@ -20,9 +20,9 @@ import java.io.IOException;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -63,7 +63,7 @@ public class AudioButton extends ImageButton implements OnClickListener {
             player = null;
         }
         public void playAudio(Context c) {
-        	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onClick.playAudioPrompt", selectionDesignator, index);
+        	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onClick.playAudioPrompt", selectionDesignator, index);
             if (URI == null) {
                 // No audio file specified
                 Log.e(t, "No audio file was specified");

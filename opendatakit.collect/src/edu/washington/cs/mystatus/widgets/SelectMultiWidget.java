@@ -21,7 +21,7 @@ import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.views.MediaLayout;
 
 import android.content.Context;
@@ -89,11 +89,11 @@ public class SelectMultiWidget extends QuestionWidget {
                         if (!mCheckboxInit && mPrompt.isReadOnly()) {
                             if (buttonView.isChecked()) {
                                 buttonView.setChecked(false);
-                               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.deselect", 
+                               	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.deselect", 
                             			mItems.get((Integer)buttonView.getTag()).getValue(), mPrompt.getIndex());
                             } else {
                                 buttonView.setChecked(true);
-                               	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select", 
+                               	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onItemClick.select", 
                             			mItems.get((Integer)buttonView.getTag()).getValue(), mPrompt.getIndex());
                             }
                         }

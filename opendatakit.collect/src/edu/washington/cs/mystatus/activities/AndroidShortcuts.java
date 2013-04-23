@@ -16,7 +16,7 @@ package edu.washington.cs.mystatus.activities;
 
 import java.util.ArrayList;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 

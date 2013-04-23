@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 public class PasswordDialogPreference extends DialogPreference implements
         OnClickListener {
@@ -55,19 +55,19 @@ public class PasswordDialogPreference extends DialogPreference implements
                     Toast.makeText(PasswordDialogPreference.this.getContext(),
                             R.string.admin_password_changed, Toast.LENGTH_SHORT).show();
                     PasswordDialogPreference.this.getDialog().dismiss();
-                    Collect.getInstance().getActivityLogger()
+                    MyStatus.getInstance().getActivityLogger()
                             .logAction(this, "AdminPasswordDialog", "CHANGED");
                 } else if (pw.equalsIgnoreCase("") && ver.equalsIgnoreCase("")) {
                     persistString("");
                     Toast.makeText(PasswordDialogPreference.this.getContext(),
                             R.string.admin_password_disabled, Toast.LENGTH_SHORT).show();
                     PasswordDialogPreference.this.getDialog().dismiss();
-                    Collect.getInstance().getActivityLogger()
+                    MyStatus.getInstance().getActivityLogger()
                             .logAction(this, "AdminPasswordDialog", "DISABLED");
                 } else {
                     Toast.makeText(PasswordDialogPreference.this.getContext(),
                             R.string.admin_password_mismatch, Toast.LENGTH_SHORT).show();
-                    Collect.getInstance().getActivityLogger()
+                    MyStatus.getInstance().getActivityLogger()
                             .logAction(this, "AdminPasswordDialog", "MISMATCH");
                 }
             }
@@ -79,7 +79,7 @@ public class PasswordDialogPreference extends DialogPreference implements
             @Override
             public void onClick(View v) {
                 PasswordDialogPreference.this.getDialog().dismiss();
-                Collect.getInstance().getActivityLogger()
+                MyStatus.getInstance().getActivityLogger()
                         .logAction(this, "AdminPasswordDialog", "CANCELLED");
             }
 

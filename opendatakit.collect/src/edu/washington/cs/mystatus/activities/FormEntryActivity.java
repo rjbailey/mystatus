@@ -28,9 +28,9 @@ import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.xpath.XPathTypeMismatchException;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.AdvanceToNextListener;
 import edu.washington.cs.mystatus.listeners.FormLoaderListener;
 import edu.washington.cs.mystatus.listeners.FormSavedListener;
@@ -208,7 +208,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		// must be at the beginning of any activity that can be called from an
 		// external intent
 		try {
-			Collect.createODKDirs();
+			MyStatus.createODKDirs();
 		} catch (RuntimeException e) {
 			createErrorDialog(e.getMessage(), EXIT);
 			return;
@@ -298,7 +298,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			mSaveToDiskTask = (SaveToDiskTask) data;
 		} else if (data == null) {
 			if (!newForm) {
-				if (Collect.getInstance().getFormController() != null) {
+				if (MyStatus.getInstance().getFormController() != null) {
 					refreshCurrentView();
 				} else {
 					Log.w(t, "Reloading form and restoring state.");
@@ -306,7 +306,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					// controller...
 					mFormLoaderTask = new FormLoaderTask(instancePath,
 							startingXPath, waitingXPath);
-					Collect.getInstance().getActivityLogger()
+					MyStatus.getInstance().getActivityLogger()
 							.logAction(this, "formReloaded", mFormPath);
 					// TODO: this doesn' work (dialog does not get removed):
 					// showDialog(PROGRESS_DIALOG);
@@ -317,7 +317,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			}
 
 			// Not a restart from a screen orientation change (or other).
-			Collect.getInstance().setFormController(null);
+			MyStatus.getInstance().setFormController(null);
 
 			Intent intent = getIntent();
 			if (intent != null) {
@@ -340,7 +340,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 								instancePath = instanceCursor
 										.getString(instanceCursor
 												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logAction(this, "instanceLoaded",
 												instancePath);
@@ -447,7 +447,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 									mFormPath.lastIndexOf('.'))
 									+ "_";
 							final String fileSuffix = ".xml.save";
-							File cacheDir = new File(Collect.CACHE_PATH);
+							File cacheDir = new File(MyStatus.CACHE_PATH);
 							File[] files = cacheDir.listFiles(new FileFilter() {
 								@Override
 								public boolean accept(File pathname) {
@@ -467,7 +467,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 												candidate.getName().length()
 														- fileSuffix.length());
 								File instanceDir = new File(
-										Collect.INSTANCES_PATH + File.separator
+										MyStatus.INSTANCES_PATH + File.separator
 												+ instanceDirName);
 								File instanceFile = new File(instanceDir,
 										instanceDirName + ".xml");
@@ -493,7 +493,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				}
 
 				mFormLoaderTask = new FormLoaderTask(instancePath, null, null);
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "formLoaded", mFormPath);
 				showDialog(PROGRESS_DIALOG);
 				// show dialog before we execute...
@@ -506,7 +506,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_FORMPATH, mFormPath);
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		if (formController != null) {
 			outState.putString(KEY_INSTANCEPATH, formController
@@ -529,7 +529,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		if (formController == null) {
 			// we must be in the midst of a reload of the FormController.
@@ -587,7 +587,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			 */
 			// The intent is empty, but we know we saved the image to the temp
 			// file
-			File fi = new File(Collect.TMPFILE_PATH);
+			File fi = new File(MyStatus.TMPFILE_PATH);
 			String mInstanceFolder = formController.getInstancePath()
 					.getParent();
 			String s = mInstanceFolder + File.separator
@@ -681,7 +681,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * changes, so they're resynchronized here.
 	 */
 	public void refreshCurrentView() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		int event = formController.getEvent();
 
@@ -705,9 +705,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "onPrepareOptionsMenu", "show");
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 
 		menu.removeItem(MENU_LANGUAGES);
@@ -745,18 +745,18 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		switch (item.getItemId()) {
 		case MENU_LANGUAGES:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onOptionsItemSelected",
 							"MENU_LANGUAGES");
 			createLanguageDialog();
 			return true;
 		case MENU_SAVE:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onOptionsItemSelected",
 							"MENU_SAVE");
@@ -764,7 +764,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			saveDataToDisk(DO_NOT_EXIT, isInstanceComplete(false), null);
 			return true;
 		case MENU_HIERARCHY_VIEW:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onOptionsItemSelected",
 							"MENU_HIERARCHY_VIEW");
@@ -775,7 +775,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			startActivityForResult(i, HIERARCHY_ACTIVITY);
 			return true;
 		case MENU_PREFERENCES:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onOptionsItemSelected",
 							"MENU_PREFERENCES");
@@ -795,7 +795,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 *         etc...), true otherwise.
 	 */
 	private boolean saveAnswersForCurrentScreen(boolean evaluateConstraints) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		// only try to save if the current event is a question or a field-list
 		// group
@@ -825,9 +825,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "onCreateContextMenu", "show");
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 
 		menu.add(0, v.getId(), 0, getString(R.string.clear_answer));
@@ -846,7 +846,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		 */
 		for (QuestionWidget qw : ((ODKView) mCurrentView).getWidgets()) {
 			if (item.getItemId() == qw.getId()) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "onContextItemSelected",
 								"createClearDialog", qw.getPrompt().getIndex());
@@ -854,7 +854,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			}
 		}
 		if (item.getItemId() == DELETE_REPEAT) {
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onContextItemSelected",
 							"createDeleteRepeatConfirmDialog");
@@ -869,7 +869,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 */
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		// if a form is loading, pass the loader task
 		if (mFormLoaderTask != null
@@ -897,7 +897,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * @return newly created View
 	 */
 	private View createView(int event, boolean advancingPage) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		setTitle(getString(R.string.app_name) + " > "
 				+ formController.getFormTitle());
@@ -1070,7 +1070,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(
 											this,
@@ -1161,7 +1161,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * answers to the data model after checking constraints.
 	 */
 	private void showNextView() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		if (formController.currentPromptIsQuestion()) {
 			if (!saveAnswersForCurrentScreen(EVALUATE_CONSTRAINTS)) {
@@ -1209,7 +1209,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * model without checking constraints.
 	 */
 	private void showPreviousView() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		// The answer is saved on a back swipe, but question constraints are
 		// ignored.
@@ -1315,7 +1315,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			break;
 		}
 
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "showView", logString);
 	}
 
@@ -1334,13 +1334,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * Creates and displays a dialog displaying the violated constraint.
 	 */
 	private void createConstraintToast(FormIndex index, int saveStatus) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		String constraintText = formController.getQuestionPrompt(index)
 				.getConstraintText();
 		switch (saveStatus) {
 		case FormEntryController.ANSWER_CONSTRAINT_VIOLATED:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this,
 							"createConstraintToast.ANSWER_CONSTRAINT_VIOLATED",
@@ -1354,7 +1354,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			}
 			break;
 		case FormEntryController.ANSWER_REQUIRED_BUT_EMPTY:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this,
 							"createConstraintToast.ANSWER_REQUIRED_BUT_EMPTY",
@@ -1396,20 +1396,20 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * repeat of the current group.
 	 */
 	private void createRepeatDialog() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "createRepeatDialog", "show");
 		mAlertDialog = new AlertDialog.Builder(this).create();
 		mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
 		DialogInterface.OnClickListener repeatListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int i) {
-				FormController formController = Collect.getInstance()
+				FormController formController = MyStatus.getInstance()
 						.getFormController();
 				switch (i) {
 				case DialogInterface.BUTTON1: // yes, repeat
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this, "createRepeatDialog",
 									"addRepeat");
@@ -1434,7 +1434,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					}
 					break;
 				case DialogInterface.BUTTON2: // no, no repeat
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this, "createRepeatDialog",
 									"showNext");
@@ -1470,7 +1470,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * Creates and displays dialog with the given errorMsg.
 	 */
 	private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-		Collect.getInstance()
+		MyStatus.getInstance()
 				.getActivityLogger()
 				.logInstanceAction(this, "createErrorDialog",
 						"show." + Boolean.toString(shouldExit));
@@ -1484,7 +1484,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			public void onClick(DialogInterface dialog, int i) {
 				switch (i) {
 				case DialogInterface.BUTTON1:
-					Collect.getInstance().getActivityLogger()
+					MyStatus.getInstance().getActivityLogger()
 							.logInstanceAction(this, "createErrorDialog", "OK");
 					if (shouldExit) {
 						finish();
@@ -1503,11 +1503,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * Creates a confirm/cancel dialog for deleting repeats.
 	 */
 	private void createDeleteRepeatConfirmDialog() {
-		Collect.getInstance()
+		MyStatus.getInstance()
 				.getActivityLogger()
 				.logInstanceAction(this, "createDeleteRepeatConfirmDialog",
 						"show");
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		mAlertDialog = new AlertDialog.Builder(this).create();
 		mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
@@ -1522,11 +1522,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		DialogInterface.OnClickListener quitListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int i) {
-				FormController formController = Collect.getInstance()
+				FormController formController = MyStatus.getInstance()
 						.getFormController();
 				switch (i) {
 				case DialogInterface.BUTTON1: // yes
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this,
 									"createDeleteRepeatConfirmDialog", "OK");
@@ -1534,7 +1534,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					showPreviousView();
 					break;
 				case DialogInterface.BUTTON2: // no
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this,
 									"createDeleteRepeatConfirmDialog", "cancel");
@@ -1579,7 +1579,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * saving
 	 */
 	private void createQuitDialog() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		String[] items;
 		if (mAdminPreferences.getBoolean(AdminPreferencesActivity.KEY_SAVE_MID,
@@ -1592,7 +1592,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			items = one;
 		}
 
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "createQuitDialog", "show");
 		mAlertDialog = new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.ic_dialog_info)
@@ -1604,7 +1604,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(this,
 												"createQuitDialog", "cancel");
@@ -1627,7 +1627,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 									.getBoolean(
 											AdminPreferencesActivity.KEY_SAVE_MID,
 											true)) {
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(this,
 												"createQuitDialog",
@@ -1635,7 +1635,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 								saveDataToDisk(EXIT, isInstanceComplete(false),
 										null);
 							} else {
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(this,
 												"createQuitDialog",
@@ -1646,7 +1646,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							break;
 
 						case 1: // discard changes and exit
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(this,
 											"createQuitDialog",
@@ -1656,7 +1656,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							break;
 
 						case 2:// do nothing
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(this,
 											"createQuitDialog", "cancel");
@@ -1672,7 +1672,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * exit'
 	 */
 	private void removeTempInstance() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 
 		// attempt to remove any scratch file
@@ -1734,7 +1734,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * Confirm clear answer dialog
 	 */
 	private void createClearDialog(final QuestionWidget qw) {
-		Collect.getInstance()
+		MyStatus.getInstance()
 				.getActivityLogger()
 				.logInstanceAction(this, "createClearDialog", "show",
 						qw.getPrompt().getIndex());
@@ -1760,7 +1760,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			public void onClick(DialogInterface dialog, int i) {
 				switch (i) {
 				case DialogInterface.BUTTON1: // yes
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this, "createClearDialog",
 									"clearAnswer", qw.getPrompt().getIndex());
@@ -1768,7 +1768,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
 					break;
 				case DialogInterface.BUTTON2: // no
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this, "createClearDialog",
 									"cancel", qw.getPrompt().getIndex());
@@ -1789,9 +1789,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * the form.
 	 */
 	private void createLanguageDialog() {
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "createLanguageDialog", "show");
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		final String[] languages = formController.getLanguages();
 		int selected = -1;
@@ -1809,7 +1809,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							@Override
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
-								FormController formController = Collect
+								FormController formController = MyStatus
 										.getInstance().getFormController();
 								// Update the language in the content provider
 								// when selecting a new
@@ -1827,7 +1827,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 										+ languages[whichButton] + " in "
 										+ updated + " rows");
 
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(
 												this,
@@ -1849,7 +1849,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							@Override
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(this,
 												"createLanguageDialog",
@@ -1867,7 +1867,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		switch (id) {
 		case PROGRESS_DIALOG:
 			Log.e(t, "Creating PROGRESS_DIALOG");
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onCreateDialog.PROGRESS_DIALOG",
 							"show");
@@ -1875,7 +1875,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			DialogInterface.OnClickListener loadingButtonListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this,
 									"onCreateDialog.PROGRESS_DIALOG", "cancel");
@@ -1897,7 +1897,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					loadingButtonListener);
 			return mProgressDialog;
 		case SAVING_DIALOG:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logInstanceAction(this, "onCreateDialog.SAVING_DIALOG",
 							"show");
@@ -1905,7 +1905,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			DialogInterface.OnClickListener savingButtonListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logInstanceAction(this,
 									"onCreateDialog.SAVING_DIALOG", "cancel");
@@ -1942,7 +1942,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	@Override
 	protected void onPause() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		dismissDialogs();
 		// make sure we're not already saving to disk. if we are, currentPrompt
@@ -1961,9 +1961,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
-		Collect.getInstance().getActivityLogger().open();
+		MyStatus.getInstance().getActivityLogger().open();
 
 		if (mFormLoaderTask != null) {
 			mFormLoaderTask.setFormLoaderListener(this);
@@ -2017,14 +2017,14 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			Collect.getInstance().getActivityLogger()
+			MyStatus.getInstance().getActivityLogger()
 					.logInstanceAction(this, "onKeyDown.KEYCODE_BACK", "quit");
 			createQuitDialog();
 			return true;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			if (event.isAltPressed() && !mBeenSwiped) {
 				mBeenSwiped = true;
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this,
 								"onKeyDown.KEYCODE_DPAD_RIGHT", "showNext");
@@ -2035,7 +2035,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		case KeyEvent.KEYCODE_DPAD_LEFT:
 			if (event.isAltPressed() && !mBeenSwiped) {
 				mBeenSwiped = true;
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "onKeyDown.KEYCODE_DPAD_LEFT",
 								"showPrevious");
@@ -2149,7 +2149,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		mFormLoaderTask = null;
 		t.cancel(true);
 		t.destroy();
-		Collect.getInstance().setFormController(formController);
+		MyStatus.getInstance().setFormController(formController);
 
 		// Set the language if one has already been set in the past
 		String[] languageTest = formController.getLanguages();
@@ -2217,7 +2217,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					Locale.ENGLISH).format(Calendar.getInstance().getTime());
 			String file = mFormPath.substring(mFormPath.lastIndexOf('/') + 1,
 					mFormPath.lastIndexOf('.'));
-			String path = Collect.INSTANCES_PATH + File.separator + file + "_"
+			String path = MyStatus.INSTANCES_PATH + File.separator + file + "_"
 					+ time;
 			if (FileUtils.createFolder(path)) {
 				formController.setInstancePath(new File(path + File.separator
@@ -2295,7 +2295,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 */
 	public int saveAnswer(IAnswerData answer, FormIndex index,
 			boolean evaluateConstraints) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		if (evaluateConstraints) {
 			return formController.answerQuestion(index, answer);
@@ -2313,7 +2313,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * @return true if form has been marked completed, false otherwise.
 	 */
 	private boolean isInstanceComplete(boolean end) {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		// default to false if we're mid form
 		boolean complete = false;
@@ -2363,7 +2363,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * requested.
 	 */
 	private void finishReturnInstance() {
-		FormController formController = Collect.getInstance()
+		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		String action = getIntent().getAction();
 		if (Intent.ACTION_PICK.equals(action)
@@ -2442,11 +2442,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 						Log.e(t,
 								"showNextView VelocityX is bogus! " + e1.getX()
 										+ " > " + e2.getX());
-						Collect.getInstance().getActivityLogger()
+						MyStatus.getInstance().getActivityLogger()
 								.logInstanceAction(this, "onFling", "showNext");
 						showNextView();
 					} else {
-						Collect.getInstance()
+						MyStatus.getInstance()
 								.getActivityLogger()
 								.logInstanceAction(this, "onFling",
 										"showPrevious");
@@ -2457,13 +2457,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 						Log.e(t,
 								"showPreviousView VelocityX is bogus! "
 										+ e1.getX() + " < " + e2.getX());
-						Collect.getInstance()
+						MyStatus.getInstance()
 								.getActivityLogger()
 								.logInstanceAction(this, "onFling",
 										"showPrevious");
 						showPreviousView();
 					} else {
-						Collect.getInstance().getActivityLogger()
+						MyStatus.getInstance().getActivityLogger()
 								.logInstanceAction(this, "onFling", "showNext");
 						showNextView();
 					}
@@ -2506,18 +2506,18 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this);
+		MyStatus.getInstance().getActivityLogger().logOnStart(this);
 	}
 
 	@Override
 	protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this);
+		MyStatus.getInstance().getActivityLogger().logOnStop(this);
 		super.onStop();
 	}
 
 	private void sendSavedBroadcast() {
 		Intent i = new Intent();
-		i.setAction("org.odk.collect.android.FormSaved");
+		i.setAction("edu.washington.cs.mystatus.FormSaved");
 		this.sendBroadcast(i);
 	}
 

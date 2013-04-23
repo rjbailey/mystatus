@@ -20,7 +20,7 @@ import java.util.List;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.views.MediaLayout;
 
 import android.content.Context;
@@ -68,7 +68,7 @@ public abstract class QuestionWidget extends LinearLayout {
     public QuestionWidget(Context context, FormEntryPrompt p) {
         super(context);
 
-        mQuestionFontsize = Collect.getQuestionFontsize();
+        mQuestionFontsize = MyStatus.getQuestionFontsize();
         mAnswerFontsize = mQuestionFontsize + 2;
 
         mPrompt = p;

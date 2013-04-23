@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.util.Log;
 
@@ -48,7 +48,7 @@ public class InfoLogger {
 
 	@SuppressWarnings("unused")
 	private static final void geologToFile(String msg) {
-		File dir = new File( Collect.ODK_ROOT + File.separator + LOG_DIRECTORY );
+		File dir = new File( MyStatus.ODK_ROOT + File.separator + LOG_DIRECTORY );
 		if ( !dir.exists() ) {
 			dir.mkdirs();
 		}

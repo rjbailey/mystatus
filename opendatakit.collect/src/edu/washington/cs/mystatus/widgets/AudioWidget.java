@@ -17,10 +17,10 @@ package edu.washington.cs.mystatus.widgets;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
@@ -64,7 +64,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 	public AudioWidget(Context context, FormEntryPrompt prompt) {
 		super(context, prompt);
 
-		mInstanceFolder = Collect.getInstance().getFormController()
+		mInstanceFolder = MyStatus.getInstance().getFormController()
 				.getInstancePath().getParent();
 
 		setOrientation(LinearLayout.VERTICAL);
@@ -86,7 +86,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 		mCaptureButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "captureButton", "click",
 								mPrompt.getIndex());
@@ -97,7 +97,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 						android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 								.toString());
 				try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
 					((Activity) getContext()).startActivityForResult(i,
 							FormEntryActivity.AUDIO_CAPTURE);
@@ -107,7 +107,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 							getContext().getString(R.string.activity_not_found,
 									"audio capture"), Toast.LENGTH_SHORT)
 							.show();
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(null);
 				}
 
@@ -127,14 +127,14 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 		mChooseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "chooseButton", "click",
 								mPrompt.getIndex());
 				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 				i.setType("audio/*");
 				try {
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(mPrompt.getIndex());
 					((Activity) getContext()).startActivityForResult(i,
 							FormEntryActivity.AUDIO_CHOOSER);
@@ -143,7 +143,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 							getContext(),
 							getContext().getString(R.string.activity_not_found,
 									"choose audio"), Toast.LENGTH_SHORT).show();
-					Collect.getInstance().getFormController()
+					MyStatus.getInstance().getFormController()
 							.setIndexWaitingForData(null);
 				}
 
@@ -162,7 +162,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 		mPlayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "playButton", "click",
 								mPrompt.getIndex());
@@ -289,7 +289,7 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 			Log.e(t, "Inserting Audio file FAILED");
 		}
 
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override
@@ -303,13 +303,13 @@ public class AudioWidget extends QuestionWidget implements IBinaryWidget {
 	@Override
 	public boolean isWaitingForBinaryData() {
 		return mPrompt.getIndex().equals(
-				Collect.getInstance().getFormController()
+				MyStatus.getInstance().getFormController()
 						.getIndexWaitingForData());
 	}
 
 	@Override
 	public void cancelWaitingForBinaryData() {
-		Collect.getInstance().getFormController().setIndexWaitingForData(null);
+		MyStatus.getInstance().getFormController().setIndexWaitingForData(null);
 	}
 
 	@Override

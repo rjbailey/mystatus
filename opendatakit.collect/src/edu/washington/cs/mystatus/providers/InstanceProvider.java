@@ -14,9 +14,9 @@
 
 package edu.washington.cs.mystatus.providers;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.ODKSQLiteOpenHelper;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
@@ -63,7 +63,7 @@ public class InstanceProvider extends ContentProvider {
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 
         DatabaseHelper(String databaseName) {
-            super(Collect.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
         }
 
 
@@ -110,7 +110,7 @@ public class InstanceProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
-        Collect.createODKDirs();
+        MyStatus.createODKDirs();
 
         mDbHelper = new DatabaseHelper(DATABASE_NAME);
         return true;
@@ -198,7 +198,7 @@ public class InstanceProvider extends ContentProvider {
         if (rowId > 0) {
             Uri instanceUri = ContentUris.withAppendedId(InstanceColumns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(instanceUri, null);
-        	Collect.getInstance().getActivityLogger().logActionParam(this, "insert",
+        	MyStatus.getInstance().getActivityLogger().logActionParam(this, "insert",
         			instanceUri.toString(), values.getAsString(InstanceColumns.INSTANCE_FILE_PATH));
             return instanceUri;
         }
@@ -264,7 +264,7 @@ public class InstanceProvider extends ContentProvider {
 	                del.moveToPosition(-1);
 	                while (del.moveToNext()) {
 	                    String instanceFile = del.getString(del.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
-	                    Collect.getInstance().getActivityLogger().logAction(this, "delete", instanceFile);
+	                    MyStatus.getInstance().getActivityLogger().logAction(this, "delete", instanceFile);
 	                    File instanceDir = (new File(instanceFile)).getParentFile();
 	                    deleteAllFilesInDirectory(instanceDir);
 	                }
@@ -286,7 +286,7 @@ public class InstanceProvider extends ContentProvider {
 	                c.moveToPosition(-1);
 	                while (c.moveToNext()) {
 	                    String instanceFile = c.getString(c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
-	                    Collect.getInstance().getActivityLogger().logAction(this, "delete", instanceFile);
+	                    MyStatus.getInstance().getActivityLogger().logAction(this, "delete", instanceFile);
 	                    File instanceDir = (new File(instanceFile)).getParentFile();
 	                    deleteAllFilesInDirectory(instanceDir);
 	                }

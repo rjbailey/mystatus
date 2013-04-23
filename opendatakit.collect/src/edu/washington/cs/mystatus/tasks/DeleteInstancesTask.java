@@ -15,7 +15,7 @@
 package edu.washington.cs.mystatus.tasks;
 
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.DeleteInstancesListener;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 
@@ -59,7 +59,7 @@ public class DeleteInstancesTask extends AsyncTask<Long, Void, Integer> {
 	            deleted += wasDeleted;
 	            
 	            if (wasDeleted > 0) {
-	            	Collect.getInstance().getActivityLogger().logAction(this, "delete", deleteForm.toString());
+	            	MyStatus.getInstance().getActivityLogger().logAction(this, "delete", deleteForm.toString());
 	            }
 			} catch ( Exception ex ) {
 				Log.e(t,"Exception during delete of: " + params[i].toString() + " exception: "  + ex.toString());

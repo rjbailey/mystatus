@@ -16,7 +16,7 @@ package edu.washington.cs.mystatus.preferences;
 
 import java.util.ArrayList;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.utilities.UrlUtils;
 

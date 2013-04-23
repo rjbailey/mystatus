@@ -23,9 +23,9 @@ import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.AdvanceToNextListener;
 import edu.washington.cs.mystatus.views.MediaLayout;
 
@@ -190,7 +190,7 @@ public class SelectOneAutoAdvanceWidget extends QuestionWidget implements OnChec
                 button.setChecked(false);
             }
         }
-       	Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged", 
+       	MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged", 
     			mItems.get((Integer)buttonView.getTag()).getValue(), mPrompt.getIndex());
 
        	listener.advance();

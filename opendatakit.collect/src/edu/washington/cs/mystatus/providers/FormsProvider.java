@@ -20,9 +20,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.ODKSQLiteOpenHelper;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.FileUtils;
@@ -67,7 +67,7 @@ public class FormsProvider extends ContentProvider {
         private static final String MODEL_VERSION = "modelVersion";
 
         DatabaseHelper(String databaseName) {
-            super(Collect.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
         }
 
 
@@ -185,7 +185,7 @@ public class FormsProvider extends ContentProvider {
     public boolean onCreate() {
 
         // must be at the beginning of any activity that can be called from an external intent
-        Collect.createODKDirs();
+        MyStatus.createODKDirs();
 
         mDbHelper = new DatabaseHelper(DATABASE_NAME);
         return true;
@@ -287,7 +287,7 @@ public class FormsProvider extends ContentProvider {
         values.put(FormsColumns.MD5_HASH, md5);
 
         if (values.containsKey(FormsColumns.JRCACHE_FILE_PATH) == false) {
-            String cachePath = Collect.CACHE_PATH + File.separator + md5 + ".formdef";
+            String cachePath = MyStatus.CACHE_PATH + File.separator + md5 + ".formdef";
             values.put(FormsColumns.JRCACHE_FILE_PATH, cachePath);
         }
         if (values.containsKey(FormsColumns.FORM_MEDIA_PATH) == false) {
@@ -321,7 +321,7 @@ public class FormsProvider extends ContentProvider {
         if (rowId > 0) {
             Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(formUri, null);
-        	Collect.getInstance().getActivityLogger().logActionParam(this, "insert",
+        	MyStatus.getInstance().getActivityLogger().logActionParam(this, "insert",
         			formUri.toString(),  values.getAsString(FormsColumns.FORM_FILE_PATH));
             return formUri;
         }
@@ -377,7 +377,7 @@ public class FormsProvider extends ContentProvider {
 	                    deleteFileOrDir(del.getString(del
 	                            .getColumnIndex(FormsColumns.JRCACHE_FILE_PATH)));
 	                    String formFilePath = del.getString(del.getColumnIndex(FormsColumns.FORM_FILE_PATH));
-	                    Collect.getInstance().getActivityLogger().logAction(this, "delete", formFilePath);
+	                    MyStatus.getInstance().getActivityLogger().logAction(this, "delete", formFilePath);
 	                    deleteFileOrDir(formFilePath);
 	                    deleteFileOrDir(del.getString(del.getColumnIndex(FormsColumns.FORM_MEDIA_PATH)));
 	                }
@@ -400,7 +400,7 @@ public class FormsProvider extends ContentProvider {
 	                while (c.moveToNext()) {
 	                    deleteFileOrDir(c.getString(c.getColumnIndex(FormsColumns.JRCACHE_FILE_PATH)));
 	                    String formFilePath = c.getString(c.getColumnIndex(FormsColumns.FORM_FILE_PATH));
-	                    Collect.getInstance().getActivityLogger().logAction(this, "delete", formFilePath);
+	                    MyStatus.getInstance().getActivityLogger().logAction(this, "delete", formFilePath);
 	                    deleteFileOrDir(formFilePath);
 	                    deleteFileOrDir(c.getString(c.getColumnIndex(FormsColumns.FORM_MEDIA_PATH)));
 	                }
@@ -528,7 +528,7 @@ public class FormsProvider extends ContentProvider {
 	                        String newMd5 = FileUtils.getMd5Hash(new File(formFile));
 	                        values.put(FormsColumns.MD5_HASH, newMd5);
 	                        values.put(FormsColumns.JRCACHE_FILE_PATH,
-	                        		Collect.CACHE_PATH + File.separator + newMd5 + ".formdef");
+	                        		MyStatus.CACHE_PATH + File.separator + newMd5 + ".formdef");
 	                    }
 
 	                    // Make sure that the necessary fields are all set

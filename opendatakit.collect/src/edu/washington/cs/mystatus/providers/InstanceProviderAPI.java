@@ -23,7 +23,7 @@ import android.provider.BaseColumns;
  * Convenience definitions for NotePadProvider
  */
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.odk.instances";
+    public static final String AUTHORITY = "edu.washington.cs.mystatus.provider.odk.instances";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {}

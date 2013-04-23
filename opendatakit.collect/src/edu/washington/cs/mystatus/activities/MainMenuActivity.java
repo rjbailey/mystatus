@@ -23,9 +23,9 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.AdminPreferencesActivity;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
@@ -107,7 +107,7 @@ public class MainMenuActivity extends Activity {
 		// external intent
 		Log.i(t, "Starting up, creating directories");
 		try {
-			Collect.createODKDirs();
+			MyStatus.createODKDirs();
 		} catch (RuntimeException e) {
 			createErrorDialog(e.getMessage(), EXIT);
 			return;
@@ -118,14 +118,14 @@ public class MainMenuActivity extends Activity {
 		{
 			// dynamically construct the "ODK Collect vA.B" string
 			TextView mainMenuMessageLabel = (TextView) findViewById(R.id.main_menu_header);
-			mainMenuMessageLabel.setText(Collect.getInstance()
+			mainMenuMessageLabel.setText(MyStatus.getInstance()
 					.getVersionedAppName());
 		}
 
 		setTitle(getString(R.string.app_name) + " > "
 				+ getString(R.string.main_menu));
 		
-		File f = new File(Collect.ODK_ROOT + "/collect.settings");
+		File f = new File(MyStatus.ODK_ROOT + "/collect.settings");
 		if (f.exists()) {
 			boolean success = loadSharedPreferencesFromFile(f);
 			if (success) {
@@ -153,7 +153,7 @@ public class MainMenuActivity extends Activity {
 		mEnterDataButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "fillBlankForm", "click");
 				Intent i = new Intent(getApplicationContext(),
 						FormChooserList.class);
@@ -167,7 +167,7 @@ public class MainMenuActivity extends Activity {
 		mReviewDataButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "editSavedForm", "click");
 				Intent i = new Intent(getApplicationContext(),
 						InstanceChooserList.class);
@@ -181,7 +181,7 @@ public class MainMenuActivity extends Activity {
 		mSendDataButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "uploadForms", "click");
 				Intent i = new Intent(getApplicationContext(),
 						InstanceUploaderList.class);
@@ -195,7 +195,7 @@ public class MainMenuActivity extends Activity {
 		mGetFormsButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "downloadBlankForms", "click");
 				Intent i = new Intent(getApplicationContext(),
 						FormDownloadList.class);
@@ -210,7 +210,7 @@ public class MainMenuActivity extends Activity {
 		mManageFilesButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "deleteSavedForms", "click");
 				Intent i = new Intent(getApplicationContext(),
 						FileManagerTabs.class);
@@ -298,18 +298,18 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this);
+		MyStatus.getInstance().getActivityLogger().logOnStart(this);
 	}
 
 	@Override
 	protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this);
+		MyStatus.getInstance().getActivityLogger().logOnStop(this);
 		super.onStop();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "onCreateOptionsMenu", "show");
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, MENU_PREFERENCES, 0,
@@ -324,7 +324,7 @@ public class MainMenuActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_PREFERENCES:
-			Collect.getInstance()
+			MyStatus.getInstance()
 					.getActivityLogger()
 					.logAction(this, "onOptionsItemSelected",
 							"MENU_PREFERENCES");
@@ -332,7 +332,7 @@ public class MainMenuActivity extends Activity {
 			startActivity(ig);
 			return true;
 		case MENU_ADMIN:
-			Collect.getInstance().getActivityLogger()
+			MyStatus.getInstance().getActivityLogger()
 					.logAction(this, "onOptionsItemSelected", "MENU_ADMIN");
 			String pw = mAdminPreferences.getString(
 					AdminPreferencesActivity.KEY_ADMIN_PW, "");
@@ -342,7 +342,7 @@ public class MainMenuActivity extends Activity {
 				startActivity(i);
 			} else {
 				showDialog(PASSWORD_DIALOG);
-				Collect.getInstance().getActivityLogger()
+				MyStatus.getInstance().getActivityLogger()
 						.logAction(this, "createAdminPasswordDialog", "show");
 			}
 			return true;
@@ -351,7 +351,7 @@ public class MainMenuActivity extends Activity {
 	}
 
 	private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "createErrorDialog", "show");
 		mAlertDialog = new AlertDialog.Builder(this).create();
 		mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
@@ -361,7 +361,7 @@ public class MainMenuActivity extends Activity {
 			public void onClick(DialogInterface dialog, int i) {
 				switch (i) {
 				case DialogInterface.BUTTON1:
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logAction(this, "createErrorDialog",
 									shouldExit ? "exitApplication" : "OK");
@@ -411,7 +411,7 @@ public class MainMenuActivity extends Activity {
 										MainMenuActivity.this,
 										getString(R.string.admin_password_incorrect),
 										Toast.LENGTH_SHORT).show();
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logAction(this, "adminPasswordDialog",
 												"PASSWORD_INCORRECT");
@@ -424,7 +424,7 @@ public class MainMenuActivity extends Activity {
 					new DialogInterface.OnClickListener() {
 
 						public void onClick(DialogInterface dialog, int which) {
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logAction(this, "adminPasswordDialog",
 											"cancel");

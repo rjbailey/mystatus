@@ -1,7 +1,7 @@
 package edu.washington.cs.mystatus.activities;
 
-import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.utilities.VersionHidingCursorAdapter;
 
 import edu.washington.cs.mystatus.R;
 

@@ -14,7 +14,7 @@
 
 package edu.washington.cs.mystatus.views;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
 import android.content.Context;
 import android.util.AttributeSet;

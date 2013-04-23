@@ -21,9 +21,9 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -96,10 +96,10 @@ public class SpinnerWidget extends QuestionWidget {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				if ( position == mItems.size() ) {
-					Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged.clearValue", 
+					MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged.clearValue", 
 		    			"", mPrompt.getIndex());
 				} else {
-					Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged", 
+					MyStatus.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged", 
 			    			mItems.get(position).getValue(), mPrompt.getIndex());
 				}
 			}

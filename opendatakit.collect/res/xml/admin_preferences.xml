@@ -6,15 +6,15 @@
         android:title="@string/general_preferences" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="org.odk.collect.android.preferences.PreferencesActivity"
-            android:targetPackage="org.odk.collect.android" >
+            android:targetClass="edu.washington.cs.mystatus.preferences.PreferencesActivity"
+            android:targetPackage="edu.washington.cs.mystatus" >
             <extra
                 android:name="adminMode"
                 android:value="true" />
         </intent>
     </Preference>
 
-    <org.odk.collect.android.preferences.PasswordDialogPreference
+    <edu.washington.cs.mystatus.preferences.PasswordDialogPreference
         android:id="@+id/admin_pw"
         android:defaultValue=""
         android:dialogTitle="Change Admin Password"

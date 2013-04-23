@@ -21,7 +21,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 import org.opendatakit.httpclientandroidlib.client.CookieStore;
 import org.opendatakit.httpclientandroidlib.client.CredentialsProvider;
 import org.opendatakit.httpclientandroidlib.client.protocol.ClientContext;
@@ -42,7 +42,7 @@ import java.io.File;
  * 
  * @author carlhartung
  */
-public class Collect extends Application {
+public class MyStatus extends Application {
 
     // Storage paths
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
@@ -65,9 +65,9 @@ public class Collect extends Application {
     private ActivityLogger mActivityLogger;
     private FormController mFormController = null;
 
-    private static Collect singleton = null;
+    private static MyStatus singleton = null;
 
-    public static Collect getInstance() {
+    public static MyStatus getInstance() {
         return singleton;
     }
 
@@ -84,10 +84,10 @@ public class Collect extends Application {
     }
 
     public static int getQuestionFontsize() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MyStatus
                 .getInstance());
         String question_font = settings.getString(PreferencesActivity.KEY_FONT_SIZE,
-                Collect.DEFAULT_FONTSIZE);
+                MyStatus.DEFAULT_FONTSIZE);
         int questionFontsize = Integer.valueOf(question_font);
         return questionFontsize;
     }

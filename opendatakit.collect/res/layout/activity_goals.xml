@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,71 +22,71 @@
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:orientation="vertical" >
-        
+
         <TextView
             android:id="@+id/set_goals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/set_goals"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <ListView
             android:id="@+id/set_goals_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/set_goals_list" />
-            
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical" >
-        
+
         <TextView
             android:id="@+id/new_goals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/new_goals"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
-       	<Spinner
-	        android:id="@+id/goal_options"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:entries="@array/goal_arrays"
-	        android:prompt="@string/goal_prompt" />
-       	
-       	<Button
-       	    android:id="@+id/choose_new_goal"
-       	    android:layout_width="wrap_content"
-       	    android:layout_height="wrap_content"
-       	    android:text="@string/select_dropdown" />
+
+        <Spinner
+            android:id="@+id/goal_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/goal_arrays"
+            android:prompt="@string/goal_prompt" />
+
+        <Button
+            android:id="@+id/choose_new_goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_dropdown" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical" >
-        
+
         <TextView
             android:id="@+id/remove_goals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remove_goals"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <Spinner
             android:id="@+id/remove_goals_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        
+
         <Button
             android:id="@+id/remove_goal_choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_dropdown" />
     </LinearLayout>
+
 </LinearLayout>

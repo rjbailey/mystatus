@@ -16,9 +16,9 @@ package edu.washington.cs.mystatus.activities;
 
 import java.util.ArrayList;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
@@ -117,13 +117,13 @@ public class InstanceUploaderList extends ListActivity implements
 							"Background send running, please try again shortly",
 							Toast.LENGTH_SHORT).show();
 				} else if (ni == null || !ni.isConnected()) {
-					Collect.getInstance().getActivityLogger()
+					MyStatus.getInstance().getActivityLogger()
 							.logAction(this, "uploadButton", "noConnection");
 
 					Toast.makeText(InstanceUploaderList.this,
 							R.string.no_connection, Toast.LENGTH_SHORT).show();
 				} else {
-					Collect.getInstance()
+					MyStatus.getInstance()
 							.getActivityLogger()
 							.logAction(this, "uploadButton",
 									Integer.toString(mSelected.size()));
@@ -154,7 +154,7 @@ public class InstanceUploaderList extends ListActivity implements
 				ListView ls = getListView();
 				mToggled = !mToggled;
 
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logAction(this, "toggleButton",
 								Boolean.toString(mToggled));
@@ -212,12 +212,12 @@ public class InstanceUploaderList extends ListActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this);
+		MyStatus.getInstance().getActivityLogger().logOnStart(this);
 	}
 
 	@Override
 	protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this);
+		MyStatus.getInstance().getActivityLogger().logOnStop(this);
 		super.onStop();
 	}
 
@@ -235,7 +235,7 @@ public class InstanceUploaderList extends ListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "onCreateOptionsMenu", "show");
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, MENU_PREFERENCES, 0,
@@ -250,12 +250,12 @@ public class InstanceUploaderList extends ListActivity implements
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_PREFERENCES:
-			Collect.getInstance().getActivityLogger()
+			MyStatus.getInstance().getActivityLogger()
 					.logAction(this, "onMenuItemSelected", "MENU_PREFERENCES");
 			createPreferencesMenu();
 			return true;
 		case MENU_SHOW_UNSENT:
-			Collect.getInstance().getActivityLogger()
+			MyStatus.getInstance().getActivityLogger()
 					.logAction(this, "onMenuItemSelected", "MENU_SHOW_UNSENT");
 			showSentAndUnsentChoices();
 			return true;
@@ -276,7 +276,7 @@ public class InstanceUploaderList extends ListActivity implements
 		Cursor c = (Cursor) getListAdapter().getItem(position);
 		long k = c.getLong(c.getColumnIndex(InstanceColumns._ID));
 
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "onListItemClick", Long.toString(k));
 
 		// add/remove from selected list
@@ -366,7 +366,7 @@ public class InstanceUploaderList extends ListActivity implements
 
 	@Override
 	public boolean onLongClick(View v) {
-		Collect.getInstance()
+		MyStatus.getInstance()
 				.getActivityLogger()
 				.logAction(this, "toggleButton.longClick",
 						Boolean.toString(mToggled));
@@ -381,7 +381,7 @@ public class InstanceUploaderList extends ListActivity implements
 		String[] items = { getString(R.string.show_unsent_forms),
 				getString(R.string.show_sent_and_unsent_forms) };
 
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "changeView", "show");
 
 		AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -391,7 +391,7 @@ public class InstanceUploaderList extends ListActivity implements
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logAction(this, "changeView", "cancel");
 								dialog.cancel();
@@ -403,14 +403,14 @@ public class InstanceUploaderList extends ListActivity implements
 						switch (which) {
 
 						case 0: // show unsent
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logAction(this, "changeView", "showUnsent");
 							InstanceUploaderList.this.showUnsent();
 							break;
 
 						case 1: // show all
-							Collect.getInstance().getActivityLogger()
+							MyStatus.getInstance().getActivityLogger()
 									.logAction(this, "changeView", "showAll");
 							InstanceUploaderList.this.showAll();
 							break;

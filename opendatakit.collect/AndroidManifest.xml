@@ -9,9 +9,9 @@
 	the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.odk.collect.android"
-    android:versionCode="1029"
-    android:versionName="1.3" >
+    package="edu.washington.cs.mystatus"
+    android:versionCode="1"
+    android:versionName="0.1" >
 
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
@@ -31,7 +31,9 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-sdk android:minSdkVersion="7" >
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="17" >
     </uses-sdk>
 
     <supports-screens
@@ -42,16 +44,53 @@
         android:smallScreens="true" />
 
     <application
-        android:name="edu.washington.cs.mystatus.application.Collect"
-        android:icon="@drawable/notes"
+        android:name="edu.washington.cs.mystatus.application.MyStatus"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Collect" >
+        android:theme="@style/myStatus"
+        android:allowBackup="false" >
+        
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.SurveysActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.SettingsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.HelpActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+
+        <service
+            android:name="edu.washington.cs.mystatus.services.NotificationService"
+            android:enabled="true" >
+        </service>
+        
         <provider
             android:name="edu.washington.cs.mystatus.providers.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms" />
+            android:authorities="edu.washington.cs.mystatus.provider.odk.forms"
+            android:exported="false" />
         <provider
             android:name="edu.washington.cs.mystatus.providers.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances" />
+            android:authorities="edu.washington.cs.mystatus.provider.odk.instances"
+            android:exported="false" />
 
         <activity
             android:name="edu.washington.cs.mystatus.activities.MainMenuActivity"
@@ -142,12 +181,6 @@
             android:name="edu.washington.cs.mystatus.activities.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Dialog" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- Enable Shortcuts for Command Actions -->
         <activity
@@ -167,7 +200,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="org.odk.collect.android.FormSaved" />
+                <action android:name="edu.washington.cs.mystatus.FormSaved" />
             </intent-filter>
         </receiver>
 

@@ -39,7 +39,7 @@ import org.javarosa.xform.parse.XFormParseException;
 import org.javarosa.xform.parse.XFormParser;
 import org.javarosa.xform.util.XFormUtils;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormLoaderListener;
 import edu.washington.cs.mystatus.logic.FileReferenceFactory;
 import edu.washington.cs.mystatus.logic.FormController;
@@ -142,7 +142,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
         File formXml = new File(formPath);
         String formHash = FileUtils.getMd5Hash(formXml);
-        File formBin = new File(Collect.CACHE_PATH + File.separator + formHash + ".formdef");
+        File formBin = new File(MyStatus.CACHE_PATH + File.separator + formHash + ".formdef");
 
         if (formBin.exists()) {
             // if we have binary, deserialize binary
@@ -234,7 +234,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         if (ReferenceManager._().getFactories().length == 0) {
             // this is /sdcard/odk
             ReferenceManager._().addReferenceFactory(
-                new FileReferenceFactory(Collect.ODK_ROOT));
+                new FileReferenceFactory(MyStatus.ODK_ROOT));
         }
 
         // Set jr://... to point to /sdcard/odk/forms/filename-media/
@@ -363,7 +363,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     public void serializeFormDef(FormDef fd, String filepath) {
         // calculate unique md5 identifier
         String hash = FileUtils.getMd5Hash(new File(filepath));
-        File formDef = new File(Collect.CACHE_PATH + File.separator + hash + ".formdef");
+        File formDef = new File(MyStatus.CACHE_PATH + File.separator + hash + ".formdef");
 
         // formdef does not exist, create one.
         if (!formDef.exists()) {

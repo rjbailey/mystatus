@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import org.odk.collect.android.R;
+import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.application.Collect;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.ColorPickerDialog;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
@@ -113,9 +113,9 @@ public class DrawActivity extends Activity {
 		if (extras == null) {
 			loadOption = OPTION_DRAW;
 			refImage = null;
-			savepointImage = new File(Collect.TMPDRAWFILE_PATH);
+			savepointImage = new File(MyStatus.TMPDRAWFILE_PATH);
 			savepointImage.delete();
-			output = new File(Collect.TMPFILE_PATH);
+			output = new File(MyStatus.TMPFILE_PATH);
 		} else {
 			loadOption = extras.getString(OPTION);
 			if (loadOption == null) {
@@ -134,7 +134,7 @@ public class DrawActivity extends Activity {
 					FileUtils.copyFile(refImage, savepointImage);
 				}
 			} else {
-				savepointImage = new File(Collect.TMPDRAWFILE_PATH);
+				savepointImage = new File(MyStatus.TMPDRAWFILE_PATH);
 				savepointImage.delete();
 				if (refImage != null && refImage.exists()) {
 					FileUtils.copyFile(refImage, savepointImage);
@@ -144,7 +144,7 @@ public class DrawActivity extends Activity {
 			if (uri != null) {
 				output = new File(uri.getPath());
 			} else {
-				output = new File(Collect.TMPFILE_PATH);
+				output = new File(MyStatus.TMPFILE_PATH);
 			}
 		}
 
@@ -205,13 +205,13 @@ public class DrawActivity extends Activity {
 		btnDrawColor.setText(getString(R.string.set_color));
 		btnDrawColor.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(
 								DrawActivity.this,
 								"setColorButton",
 								"click",
-								Collect.getInstance().getFormController()
+								MyStatus.getInstance().getFormController()
 										.getFormIndex());
 				ColorPickerDialog cpd = new ColorPickerDialog(
 						DrawActivity.this,
@@ -234,13 +234,13 @@ public class DrawActivity extends Activity {
 		btnFinished.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(
 								DrawActivity.this,
 								"saveAndCloseButton",
 								"click",
-								Collect.getInstance().getFormController()
+								MyStatus.getInstance().getFormController()
 										.getFormIndex());
 				SaveAndClose();
 			}
@@ -249,13 +249,13 @@ public class DrawActivity extends Activity {
 		btnReset.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(
 								DrawActivity.this,
 								"resetButton",
 								"click",
-								Collect.getInstance().getFormController()
+								MyStatus.getInstance().getFormController()
 										.getFormIndex());
 				Reset();
 			}
@@ -264,13 +264,13 @@ public class DrawActivity extends Activity {
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(
 								DrawActivity.this,
 								"cancelAndCloseButton",
 								"click",
-								Collect.getInstance().getFormController()
+								MyStatus.getInstance().getFormController()
 										.getFormIndex());
 				CancelAndClose();
 			}
@@ -345,13 +345,13 @@ public class DrawActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			Collect.getInstance().getActivityLogger()
+			MyStatus.getInstance().getActivityLogger()
 					.logInstanceAction(this, "onKeyDown.KEYCODE_BACK", "quit");
 			createQuitDrawDialog();
 			return true;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			if (event.isAltPressed()) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this,
 								"onKeyDown.KEYCODE_DPAD_RIGHT", "showNext");
@@ -361,7 +361,7 @@ public class DrawActivity extends Activity {
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
 			if (event.isAltPressed()) {
-				Collect.getInstance()
+				MyStatus.getInstance()
 						.getActivityLogger()
 						.logInstanceAction(this, "onKeyDown.KEYCODE_DPAD_LEFT",
 								"showPrevious");
@@ -381,7 +381,7 @@ public class DrawActivity extends Activity {
 		String[] items = { getString(R.string.keep_changes),
 				getString(R.string.do_not_save) };
 
-		Collect.getInstance().getActivityLogger()
+		MyStatus.getInstance().getActivityLogger()
 				.logInstanceAction(this, "createQuitDrawDialog", "show");
 		alertDialog = new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.ic_dialog_info)
@@ -391,7 +391,7 @@ public class DrawActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 
-								Collect.getInstance()
+								MyStatus.getInstance()
 										.getActivityLogger()
 										.logInstanceAction(this,
 												"createQuitDrawDialog",
@@ -406,7 +406,7 @@ public class DrawActivity extends Activity {
 						switch (which) {
 
 						case 0: // save and exit
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(this,
 											"createQuitDrawDialog",
@@ -416,7 +416,7 @@ public class DrawActivity extends Activity {
 
 						case 1: // discard changes and exit
 
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(this,
 											"createQuitDrawDialog",
@@ -425,7 +425,7 @@ public class DrawActivity extends Activity {
 							break;
 
 						case 2:// do nothing
-							Collect.getInstance()
+							MyStatus.getInstance()
 									.getActivityLogger()
 									.logInstanceAction(this,
 											"createQuitDrawDialog", "cancel");
@@ -450,7 +450,7 @@ public class DrawActivity extends Activity {
 			mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 			mCurrentPath = new Path();
 			setBackgroundColor(0xFFFFFFFF);
-			mBackgroundBitmapFile = new File(Collect.TMPDRAWFILE_PATH);
+			mBackgroundBitmapFile = new File(MyStatus.TMPDRAWFILE_PATH);
 		}
 
 		public DrawView(Context c, boolean isSignature, File f) {
