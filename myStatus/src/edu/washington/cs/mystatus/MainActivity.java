@@ -1,5 +1,8 @@
 package edu.washington.cs.mystatus;
 
+import org.odk.collect.android.activities.FormDownloadList;
+import org.odk.collect.android.activities.MainMenuActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,7 +67,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Manage Surveys button clicked");
-				startActivity(OdkProxy.createFormDownloadIntent(MainActivity.this));
+				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 			}
 		});
 
@@ -99,7 +102,7 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		case R.id.action_odk_menu:
-			startActivity(OdkProxy.createMainMenuIntent(this));
+			startActivity(new Intent(this, MainMenuActivity.class));
 			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);

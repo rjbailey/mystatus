@@ -44,9 +44,7 @@ public class SurveysActivity extends ListActivity {
 				R.id.text1, R.id.text2, R.id.text3
 		};
 
-		// TODO: OdkProxy should generate and return this cursor adapter.
-		// It should also filter the results based on whether the surveys
-		// need a response.
+		// TODO: filter results based on whether the surveys need a response.
 		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
 				this, R.layout.two_item, c, data, view);
 		setListAdapter(instances);

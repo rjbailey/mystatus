@@ -16,7 +16,6 @@ import android.util.Log;
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  * @author Chuong Dao (chuongd@cs.washington.edu)
- * @see OdkProxy
  */
 public class NotificationService extends Service {
 
@@ -40,14 +39,13 @@ public class NotificationService extends Service {
 	}
 
 	/**
-	 * Create a Notification object which launches an ODK survey when clicked.
-	 * 
-	 * @return Notification containing a PendingIntent for an ODK survey
+	 * @return A Notification which launches the surveys list when clicked.
 	 */
 	private Notification createSurveyNotification() {
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
-				OdkProxy.createSurveyIntent(this), 0);
+				new Intent(this, SurveysActivity.class),
+				Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
