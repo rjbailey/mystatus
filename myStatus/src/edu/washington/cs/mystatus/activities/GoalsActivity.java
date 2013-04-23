@@ -1,7 +1,9 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.washington.cs.mystatus.R;
 
 import android.app.Activity;
 import android.os.Bundle;

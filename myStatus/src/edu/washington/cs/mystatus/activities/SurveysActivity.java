@@ -1,7 +1,9 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.activities;
 
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+
+import edu.washington.cs.mystatus.R;
 
 import android.app.ListActivity;
 import android.content.ContentUris;

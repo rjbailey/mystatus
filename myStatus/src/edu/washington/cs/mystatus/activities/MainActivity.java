@@ -1,7 +1,9 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.activities;
 
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.MainMenuActivity;
+
+import edu.washington.cs.mystatus.R;
 
 import android.app.Activity;
 import android.content.Intent;

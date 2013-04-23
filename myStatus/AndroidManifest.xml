@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.washington.cs.mystatus.MainActivity"
+            android:name="edu.washington.cs.mystatus.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -42,24 +42,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.SurveysActivity"
-            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+            android:name="edu.washington.cs.mystatus.activities.SurveysActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.SettingsActivity"
-            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+            android:name="edu.washington.cs.mystatus.activities.SettingsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.GoalsActivity"
-            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+            android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.HelpActivity"
-            android:parentActivityName="edu.washington.cs.mystatus.MainActivity" >
+            android:name="edu.washington.cs.mystatus.activities.HelpActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
 
         <service
-            android:name="edu.washington.cs.mystatus.NotificationService"
+            android:name="edu.washington.cs.mystatus.services.NotificationService"
             android:enabled="true" >
         </service>
 

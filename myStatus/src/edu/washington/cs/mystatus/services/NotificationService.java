@@ -1,5 +1,7 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.services;
 
+import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.activities.SurveysActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

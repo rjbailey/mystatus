@@ -1,5 +1,6 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.activities;
 
+import edu.washington.cs.mystatus.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
