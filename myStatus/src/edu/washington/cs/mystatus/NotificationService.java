@@ -8,6 +8,7 @@ import android.app.Service;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -25,9 +26,6 @@ public class NotificationService extends Service {
 	private static final String TAG = "mystatus.NotificationService";
 
 	private static final int NOTIFICATION_ID = 0;
-	
-	// adding alert builder
-	private AlertDialog.Builder alertDialogBuilder;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -58,7 +56,10 @@ public class NotificationService extends Service {
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))
 				.setContentText(getResources().getText(R.string.notification_message))
-				.setContentIntent(surveyIntent);
+				.setContentIntent(surveyIntent)
+				.setAutoCancel(true)
+				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+				
 		return nb.build();
 	}
 }
