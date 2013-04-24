@@ -49,6 +49,10 @@ public final class FormsProviderAPI {
         public static final String SUBMISSION_URI = "submissionUri"; // can be null
         public static final String BASE64_RSA_PUBLIC_KEY = "base64RsaPublicKey"; // can be null
 
+        // adding collumn last modified time to tracked when the file is last modified
+        // @ CD
+        //public static final String LAST_MODIFIED = "lastModified";
+        
         // these are generated for you (but you can insert something else if you want)
         public static final String DISPLAY_SUBTEXT = "displaySubtext";
         public static final String MD5_HASH = "md5Hash";

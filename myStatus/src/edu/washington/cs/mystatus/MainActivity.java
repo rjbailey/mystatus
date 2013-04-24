@@ -1,6 +1,7 @@
 package edu.washington.cs.mystatus;
 
 import org.odk.collect.android.activities.FormChooserList;
+import org.odk.collect.android.activities.FormDownloadList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -72,6 +73,7 @@ public class MainActivity extends Activity {
 		mInformationBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 				Log.d(TAG, "Information button clicked");
 			}
 		});

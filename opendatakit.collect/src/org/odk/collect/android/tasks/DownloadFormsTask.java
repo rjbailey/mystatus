@@ -120,10 +120,12 @@ public class DownloadFormsTask extends
 
 						HashMap<String, String> formInfo = FileUtils
 								.parseXML(dl);
-
-						// we can encrypted the file right here
+						
+						// initialize last modified as the time the form get
+						// downloaded
 						// @CD
-						EncryptUtils.encryptedData(dl);
+						// v.put(FormsColumns.LAST_MODIFIED,
+						// System.currentTimeMillis());
 
 						v.put(FormsColumns.DISPLAY_NAME,
 								formInfo.get(FileUtils.TITLE));
@@ -135,11 +137,38 @@ public class DownloadFormsTask extends
 								formInfo.get(FileUtils.SUBMISSIONURI));
 						v.put(FormsColumns.BASE64_RSA_PUBLIC_KEY,
 								formInfo.get(FileUtils.BASE64_RSA_PUBLIC_KEY));
-						uri = Collect.getInstance().getContentResolver()
-								.insert(FormsColumns.CONTENT_URI, v);
-						Collect.getInstance()
-								.getActivityLogger()
-								.logAction(this, "insert", dl.getAbsolutePath());
+
+						// check if the form is a duplicate or not before insert
+						// it to the db
+						// @CD
+						
+						Cursor duplicateFormCursor;
+						String[] selectionArgs1 = new String[] {
+								formInfo.get(FileUtils.FORMID),
+								formInfo.get(FileUtils.VERSION) };
+						String selection1 = FormsColumns.JR_FORM_ID + "=? AND "
+								+ FormsColumns.JR_VERSION + "=?";
+						duplicateFormCursor = Collect
+								.getInstance()
+								.getContentResolver()
+								.query(FormsColumns.CONTENT_URI, null,
+										selection1, selectionArgs1, null);
+						
+						// check before insert new form to table
+						// @CD
+						if (duplicateFormCursor.getCount() == 0){
+							// we can encrypted the file right here
+							// @CD
+							EncryptUtils.encryptedData(dl);
+							uri = Collect.getInstance().getContentResolver()
+									.insert(FormsColumns.CONTENT_URI, v);
+							Collect.getInstance()
+							.getActivityLogger()
+							.logAction(this, "insert", dl.getAbsolutePath());
+							
+						}else {
+							dl.delete();
+						}
 
 					} else {
 						alreadyExists.moveToFirst();
@@ -527,7 +556,7 @@ public class DownloadFormsTask extends
 						// encrypted media file here
 						// @CD
 						EncryptUtils.encryptedData(mediaFile);
-						
+
 					} else {
 						String currentFileHash = FileUtils
 								.getMd5Hash(mediaFile);

@@ -3,6 +3,7 @@ package edu.washington.cs.mystatus;
 import org.odk.collect.android.activities.FormChooserList;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.InstanceChooserList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,7 @@ public class OdkProxy {
 	 * @return An Intent which launches the ODK Collect FormDownloadList.
 	 */
 	public static Intent createFormDownloadIntent(Context context) {
-		return new Intent(context, FormDownloadList.class);
+		//return new Intent(context, FormDownloadList.class);
+		return new Intent(context, InstanceChooserList.class);
 	}
 }

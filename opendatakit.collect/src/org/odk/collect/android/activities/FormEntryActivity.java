@@ -1635,6 +1635,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 												"saveAndExit");
 								saveDataToDisk(EXIT, isInstanceComplete(false),
 										null);
+								// changing the last modified field of the form
+								// @CD
+								
 							} else {
 								Collect.getInstance()
 										.getActivityLogger()
@@ -2521,5 +2524,4 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		i.setAction("org.odk.collect.android.FormSaved");
 		this.sendBroadcast(i);
 	}
-
 }
