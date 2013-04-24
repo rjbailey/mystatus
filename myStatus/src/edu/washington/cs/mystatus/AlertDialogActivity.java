@@ -58,7 +58,7 @@ public class AlertDialogActivity extends Activity {
 				new Intent(this, NotificationService.class), 0);
 		long freqMillis = period * 1000;
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30*1000,
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+freqMillis,
 				freqMillis, notifyIntent);
 		Log.d(TAG, "Notifying every " + period + " seconds");
 	}
