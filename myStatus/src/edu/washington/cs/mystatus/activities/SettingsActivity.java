@@ -119,7 +119,7 @@ public class SettingsActivity extends Activity {
 		// Convert from seconds to milliseconds
 		long freqMillis = period * 1000;
 
-		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, freqMillis, freqMillis, notifyIntent);
+		am.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis()+freqMillis, freqMillis, notifyIntent);
 		Log.d(TAG, "Notifying every " + period + " seconds");
 	}
 
