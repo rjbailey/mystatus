@@ -167,6 +167,8 @@ public class DownloadFormsTask extends
 							.logAction(this, "insert", dl.getAbsolutePath());
 							
 						}else {
+							// if the form is duplicate ---then delete it
+							// @CD
 							dl.delete();
 						}
 

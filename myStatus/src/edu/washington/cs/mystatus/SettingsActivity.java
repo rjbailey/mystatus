@@ -25,12 +25,13 @@ import android.widget.EditText;
  * @see NotificationService
  */
 public class SettingsActivity extends Activity {
-	
-	private static final String TAG = "mystatus.SettingsActivity";
-	
-	private static final long DEFAULT_NOTIFICATION_PERIOD = 5; // 5 seconds
-	private static final long MAX_NOTIFICATION_PERIOD = 86400; // number of seconds per day
 
+	private static final String TAG = "mystatus.SettingsActivity";
+
+	private static final long DEFAULT_NOTIFICATION_PERIOD = 5; // 5 seconds
+	private static final long MAX_NOTIFICATION_PERIOD = 86400; // number of
+																// seconds per
+																// day
 	private CheckBox mEnableNotificationsBox;
 	private EditText mNotificationPeriod;
 
@@ -41,29 +42,31 @@ public class SettingsActivity extends Activity {
 
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		boolean isChecked = settings.getBoolean("settings_checked", false);
-		
+
 		mEnableNotificationsBox = (CheckBox) findViewById(R.id.notification_checkbox);
 		mNotificationPeriod = (EditText) findViewById(R.id.notification_period);
 
 		mEnableNotificationsBox.setChecked(isChecked);
-		
-		mEnableNotificationsBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-				SharedPreferences.Editor editor = prefs.edit();
-				if (isChecked) {
-					// set preference
-					editor.putBoolean("settings_checked", true);
-					enableNotifications();
-				} else {
-					// set preference
-					editor.putBoolean("settings_checked", false);
-					disableNotifications();
-				}
-				editor.commit();
-			}
-		});
+
+		mEnableNotificationsBox
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+						SharedPreferences.Editor editor = prefs.edit();
+						if (isChecked) {
+							// set preference
+							editor.putBoolean("settings_checked", true);
+							enableNotifications();
+						} else {
+							// set preference
+							editor.putBoolean("settings_checked", false);
+							disableNotifications();
+						}
+						editor.commit();
+					}
+				});
 
 		mNotificationPeriod.setText(Long.toString(DEFAULT_NOTIFICATION_PERIOD));
 	}
@@ -95,9 +98,12 @@ public class SettingsActivity extends Activity {
 		// Convert from seconds to milliseconds
 		long freqMillis = period * 1000;
 
-		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, freqMillis, freqMillis, notifyIntent);
+		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, freqMillis,
+				freqMillis, notifyIntent);
 		Log.d(TAG, "Notifying every " + period + " seconds");
 	}
+	
+	
 
 	/**
 	 * Cancels the AlarmManager alarm that generates notifications.

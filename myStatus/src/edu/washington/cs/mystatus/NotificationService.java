@@ -1,9 +1,11 @@
 package edu.washington.cs.mystatus;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -23,7 +25,10 @@ public class NotificationService extends Service {
 	private static final String TAG = "mystatus.NotificationService";
 
 	private static final int NOTIFICATION_ID = 0;
-
+	
+	// adding alert builder
+	private AlertDialog.Builder alertDialogBuilder;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -47,8 +52,8 @@ public class NotificationService extends Service {
 	private Notification createSurveyNotification() {
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
-				OdkProxy.createSurveyIntent(this), 0);
-
+				OdkProxy.createSurveyIntent(this), 0);	
+		
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))

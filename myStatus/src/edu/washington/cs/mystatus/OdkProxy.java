@@ -27,9 +27,12 @@ public class OdkProxy {
 	 * @return An Intent which launches an ODK Collect FormEntryActivity.
 	 */
 	public static Intent createSurveyIntent(Context context) {
-		return new Intent(context, FormEntryActivity.class)
-				.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-				.setData(Uri.parse(ODK_FORMS_URI));
+//		return new Intent(context, FormEntryActivity.class)
+//				.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//				.setData(Uri.parse(ODK_FORMS_URI));
+		return new Intent(context, AlertDialogActivity.class)
+		.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+		.setData(Uri.parse(ODK_FORMS_URI));
 	}
 
 	/**
