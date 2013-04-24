@@ -107,7 +107,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		FormLoaderListener, FormSavedListener, AdvanceToNextListener,
 		OnGestureListener {
 	private static final String t = "FormEntryActivity";
-
+	private static final String ODK_FORMS_URI = "content://org.odk.collect.android.provider.odk.forms/forms/";
+	private static int FORMS_URI_NUM = 1;
+	
 	// save with every swipe forward or back. Timings indicate this takes .25
 	// seconds.
 	// if it ever becomes an issue, this value can be changed to save every n'th
@@ -1064,30 +1066,46 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				sa.setVisibility(View.GONE);
 			}
 
-			// Create 'save' button
-			((Button) endView.findViewById(R.id.save_exit_button))
-					.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Collect.getInstance()
-									.getActivityLogger()
-									.logInstanceAction(
-											this,
-											"createView.saveAndExit",
-											instanceComplete.isChecked() ? "saveAsComplete"
-													: "saveIncomplete");
-							// Form is marked as 'saved' here.
-							if (saveAs.getText().length() < 1) {
-								Toast.makeText(FormEntryActivity.this,
-										R.string.save_as_error,
-										Toast.LENGTH_SHORT).show();
-							} else {
-								saveDataToDisk(EXIT, instanceComplete
-										.isChecked(), saveAs.getText()
-										.toString());
-							}
+			// Create 'next survey' button
+			// check that there is a next form
+			((Button) endView.findViewById(R.id.next_survey_button))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (saveAs.getText().length() < 1) {
+							Toast.makeText(FormEntryActivity.this,
+									R.string.save_as_error,
+									Toast.LENGTH_SHORT).show();
+						} else {
+							saveDataToDisk(EXIT, false,
+									saveAs.getText().toString());
 						}
-					});
+						FORMS_URI_NUM++;
+						// not sure what happens if no more forms left
+						Uri nextForm = Uri.parse(ODK_FORMS_URI + FORMS_URI_NUM);
+						startActivity(new Intent(FormEntryActivity.this,
+								FormEntryActivity.class)
+								.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+								.setData(nextForm));
+					}
+				});
+
+			// Create 'survey list' button
+			((Button) endView.findViewById(R.id.survey_menu_button))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (saveAs.getText().length() < 1) {
+							Toast.makeText(FormEntryActivity.this,
+									R.string.save_as_error,
+									Toast.LENGTH_SHORT).show();
+						} else {
+							saveDataToDisk(EXIT, false,
+									saveAs.getText().toString());
+						}
+						finish();
+					}
+				});
 
 			if (mBackButton.isShown()) {
 				mBackButton.setEnabled(true);
