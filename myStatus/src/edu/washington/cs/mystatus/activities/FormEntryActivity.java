@@ -733,8 +733,8 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			menu.add(0, MENU_LANGUAGES, 0, getString(R.string.change_language))
 					.setIcon(R.drawable.ic_menu_start_conversation)
 					.setEnabled(
-							(formController.getLanguages() == null || formController
-									.getLanguages().length == 1) ? false : true);
+							(formController == null || formController.getLanguages() == null ||
+									formController.getLanguages().length == 1) ? false : true);
 		}
 		if (mAdminPreferences.getBoolean(
 				AdminPreferencesActivity.KEY_ACCESS_SETTINGS, true)) {
