@@ -14,6 +14,10 @@
 
     <!-- Survey list -->
     <string name="no_surveys">No more surveys for today!</string>
+    
+    <!-- Form Entry Activity -->
+    <string name="next_survey">Go to the next survey.</string>
+    <string name="survey_menu">Go back to the list of surveys.</string>
 
     <!-- Settings -->
     <string name="settings_title">Notification Settings</string>

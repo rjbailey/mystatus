@@ -64,12 +64,21 @@
             android:textSize="21sp" />
 
         <Button
-            android:id="@+id/save_exit_button"
+            android:id="@+id/next_survey_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
-            android:text="@string/quit_entry"
+            android:text="@string/next_survey"
+            android:textSize="21sp" />
+
+        <Button
+            android:id="@+id/survey_menu_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:text="@string/survey_menu"
             android:textSize="21sp" />
 
         <View

@@ -1,0 +1,31 @@
+How do we want to use Collect:
+  we want to make modifications in Collect
+  Gaetano thinks there should be a barrier
+    more it diverges, more work later
+
+Encryption:
+  Collect doesnt encrypt media or xml
+
+Next week:
+  how to evaluate what forms to display
+  history page: previous survey responses (home screen button)
+
+What to put in form to see when to fill out
+Design form that can be filled out at will
+Making superset of what's there
+Well documented, clear doing something different
+
+For later:
+  signing into mystatus
+  ask for pin or do a design
+  but whenever loses focus
+
+Next week:
+  10 min presentation
+
+Decide duties on project
+  with rationale
+
+Demo for Amy
+
+Widgets
