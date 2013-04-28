@@ -30,8 +30,6 @@ public class GoalsActivity extends Activity {
 	private ArrayAdapter<String> goalPopulatorForList;
 	private List<String> setGoals;
 	private ListView setGoalsView;
-	//private Gson gson;
-	//private String[] goalsList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +39,6 @@ public class GoalsActivity extends Activity {
 		
 		setGlobalVariables();
 		
-		//GsonBuilder gsonb = new GsonBuilder();
-		//gson = gsonb.create();
-		//goalsList = gson.fromJson(goalsPrefs, String[].class);
-		//setGoals = gson.fromJson(goalsPrefs, List<String>.class);
-		//setGoals = new ArrayList<String>(Arrays.asList(goalsList));
 		makeArrayAdapters();
 		
 		addListenersOnButtons();
@@ -58,8 +51,6 @@ public class GoalsActivity extends Activity {
 			// When "Select" is clicked, add the selected goal to the list of Set Goals
 			// This will populate the ListView and the dropdown for Removing goals.
 			public void onClick(View v) {
-				//SharedPreferences settings = getPreferences(MODE_PRIVATE);
-				//Editor e = settings.edit();
 				
 				String newGoalItem = String.valueOf(newGoal.getSelectedItem());
 				// Check that the item is not already a Set Goal to avoid duplicates
@@ -67,10 +58,7 @@ public class GoalsActivity extends Activity {
 					setGoals.add(newGoalItem);
 					removeGoal.setAdapter(goalPopulatorForRemove);
 					setGoalsView.setAdapter(goalPopulatorForList);
-					//String value = gson.toJson(goalsList);
-					//e.putString("set_goals", value);
 				}
-				//e.commit();
 			}
 		});
 		
