@@ -17,12 +17,6 @@
         android:text="@string/settings_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <CheckBox
-        android:id="@+id/notification_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/notification_enable" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
