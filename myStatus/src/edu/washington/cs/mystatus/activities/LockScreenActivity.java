@@ -50,20 +50,20 @@ public class LockScreenActivity extends Activity implements ICacheWordSubscriber
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_lock_screen);
-//        mCacheWord = new CacheWordActivityHandler(this);
-//
-//        mViewCreatePassphrase = findViewById(R.id.llCreatePassphrase);
-//        mViewEnterPassphrase = findViewById(R.id.llEnterPassphrase);
-//
-//        mEnterPassphrase = (EditText) findViewById(R.id.editEnterPassphrase);
-//        mNewPassphrase = (EditText) findViewById(R.id.editNewPassphrase);
-//        mConfirmNewPassphrase = (EditText) findViewById(R.id.editConfirmNewPassphrase);
-//        ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper1);
-//        LinearLayout flipView1 = (LinearLayout) findViewById(R.id.flipView1);
-//        LinearLayout flipView2 = (LinearLayout) findViewById(R.id.flipView2);
-//
-//        mSlider = new TwoViewSlider(vf, flipView1, flipView2, mNewPassphrase, mConfirmNewPassphrase);
+        setContentView(R.layout.activity_lock_screen);
+        mCacheWord = new CacheWordActivityHandler(this);
+
+        mViewCreatePassphrase = findViewById(R.id.llCreatePassphrase);
+        mViewEnterPassphrase = findViewById(R.id.llEnterPassphrase);
+
+        mEnterPassphrase = (EditText) findViewById(R.id.editEnterPassphrase);
+        mNewPassphrase = (EditText) findViewById(R.id.editNewPassphrase);
+        mConfirmNewPassphrase = (EditText) findViewById(R.id.editConfirmNewPassphrase);
+        ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper1);
+        LinearLayout flipView1 = (LinearLayout) findViewById(R.id.flipView1);
+        LinearLayout flipView2 = (LinearLayout) findViewById(R.id.flipView2);
+
+        mSlider = new TwoViewSlider(vf, flipView1, flipView2, mNewPassphrase, mConfirmNewPassphrase);
 
     }
 
