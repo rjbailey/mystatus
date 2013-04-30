@@ -14,6 +14,7 @@
 
 package edu.washington.cs.mystatus.tasks;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -21,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
@@ -43,6 +45,7 @@ import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormLoaderListener;
 import edu.washington.cs.mystatus.logic.FileReferenceFactory;
 import edu.washington.cs.mystatus.logic.FormController;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
 import android.content.Intent;
@@ -164,7 +167,14 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             try {
                 Log.i(t, "Attempting to load from: " + formXml.getAbsolutePath());
                 fis = new FileInputStream(formXml);
-                fd = XFormUtils.getFormFromInputStream(fis);
+                DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+                dataDecryption.InitCiphers();
+                ByteArrayInputStream bis = new ByteArrayInputStream(dataDecryption.CBCDecryptAsByteArray
+                		 						(fis, formXml.length()));
+                // use byte decrypted data
+                // @CD
+                //fd = XFormUtils.getFormFromInputStream(fis);
+                fd = XFormUtils.getFormFromInputStream(bis);
                 if (fd == null) {
                     mErrorMsg = "Error reading XForm file";
                 } else {
