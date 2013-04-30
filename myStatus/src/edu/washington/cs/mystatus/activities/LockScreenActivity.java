@@ -27,6 +27,8 @@ import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.security.GeneralSecurityException;
 
+import edu.washington.cs.mystatus.R;
+
 public class LockScreenActivity extends Activity implements ICacheWordSubscriber {
     private static final String TAG = "LockScreenActivity";
 
