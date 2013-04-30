@@ -104,7 +104,7 @@ public class MediaLayout extends RelativeLayout {
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                 return;
             }
-         // need to decrypt the video file first 
+            // need to decrypt the video file first 
             // @CD
             String tempPathFile = videoFilename.substring(0,videoFilename.lastIndexOf(".") - 1)+"temp"
 					+videoFilename.substring(videoFilename.lastIndexOf("."));
@@ -125,6 +125,8 @@ public class MediaLayout extends RelativeLayout {
             Intent i = new Intent("android.intent.action.VIEW");
             //i.setDataAndType(Uri.fromFile(videoFile), "video/*");
             // need to set new file path
+            // TODO: might need to change the way we play video so we can get rid of 
+            // the temporary file....
             // @CD
             i.setDataAndType(Uri.fromFile(tf), "video/*");
             try {
