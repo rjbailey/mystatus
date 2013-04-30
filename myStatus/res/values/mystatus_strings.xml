@@ -20,9 +20,21 @@
 
     <!-- Settings -->
     <string name="settings_title">Notification Settings</string>
-    <string name="notification_period">Notify every X seconds:</string>
+    
+    <string name="day_setting">Day of the week:</string>
     <string name="notification_title">myStatus Alert</string>
     <string name="notification_message">Tap to check in with myStatus</string>
+    <string-array name="day_array">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+    <string name="day_prompt">Choose a day of the week.</string>
+    <string name="pick_day">Confirm choice of day.</string>
     
     <!-- Get Help -->
     <string name="help_title">Need help?</string>
@@ -39,7 +51,8 @@
         <item>I would like to go for a walk everyday.</item>
         <item>I want to go out once a week.</item>
     </string-array>
-	<string name="set_goals">Your current goals:</string>
+	<string name="create_activity">Add a new activity to your calendar:</string>
+	<string name="activity_title">What would you like to do?</string>
 	<string-array name="set_goals_list">
 	    
 	</string-array>
@@ -47,4 +60,6 @@
 	<string name="remove_goals">Remove a goal?</string>
 	<string name="remove_goal_prompt">Which goal would you like to remove?</string>
 	<string name="select_dropdown">Select</string>
+	<string name="time_setting">Time:</string>
+	<string name="pick_time">Pick time</string>
 </resources>
