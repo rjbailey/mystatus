@@ -14,7 +14,9 @@
 
 package edu.washington.cs.mystatus.tasks;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +34,7 @@ import org.kxml2.kdom.Element;
 import edu.washington.cs.mystatus.R;
 import org.opendatakit.httpclientandroidlib.HttpResponse;
 import org.opendatakit.httpclientandroidlib.HttpStatus;
+import org.opendatakit.httpclientandroidlib.androidextra.Base64;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
@@ -41,6 +44,8 @@ import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
 import edu.washington.cs.mystatus.logic.FormDetails;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.utilities.Base64Wrapper;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.DocumentFetchResult;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.WebUtils;
@@ -118,7 +123,15 @@ public class DownloadFormsTask extends
 	                    ContentValues v = new ContentValues();
 	                    v.put(FormsColumns.FORM_FILE_PATH, dl.getAbsolutePath());
 	
-	                    HashMap<String, String> formInfo = FileUtils.parseXML(dl);
+	                    //HashMap<String, String> formInfo = FileUtils.parseXML(dl);
+	                    // added parsing using input stream for more secured
+	                    // @CD
+	                    FileInputStream fis = new FileInputStream(dl);
+	                    DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+	                    dataDecryption.InitCiphers();
+	                    ByteArrayInputStream bis = new ByteArrayInputStream(dataDecryption.CBCDecryptAsByteArray
+	                    		 						(fis, dl.length()));
+	                    HashMap<String, String> formInfo = FileUtils.parseXML(bis);
 	                    v.put(FormsColumns.DISPLAY_NAME, formInfo.get(FileUtils.TITLE));
 	                    v.put(FormsColumns.JR_VERSION, formInfo.get(FileUtils.VERSION));
 	                    v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));
@@ -212,7 +225,11 @@ public class DownloadFormsTask extends
         String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
         rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
         rootName = rootName.trim();
-
+        // adding filename encryption to avoid exposed data
+        // for now use base 64 encoding
+        // @CD
+        rootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
+               
         // proposed name of xml file...
         String path = MyStatus.FORMS_PATH + File.separator + rootName + ".xml";
         int i = 2;
@@ -320,12 +337,18 @@ public class DownloadFormsTask extends
 	            try {
 	                is = response.getEntity().getContent();
 	                os = new FileOutputStream(f);
-	                byte buf[] = new byte[1024];
-	                int len;
-	                while ((len = is.read(buf)) > 0) {
-	                    os.write(buf, 0, len);
-	                }
-	                os.flush();
+	                // adding encryption for file downloaded
+	                // @CD
+	                DataEncryptionUtils dataEncryption = new DataEncryptionUtils();
+	                dataEncryption.InitCiphers();
+//	                byte buf[] = new byte[1024];
+//	                int len;
+//	                while ((len = is.read(buf)) > 0) {
+//	                    os.write(buf, 0, len);
+//	                }
+//	                os.flush();
+	                // encrypt data downloaded
+	                dataEncryption.CBCEncrypt(is, os);
 	                success = true;
 	            } finally {
 	                if (os != null) {

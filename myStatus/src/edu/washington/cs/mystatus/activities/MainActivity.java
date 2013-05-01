@@ -1,5 +1,8 @@
 package edu.washington.cs.mystatus.activities;
 
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 import edu.washington.cs.mystatus.activities.FormDownloadList;
 import edu.washington.cs.mystatus.activities.MainMenuActivity;
 
@@ -19,7 +22,7 @@ import android.widget.Button;
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 	private static final String TAG = "mystatus.MainActivity";
 
@@ -29,12 +32,15 @@ public class MainActivity extends Activity {
 	private Button mManageSurveysBtn;
 	private Button mInformationBtn;
 	private Button mHelpBtn;
-
+	private CacheWordActivityHandler mCacheWord;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		// adding activity handler
+		mCacheWord = new CacheWordActivityHandler(this);
+		
 		mSurveyBtn = (Button) findViewById(R.id.button_survey);
 		mHistoryBtn = (Button) findViewById(R.id.button_history);
 		mGoalsBtn = (Button) findViewById(R.id.button_goals);
@@ -110,5 +116,50 @@ public class MainActivity extends Activity {
 			return super.onMenuItemSelected(featureId, item);
 		}
 	}
+	
+	// methods need to be added to subscribed to cache word
+	// @CD
+	@Override
+	public void onCacheWordUninitialized() {
+		showLockScreen();
+	}
+
+	@Override
+	public void onCacheWordLocked() {
+		// TODO: might need to do some more clean up here
+		// such as close database and erase all decrypted media files
+		// @CD
+		showLockScreen();
+	}
+
+	@Override
+	public void onCacheWordOpened() {
+		// TODO: night need to reenable database and 
+		// @CD
+		
+	}
+	
+	@Override
+    protected void onPause() {
+        super.onPause();
+        mCacheWord.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCacheWord.onResume();
+    }
+    
+    /**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
 
 }

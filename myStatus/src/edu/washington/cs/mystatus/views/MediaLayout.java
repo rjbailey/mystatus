@@ -15,6 +15,9 @@
 package edu.washington.cs.mystatus.views;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
@@ -22,6 +25,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.widgets.QuestionWidget;
 
@@ -100,9 +104,31 @@ public class MediaLayout extends RelativeLayout {
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                 return;
             }
-
+            // need to decrypt the video file first 
+            // @CD
+            String tempPathFile = videoFilename.substring(0,videoFilename.lastIndexOf(".") - 1)+"temp"
+					+videoFilename.substring(videoFilename.lastIndexOf("."));
+            final File tf = new File (tempPathFile);
+            try {
+				FileOutputStream fos = new FileOutputStream(tf);
+				FileInputStream fis = new FileInputStream(videoFilename);
+				DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+				dataDecryption.InitCiphers();
+				dataDecryption.CBCDecrypt(fis, fos);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+            
             Intent i = new Intent("android.intent.action.VIEW");
-            i.setDataAndType(Uri.fromFile(videoFile), "video/*");
+            //i.setDataAndType(Uri.fromFile(videoFile), "video/*");
+            // need to set new file path
+            // TODO: might need to change the way we play video so we can get rid of 
+            // the temporary file....
+            // @CD
+            i.setDataAndType(Uri.fromFile(tf), "video/*");
             try {
                 ((Activity) getContext()).startActivity(i);
             } catch (ActivityNotFoundException e) {
