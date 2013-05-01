@@ -27,7 +27,7 @@ import android.util.Log;
  */
 public class NotificationService extends Service {
 
-	private static final String TAG = "mystatus.NotificationService";
+	private static final String TAG = "NotificationService";
 
 	private static final int NOTIFICATION_ID = 0;
 
@@ -38,6 +38,8 @@ public class NotificationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d(TAG, "NotificationService started.");
+
 		// mark all passive forms that satisfy their predicate as needing a response
 		PredicateSolver.evaluateAllPredicates();
 
@@ -55,6 +57,8 @@ public class NotificationService extends Service {
 			Notification surveyNotification = createSurveyNotification();
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.notify(NOTIFICATION_ID, surveyNotification);
+		} else {
+			Log.i(TAG, "No surveys need a response, so no notification was generated.");
 		}
 
 		return super.onStartCommand(intent, flags, startId);

@@ -1,5 +1,6 @@
 package edu.washington.cs.mystatus.activities;
 
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.VersionHidingCursorAdapter;
 
@@ -24,7 +25,7 @@ import android.widget.SimpleCursorAdapter;
  */
 public class SurveysActivity extends ListActivity {
 
-	private static final String TAG = "mystatus.SurveysActivity";
+	private static final String TAG = "SurveysActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +34,10 @@ public class SurveysActivity extends ListActivity {
 		Log.d(TAG, "Surveys activity created.");
 
 		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
-		String selection = FormsColumns.NEEDS_RESPONSE + " = 1";
-		Cursor c = getContentResolver()
-				.query(FormsColumns.CONTENT_URI, null, selection, null, sortOrder);
+		String selection = FormsColumns.NEEDS_RESPONSE + " = 1 AND "
+				 + FormsColumns.FORM_TYPE + " = ?";
+		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
+		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
 
 		String[] data = new String[] {
 				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION

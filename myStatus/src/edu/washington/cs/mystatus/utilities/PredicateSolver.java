@@ -17,7 +17,7 @@ import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
  */
 public class PredicateSolver {
 
-    public static final String TAG = "mystatus.PredicateSolver";
+    public static final String TAG = "PredicateSolver";
 
     /**
      * Evaluates the predicates of all passive forms currently flagged as not
@@ -26,7 +26,10 @@ public class PredicateSolver {
      */
     public static void evaluateAllPredicates() {
         String[] projection = new String[] {
-                FormsColumns._ID, FormsColumns.PREDICATE, FormsColumns.LAST_RESPONSE
+                FormsColumns._ID,
+                FormsColumns.DISPLAY_NAME,
+                FormsColumns.PREDICATE,
+                FormsColumns.LAST_RESPONSE
         };
         String selection = FormsColumns.NEEDS_RESPONSE + " = 0 AND "
                 + FormsColumns.FORM_TYPE + " = ?";
@@ -35,6 +38,8 @@ public class PredicateSolver {
 
         Cursor c = MyStatus.getInstance().getContentResolver()
                 .query(FormsColumns.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
+
+        Log.d(TAG, "Found " + c.getCount() + " form(s) to be evaluated.");
 
         while (c.moveToNext()) {
             if (evaluatePredicate(c)) {
@@ -45,6 +50,7 @@ public class PredicateSolver {
                 MyStatus.getInstance().getContentResolver().update(uri, values, null, null);
             }
         }
+        c.close();
     }
 
     /**
@@ -60,33 +66,38 @@ public class PredicateSolver {
      * predicate has a syntax error or its input values are invalid, we may want
      * to do something else.
      * 
-     * @param c A Cursor positioned on a row with projection (id, predicate,
-     *        lastResponse).
+     * @param c A Cursor positioned on a row with projection (id, name,
+     *        predicate, lastResponse).
      * @return If the predicate and its input values (e.g. lastResponse) are
      *         valid, returns the truth value of the evaluated predicate. If the
      *         predicate or its input values are invalid, returns true.
      */
     private static boolean evaluatePredicate(Cursor c) {
-        // always display passive forms where the predicate is null
-        // or the last response time is null (i.e. the form has never been filled out before)
-        if (c.isNull(1) || c.isNull(2)) {
+        int formId = c.getInt(0);
+        String formName = c.getString(1);
+        Log.d(TAG, "Evaluating predicate for Form #" + formId + ": " + formName);
+
+        if (c.isNull(2) || c.isNull(3)) {
+            if (c.isNull(2)) Log.i(TAG, "Predicate is null.");
+            if (c.isNull(3)) Log.i(TAG, "The survey has never been filled out.");
             return true;
         }
 
-        int formId = c.getInt(0);
-        String predicate = c.getString(1);
-        Long lastResponseTime = c.getLong(2);
+        String predicate = c.getString(2);
+        Long lastResponseTime = c.getLong(3);
 
         Long waitTime;
         try {
             waitTime = Long.parseLong(predicate);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Invalid predicate in form with ID " + formId + ": \"" + predicate + "\"");
+            Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
             // always display passive forms with an invalid predicate
             return true;
         }
         Long now = Long.valueOf(System.currentTimeMillis());
 
-        return (lastResponseTime + waitTime) < now;
+        boolean result = (lastResponseTime + waitTime) < now;
+        Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
+        return result;
     }
 }
