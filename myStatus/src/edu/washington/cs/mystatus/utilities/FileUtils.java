@@ -316,14 +316,14 @@ public class FileUtils {
                 // and that's totally fine.
             }
             try {
-                Element predicate = getChildElement(model, "predicate");
-                fields.put(PREDICATE, predicate.getText(0));
+                String predicate = model.getAttributeValue(null, "predicate");
+                fields.put(PREDICATE, predicate);
             } catch (Exception e) {
                 Log.i(t, xmlFile.getAbsolutePath() + " does not have a predicate element");
             }
             try {
-                Element trigger = getChildElement(model, "trigger");
-                fields.put(TRIGGER, trigger.getText(0));
+                String trigger = model.getAttributeValue(null, "trigger");
+                fields.put(TRIGGER, trigger);
             } catch (Exception e) {
                 Log.i(t, xmlFile.getAbsolutePath() + " does not have a trigger element");
             }
