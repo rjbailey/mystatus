@@ -52,6 +52,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
     private Boolean mMarkCompleted;
     private Uri mUri;
     private String mInstanceName;
+    private Uri mFormUri;
 
     public static final int SAVED = 500;
     public static final int SAVE_ERROR = 501;
@@ -60,11 +61,13 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
     public static final int SAVED_AND_EXIT = 504;
 
 
-    public SaveToDiskTask(Uri uri, Boolean saveAndExit, Boolean markCompleted, String updatedName) {
+    public SaveToDiskTask(Uri uri, Boolean saveAndExit, Boolean markCompleted, String updatedName,
+            Uri formUri) {
         mUri = uri;
         mSave = saveAndExit;
         mMarkCompleted = markCompleted;
         mInstanceName = updatedName;
+        mFormUri = formUri;
     }
 
 
@@ -125,6 +128,21 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
             values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
         } else {
             values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_COMPLETE);
+
+            // Update the lastResponse time of this form and mark it as not needing a response
+            ContentValues formValues = new ContentValues();
+            formValues.put(FormsColumns.LAST_RESPONSE, Long.valueOf(System.currentTimeMillis()));
+            formValues.put(FormsColumns.NEEDS_RESPONSE, 0);
+
+            int updated = MyStatus.getInstance().getContentResolver()
+                    .update(mFormUri, formValues, null, null);
+            if (updated > 1) {
+                Log.w(t, "Updated more than one form, that's not good: " + mFormUri.toString());
+            } else if (updated == 1) {
+                Log.i(t, "Form successfully updated");
+            } else {
+                Log.e(t, "Form doesn't exist but we have its Uri!! " + mFormUri.toString());
+            }
         }
         // update this whether or not the status is complete...
         values.put(InstanceColumns.CAN_EDIT_WHEN_COMPLETE, Boolean.toString(canEditAfterCompleted));
