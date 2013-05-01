@@ -17,11 +17,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * SurveysActivity should provide a list of all surveys which currently need a
- * response. Surveys needing a response are those surveys that the user has
- * subscribed to, but not responded to within their set period (i.e., if a
- * survey requires a response every N days, and it has been N days since the
- * user last responded to it, it will appear in the list).
+ * SurveysActivity provides a list of all surveys which are flagged as needing a
+ * response.
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  */
@@ -36,8 +33,9 @@ public class SurveysActivity extends ListActivity {
 		Log.d(TAG, "Surveys activity created.");
 
 		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
+		String selection = FormsColumns.NEEDS_RESPONSE + " = 1";
 		Cursor c = getContentResolver()
-				.query(FormsColumns.CONTENT_URI, null, null, null, sortOrder);
+				.query(FormsColumns.CONTENT_URI, null, selection, null, sortOrder);
 
 		String[] data = new String[] {
 				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
@@ -46,7 +44,6 @@ public class SurveysActivity extends ListActivity {
 				R.id.text1, R.id.text2, R.id.text3
 		};
 
-		// TODO: filter results based on whether the surveys need a response.
 		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
 				this, R.layout.two_item, c, data, view);
 		setListAdapter(instances);
