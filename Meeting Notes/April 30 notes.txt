@@ -1,0 +1,51 @@
+Biweekly survey ex) make available between 12-16 days
+	notify how long they have left
+	queue up in case want to get out of the way
+
+Demos
+	make some surveys
+	from start to finish: where start is notification
+		when does it show up in the server
+		what does it look like on the server
+		Fusion Tables (for viewing data, also get URL, for use with aggregate)
+		
+	
+good writeup for encryption
+
+decrypt video/media when relock
+
+XLS form instead of Build
+	begin group, end group
+
+Make sure can get data in redcap
+what is form Amy wants to see in
+
+find out license of catch word which is under guardian project?
+
+For writeup:
+Appendix with each library/piece of software, where go it, license, issues
+
+Proof of concept
+
+To Do this week:
+Full path
+How to do forms in xls form
+	maybe autoadvance stuff, see if makes sense, (usually for navigation not filling out)
+	Do we want all the questions on one slide or one slide each
+		(think our plan was one slide each)
+
+Predicates:
+	have a way to open collect and cause it to go to each form
+	load each form and evaluate specially named node
+	standard calculate inside of collect
+		which can take current time
+		puts in variable in model which doesnt have to be visible
+	in place of writing expression evaluator
+
+History:
+	create graph from instances->saved in xml form
+	tag important bit of information, save in database
+	
+Chuong: finish up security, history page, library for making graphs, XLS Form(s)
+Jake: get API token for RedCap, expression evaluator, XLS Form(s)
+Emily: Calendar w/notification service, XLS Form(s)
