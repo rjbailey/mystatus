@@ -63,6 +63,7 @@
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.SurveyListTabs"
+            android:theme="@style/myStatus.Track"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
@@ -79,10 +80,12 @@
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
+            android:theme="@style/myStatus.Plan"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.HelpActivity"
+            android:theme="@style/myStatus.Help"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
 
@@ -104,14 +107,15 @@
         <activity
             android:name="edu.washington.cs.mystatus.activities.MainMenuActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/myStatus.Track"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.SurveyListTabs" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.DrawActivity"
             android:label="@string/app_name" />
@@ -129,7 +133,9 @@
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormDownloadList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/myStatus.Setup"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.DataManagerList"
             android:label="@string/app_name" />

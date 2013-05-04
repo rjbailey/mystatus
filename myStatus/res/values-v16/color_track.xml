@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="myStatus.Track" parent="myStatus">
+        <item name="android:actionBarStyle">@style/Widget.myStatus.ActionBar.Track</item>
+    </style>
+
+    <style name="Widget.myStatus.ActionBar.Track" parent="Widget.myStatus.ActionBar">
+        <item name="android:background">@color/track_color</item>
+        <item name="android:backgroundSplit">@color/track_color</item>
+    </style>
+
+</resources>
