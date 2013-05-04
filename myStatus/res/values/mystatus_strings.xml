@@ -5,18 +5,16 @@
     <string name="action_odk_menu">ODK Collect menu</string>
 
     <!-- Main menu -->
-    <string name="button_survey">Self-Assessment</string>
-    <string name="button_history">History</string>
-    <string name="button_goals">Goals</string>
-    <string name="button_manage_surveys">Manage My Surveys</string>
-    <string name="button_information">More Information</string>
+    <string name="button_track">Track</string>
+    <string name="button_setup">Setup</string>
+    <string name="button_plan">Plan</string>
     <string name="button_help">Get Help</string>
 
     <!-- Survey list -->
-    <string name="no_surveys">No more surveys for today!</string>
+    <string name="no_surveys">You have no unfinished surveys.</string>
     
     <!-- Form Entry Activity -->
-    <string name="survey_menu">Go back to the list of surveys.</string>
+    <string name="survey_menu">Back to survey list</string>
 
     <!-- Settings -->
     <string name="settings_title">Notification Settings</string>

@@ -23,64 +23,41 @@ public class MainActivity extends Activity {
 
 	private static final String TAG = "mystatus.MainActivity";
 
-	private Button mSurveyBtn;
-	private Button mHistoryBtn;
-	private Button mGoalsBtn;
-	private Button mManageSurveysBtn;
-	private Button mInformationBtn;
-	private Button mHelpBtn;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mystatus_main);
 
-		mSurveyBtn = (Button) findViewById(R.id.button_survey);
-		mHistoryBtn = (Button) findViewById(R.id.button_history);
-		mGoalsBtn = (Button) findViewById(R.id.button_goals);
-		mManageSurveysBtn = (Button) findViewById(R.id.button_manage_surveys);
-		mInformationBtn = (Button) findViewById(R.id.button_information);
-		mHelpBtn = (Button) findViewById(R.id.button_help);
+		Button trackBtn = (Button) findViewById(R.id.button_track);
+		Button setupBtn = (Button) findViewById(R.id.button_setup);
+		Button planBtn  = (Button) findViewById(R.id.button_plan);
+		Button helpBtn  = (Button) findViewById(R.id.button_help);
 
-		mSurveyBtn.setOnClickListener(new View.OnClickListener() {
+		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Survey button clicked");
+				Log.d(TAG, "Track button clicked");
 				startActivity(new Intent(MainActivity.this, SurveysActivity.class));
 			}
 		});
 
-		mHistoryBtn.setOnClickListener(new View.OnClickListener() {
+		setupBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "History button clicked");
-			}
-		});
-
-		mGoalsBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Goals button clicked");
-				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
-			}
-		});
-
-		mManageSurveysBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Manage Surveys button clicked");
+				Log.d(TAG, "Setup button clicked");
 				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 			}
 		});
 
-		mInformationBtn.setOnClickListener(new View.OnClickListener() {
+		planBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Information button clicked");
+				Log.d(TAG, "Plan button clicked");
+				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
 			}
 		});
 
-		mHelpBtn.setOnClickListener(new View.OnClickListener() {
+		helpBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Help button clicked");
