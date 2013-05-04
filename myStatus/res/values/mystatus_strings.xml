@@ -6,9 +6,13 @@
 
     <!-- Main menu -->
     <string name="button_track">Track</string>
-    <string name="button_setup">Setup</string>
+    <string name="button_track_subtext">how I\'m doing</string>
+    <string name="button_setup">Set up</string>
+    <string name="button_setup_subtext">surveys and reminders</string>
     <string name="button_plan">Plan</string>
-    <string name="button_help">Get Help</string>
+    <string name="button_plan_subtext">activities and goals</string>
+    <string name="button_help">Get help</string>
+    <string name="button_help_subtext">contact someone</string>
 
     <!-- Survey list -->
     <string name="due_surveys">Surveys due</string>

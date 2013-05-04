@@ -10,32 +10,60 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
+    <LinearLayout
         android:id="@+id/button_track"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/button_track" />
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_track" >
 
-    <Button
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_track" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_track_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/button_setup"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/button_setup" />
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_setup" >
 
-    <Button
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_setup" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_setup_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/button_plan"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/button_plan" />
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_plan" >
 
-    <Button
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_plan" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_plan_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/button_help"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/button_help" />
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_help" >
+
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_help" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_help_subtext" />
+    </LinearLayout>
 
 </LinearLayout>

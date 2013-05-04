@@ -28,10 +28,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mystatus_main);
 
-		Button trackBtn = (Button) findViewById(R.id.button_track);
-		Button setupBtn = (Button) findViewById(R.id.button_setup);
-		Button planBtn  = (Button) findViewById(R.id.button_plan);
-		Button helpBtn  = (Button) findViewById(R.id.button_help);
+		View trackBtn = findViewById(R.id.button_track);
+		View setupBtn = findViewById(R.id.button_setup);
+		View planBtn  = findViewById(R.id.button_plan);
+		View helpBtn  = findViewById(R.id.button_help);
 
 		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="myStatus" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- API 16 theme customizations can go here. -->
+    </style>
+
+    <style name="btn_menu_text" parent="btn_menu_text_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+</resources>
