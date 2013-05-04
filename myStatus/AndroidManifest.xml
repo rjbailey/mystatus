@@ -63,7 +63,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.activities.SurveysActivity"
+            android:name="edu.washington.cs.mystatus.activities.SurveyListTabs"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.DueSurveysList"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.AllSurveysList"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity

@@ -11,7 +11,9 @@
     <string name="button_help">Get Help</string>
 
     <!-- Survey list -->
-    <string name="no_surveys">You have no unfinished surveys.</string>
+    <string name="due_surveys">Surveys due</string>
+    <string name="all_surveys">All surveys</string>
+    <string name="no_surveys">You have no surveys due!</string>
     
     <!-- Form Entry Activity -->
     <string name="survey_menu">Back to survey list</string>

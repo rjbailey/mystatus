@@ -18,14 +18,13 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * SurveysActivity provides a list of all surveys which are flagged as needing a
- * response.
+ * Provides a list of all passive surveys.
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  */
-public class SurveysActivity extends ListActivity {
+public class AllSurveysList extends ListActivity {
 
-	private static final String TAG = "SurveysActivity";
+	private static final String TAG = "AllSurveysList";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +33,7 @@ public class SurveysActivity extends ListActivity {
 		Log.d(TAG, "Surveys activity created.");
 
 		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
-		String selection = FormsColumns.NEEDS_RESPONSE + " = 1 AND "
-				 + FormsColumns.FORM_TYPE + " = ?";
+		String selection = FormsColumns.FORM_TYPE + " = ?";
 		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
 		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
 

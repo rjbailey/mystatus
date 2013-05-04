@@ -1,7 +1,7 @@
 package edu.washington.cs.mystatus.services;
 
 import edu.washington.cs.mystatus.R;
-import edu.washington.cs.mystatus.activities.SurveysActivity;
+import edu.washington.cs.mystatus.activities.SurveyListTabs;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
@@ -70,8 +70,7 @@ public class NotificationService extends Service {
 	private Notification createSurveyNotification() {
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
-				new Intent(this, SurveysActivity.class),
-				Intent.FLAG_ACTIVITY_NEW_TASK);
+				new Intent(this, SurveyListTabs.class), Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)

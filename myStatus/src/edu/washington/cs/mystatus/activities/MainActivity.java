@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Track button clicked");
-				startActivity(new Intent(MainActivity.this, SurveysActivity.class));
+				startActivity(new Intent(MainActivity.this, SurveyListTabs.class));
 			}
 		});
 
