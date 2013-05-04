@@ -55,6 +55,6 @@ public class SurveysActivity extends ListActivity {
 	protected void onListItemClick(ListView listView, View view, int position, long id) {
 		long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
 		Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
-		startActivity(new Intent(Intent.ACTION_EDIT, formUri));
+		startActivity(new Intent(Intent.ACTION_EDIT, formUri, this, FormEntryActivity.class));
 	}
 }

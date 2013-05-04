@@ -50,6 +50,7 @@
         android:theme="@style/myStatus"
         android:allowBackup="false" >
         
+        <!-- myStatus Components -->
         <activity
             android:name="edu.washington.cs.mystatus.activities.MainActivity"
             android:label="@string/app_name"
@@ -78,6 +79,7 @@
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
 
+        <!-- ODK Collect Components -->
         <service
             android:name="edu.washington.cs.mystatus.services.NotificationService"
             android:enabled="true" >
@@ -102,15 +104,6 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />
-            </intent-filter>
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.DrawActivity"
@@ -118,32 +111,12 @@
         <activity
             android:name="edu.washington.cs.mystatus.activities.InstanceChooserList"
             android:label="@string/app_name" />
-
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <action android:name="android.intent.action.EDIT" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-
-            <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
-        </intent-filter>
-
         <activity
             android:name="edu.washington.cs.mystatus.activities.InstanceChooserTabs"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormChooserList"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormManagerList"
             android:label="@string/app_name" />
@@ -186,13 +159,7 @@
         <activity
             android:name="edu.washington.cs.mystatus.activities.AndroidShortcuts"
             android:label="ODK Form"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <receiver
             android:name="edu.washington.cs.mystatus.receivers.NetworkReceiver"
             android:enabled="true" >
