@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.mystatus_main);
 
 		mSurveyBtn = (Button) findViewById(R.id.button_survey);
 		mHistoryBtn = (Button) findViewById(R.id.button_history);

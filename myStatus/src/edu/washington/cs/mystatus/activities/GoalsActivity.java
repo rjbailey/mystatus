@@ -35,7 +35,7 @@ public class GoalsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_goals);
+		setContentView(R.layout.mystatus_goals);
 		
 		setGlobalVariables();
 		

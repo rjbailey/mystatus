@@ -30,7 +30,7 @@ public class SurveysActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_surveys);
+		setContentView(R.layout.mystatus_surveys);
 		Log.d(TAG, "Surveys activity created.");
 
 		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";

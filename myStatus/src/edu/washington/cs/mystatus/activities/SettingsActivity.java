@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
+		setContentView(R.layout.mystatus_settings);
 
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		boolean isChecked = settings.getBoolean("settings_checked", false);

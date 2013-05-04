@@ -33,7 +33,7 @@ public class HelpActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_help);
+		setContentView(R.layout.mystatus_help);
 		Log.d(TAG, "Help activity created.");
 
 		Button callDoctor = (Button) findViewById(R.id.call_doctor);
