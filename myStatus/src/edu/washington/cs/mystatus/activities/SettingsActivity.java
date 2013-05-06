@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.fragments.TimePickerFragment;
 import edu.washington.cs.mystatus.services.NotificationService;
+import edu.washington.cs.mystatus.CalendarCreator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -17,18 +18,17 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Spinner;
-import android.view.View.OnKeyListener;
 
 /**
  * SettingsActivity provides a UI for managing notification settings.
@@ -49,6 +49,7 @@ public class SettingsActivity extends Activity {
 	private static final int DEFAULT_HOUR = 17;
 	private static final int DEFAULT_MIN = 30;
 	private static long EVENT_ID;
+	private static long CALENDAR_ID;
 	
 	//private CheckBox mEnableNotificationsBox;
 	private Spinner mDay;
@@ -60,12 +61,20 @@ public class SettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 
+		Calendar cal = Calendar.getInstance();
+		ContentResolver cr = getContentResolver();
+		CalendarCreator.addCalendar(cal, cr);
+		
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		String notDefaultDay = settings.getString("day_setting", DEFAULT_DAY);
 		int notDefaultDayPosition = settings.getInt("day_position_setting", 0);
 		int notDefaultHour = settings.getInt("hour_setting", DEFAULT_HOUR);
 		int notDefaultMinute = settings.getInt("minute_setting", DEFAULT_MIN);
 		EVENT_ID = settings.getLong("event_id", -1);
+		CALENDAR_ID = getCalendarId();
+		if (CALENDAR_ID == -1) {
+			CALENDAR_ID = 1;
+		}
 		
 		mDay = (Spinner) findViewById(R.id.day);
 		mDayButton = (Button) findViewById(R.id.day_button);
@@ -94,9 +103,9 @@ public class SettingsActivity extends Activity {
 		});
 		
 		// TODO: make only appear once, edit from then on
-		if (EVENT_ID == -1) {
+		//if (EVENT_ID == -1) {
 			createEvent(notDefaultDay, notDefaultHour, notDefaultMinute);
-		}
+		//}
 	}
 	
 	private void createEvent(String day, int hour, int min) {
@@ -115,7 +124,7 @@ public class SettingsActivity extends Activity {
 		values.put(Events.DTSTART, beginTime.getTime());
 		values.put(Events.DTEND, endTime.getTime());
 		values.put(Events.TITLE, "myStatus");
-		values.put(Events.CALENDAR_ID, 1); // TODO: make own calendar
+		values.put(Events.CALENDAR_ID, CALENDAR_ID); // TODO: make own calendar
 		values.put(Events.EVENT_TIMEZONE, tz.getDisplayName());
 		values.put(Events.RRULE, "FREQ=WEEKLY;BYDAY=" + getWeekdayAbr(day));
 		
@@ -189,5 +198,21 @@ public class SettingsActivity extends Activity {
 	// weekday passed
 	private String getWeekdayAbr(String weekday) {
 		return weekday.substring(0, 2).toUpperCase();
+	}
+	
+	// returns true when the "myStatus" calendar id is found
+	// false otherwise
+	private int getCalendarId() {
+		ContentResolver cr = getContentResolver();
+		Cursor cursor = cr.query(Uri.parse("content://com.android.calendar/calendars"),
+		        (new String[] { "_id", "calendar_displayName" }), null, null, null);
+		
+		while (cursor.moveToNext()) {
+			String displayName = cursor.getString(1);
+			if (displayName.equals("myStatus")) {
+				return Integer.parseInt(cursor.getString(0));
+			}
+		}
+		return -1;
 	}
 }

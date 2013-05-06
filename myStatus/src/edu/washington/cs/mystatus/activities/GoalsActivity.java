@@ -1,35 +1,27 @@
 package edu.washington.cs.mystatus.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.washington.cs.mystatus.R;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Spinner;
 
 /**
- * GoalsActivity provides a UI for setting new goals, seeing active goals, and removing
- * active goals.
- * Goals are prepopulated
+ * 
  * 
  * @author eechien@cs.washington.edu
  */
 
 public class GoalsActivity extends Activity {
 
-	private Spinner newGoal, removeGoal;
-	private Button newGoalButton, removeGoalButton;
-	private ArrayAdapter<String> goalPopulatorForRemove;
-	private ArrayAdapter<String> goalPopulatorForList;
-	private List<String> setGoals;
-	private ListView setGoalsView;
+	private static final String TAG = "mystatus.CreateEventActivity";
+	
+	private Button mCreateActivity, mPrescriptions, mSideEffects;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,60 +31,36 @@ public class GoalsActivity extends Activity {
 		
 		setGlobalVariables();
 		
-		makeArrayAdapters();
-		
 		addListenersOnButtons();
 	}
 
 	private void addListenersOnButtons() {
-		
-		newGoalButton.setOnClickListener(new OnClickListener() {
+		mCreateActivity.setOnClickListener(new OnClickListener() {
 			@Override
-			// When "Select" is clicked, add the selected goal to the list of Set Goals
-			// This will populate the ListView and the dropdown for Removing goals.
 			public void onClick(View v) {
-				
-				String newGoalItem = String.valueOf(newGoal.getSelectedItem());
-				// Check that the item is not already a Set Goal to avoid duplicates
-				if (!setGoals.contains(newGoalItem)) {
-					setGoals.add(newGoalItem);
-					removeGoal.setAdapter(goalPopulatorForRemove);
-					setGoalsView.setAdapter(goalPopulatorForList);
-				}
+				Log.d(TAG, "Create event button clicked");
+				startActivity(new Intent(GoalsActivity.this, CreateEventActivity.class));
 			}
 		});
 		
-		removeGoalButton.setOnClickListener(new OnClickListener() {
+		mPrescriptions.setOnClickListener(new OnClickListener() {
 			@Override
-			// When "Select" is clicked, remove the selected goal from the list of Set Goals
-			// This will remove items from the ListView and the dropdown for Removing goals.
 			public void onClick(View v) {
-				String goalItem = String.valueOf(removeGoal.getSelectedItem());
-				// Check that the item is actually already a Set Goal
-				if (setGoals.contains(goalItem)) {
-					setGoals.remove(goalItem);
-					removeGoal.setAdapter(goalPopulatorForRemove);
-					setGoalsView.setAdapter(goalPopulatorForList);
-				}
+				
+			}
+		});
+		
+		mSideEffects.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
 			}
 		});
 	}
 	
 	private void setGlobalVariables() {
-		setGoalsView = (ListView) findViewById(R.id.set_goals_list);
-		newGoalButton = (Button) findViewById(R.id.choose_new_goal);
-		removeGoalButton = (Button) findViewById(R.id.remove_goal_choice);
-		newGoal = (Spinner) findViewById(R.id.goal_options);
-		removeGoal = (Spinner) findViewById(R.id.remove_goals_options);
-		setGoals = new ArrayList<String>();
-	}
-	
-	private void makeArrayAdapters() {
-		// An adapter for the remove dropdown and the list of current goals
-		goalPopulatorForRemove = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, setGoals);
-		goalPopulatorForRemove.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		goalPopulatorForList = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, setGoals);
+		mCreateActivity = (Button) findViewById(R.id.create_activity_button);
+		mPrescriptions = (Button) findViewById(R.id.new_prescription_button);
+		mSideEffects = (Button) findViewById(R.id.side_effects_button);
 	}
 }

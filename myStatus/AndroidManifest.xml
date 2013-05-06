@@ -76,6 +76,10 @@
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
+            android:name="edu.washington.cs.mystatus.activities.CreateEventActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.GoalsActivity" >
+        </activity>
+        <activity
             android:name="edu.washington.cs.mystatus.activities.HelpActivity"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
