@@ -383,5 +383,11 @@ public class InstanceProvider extends ContentProvider {
         sInstancesProjectionMap.put(InstanceColumns.LAST_STATUS_CHANGE_DATE, InstanceColumns.LAST_STATUS_CHANGE_DATE);
         sInstancesProjectionMap.put(InstanceColumns.DISPLAY_SUBTEXT, InstanceColumns.DISPLAY_SUBTEXT);
     }
-
+    
+    // reset database used for first initiaized
+    // @CD
+    public void resetDatabase() {
+        mDbHelper.close();
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
+    }
 }

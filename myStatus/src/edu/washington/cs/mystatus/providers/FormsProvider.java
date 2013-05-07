@@ -587,5 +587,11 @@ public class FormsProvider extends ContentProvider {
         sFormsProjectionMap.put(FormsColumns.JRCACHE_FILE_PATH, FormsColumns.JRCACHE_FILE_PATH);
         sFormsProjectionMap.put(FormsColumns.LANGUAGE, FormsColumns.LANGUAGE);
     }
+    // reset database used for first initiaized
+    // @CD
+    public void resetDatabase() {
+        mDbHelper.close();
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
+    }
 
 }

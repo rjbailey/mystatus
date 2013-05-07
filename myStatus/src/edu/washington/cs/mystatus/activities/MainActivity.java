@@ -8,12 +8,16 @@ import info.guardianproject.cacheword.ICacheWordSubscriber;
 import edu.washington.cs.mystatus.activities.FormDownloadList;
 import edu.washington.cs.mystatus.activities.MainMenuActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
 import edu.washington.cs.mystatus.R;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +41,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	private Button mInformationBtn;
 	private Button mHelpBtn;
 	private CacheWordActivityHandler mCacheWord;
+	private boolean firstTimeInitialize = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -137,6 +142,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		deleteAllFilesInDirectory(f1);
 		deleteAllFilesInDirectory(f2);
 		deleteAllFilesInDirectory(f3);
+		firstTimeInitialize = true;
 		showLockScreen();
 	}
 
@@ -150,10 +156,17 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		showLockScreen();
 	}
 
-	@Override
+	@SuppressLint("NewApi")
+    @Override
 	public void onCacheWordOpened() {
-		// TODO: night need to reenable database and 
-		// @CD
+		// reset database for first time log in 
+	    // @CD
+	    if (firstTimeInitialize){
+	        MyStatus.createODKDirs();
+	        getContentResolver().call(FormsColumns.CONTENT_URI, "resetDatabase", null, null);
+	        getContentResolver().call(InstanceColumns.CONTENT_URI, "resetDatabase", null, null);
+	        firstTimeInitialize = false;
+	    }
 		
 	}
 	
