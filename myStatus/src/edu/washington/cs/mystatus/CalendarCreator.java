@@ -33,6 +33,7 @@ public class CalendarCreator {
 	    cv.put(Calendars.CALENDAR_DISPLAY_NAME, "myStatus");
 	    cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);
 	    cv.put(Calendars.VISIBLE, 1);
+	    cv.put(Calendars.CALENDAR_TIME_ZONE, Calendar.getInstance().getTimeZone().getDisplayName());
 	    return cv;
 	}
 	
