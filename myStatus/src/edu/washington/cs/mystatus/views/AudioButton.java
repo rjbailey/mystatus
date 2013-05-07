@@ -98,8 +98,22 @@ public class AudioButton extends ImageButton implements OnClickListener {
             
             // need to decrypt the audio file first 
             // @CD
-            String tempPathFile = audioFilename.substring(0,audioFilename.lastIndexOf(".") - 1)+"temp"
+            String tempPathFile = MyStatus.TEMP_MEDIA_PATH + audioFilename.substring(audioFilename.lastIndexOf("/"))+"temp"
 					+audioFilename.substring(audioFilename.lastIndexOf("."));
+            System.out.println(tempPathFile);
+            // check if the file is already exist or not
+            // add some number to make the file unique
+            // @CD
+            File testFile = new File (tempPathFile);
+            int counter = 0;
+            while (testFile.exists()){
+            	tempPathFile = tempPathFile.substring(0, tempPathFile.lastIndexOf(".")) 
+            					+ counter 
+            					+ tempPathFile.substring(tempPathFile.lastIndexOf("."));
+            	counter++;
+            }
+            
+            
             final File tf = new File (tempPathFile);
             try {
 				FileOutputStream fos = new FileOutputStream(tf);
@@ -128,7 +142,8 @@ public class AudioButton extends ImageButton implements OnClickListener {
                         mediaPlayer.release();
                         // delete the tempFile
                        // @CD
-                        tf.delete();
+                        // not needed will delete it at clean up
+                       // tf.delete();
                     }
 
                 });

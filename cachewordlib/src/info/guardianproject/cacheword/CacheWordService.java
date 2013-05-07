@@ -197,7 +197,7 @@ public class CacheWordService extends Service {
 
         Log.d(TAG, "timeout enabled: " + timeoutEnabled + ", minutes="+timeoutMinutes);
         Log.d(TAG, "mSubscriberCount: " + mSubscriberCount);
-
+        
         if (timeoutEnabled && mSubscriberCount == 0) {
             startTimeout(timeoutMinutes * 60 * 1000);
         } else {

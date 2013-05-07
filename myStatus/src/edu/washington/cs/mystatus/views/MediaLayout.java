@@ -104,10 +104,21 @@ public class MediaLayout extends RelativeLayout {
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                 return;
             }
-            // need to decrypt the video file first 
+            // need to decrypt the audio file first 
             // @CD
-            String tempPathFile = videoFilename.substring(0,videoFilename.lastIndexOf(".") - 1)+"temp"
+            String tempPathFile = MyStatus.TEMP_MEDIA_PATH + videoFilename.substring(videoFilename.lastIndexOf("/"))+"temp"
 					+videoFilename.substring(videoFilename.lastIndexOf("."));
+            // check if the file is already exist or not
+            // add some number to make the file unique
+            // @CD
+            File testFile = new File (tempPathFile);
+            int counter = 0;
+            while (testFile.exists()){
+            	tempPathFile = tempPathFile.substring(0, tempPathFile.lastIndexOf(".")) 
+            					+ counter 
+            					+ tempPathFile.substring(tempPathFile.lastIndexOf("."));
+            	counter++;
+            }
             final File tf = new File (tempPathFile);
             try {
 				FileOutputStream fos = new FileOutputStream(tf);

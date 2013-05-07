@@ -62,6 +62,10 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
     public static final String TMPDRAWFILE_PATH = CACHE_PATH + File.separator + "tmpDraw.jpg";
     public static final String TMPXML_PATH = CACHE_PATH + File.separator + "tmp.xml";
     public static final String LOG_PATH = ODK_ROOT + File.separator + "log";
+    // Adding temp folder for using mediafiles temporarily.....
+    // this will get clean up everytime the screen became locked
+    // @CD
+    public static final String TEMP_MEDIA_PATH = ODK_ROOT+File.separator+"temp";
 
     public static final String DEFAULT_FONTSIZE = "21";
 
@@ -134,7 +138,7 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
         }
 
         String[] dirs = {
-                ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH
+                ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, TEMP_MEDIA_PATH
         };
 
         for (String dirName : dirs) {
@@ -156,7 +160,7 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
             }
         }
     }
-
+    
     /**
      * Construct and return a session context with shared cookieStore and credsProvider so a user
      * does not have to re-enter login information.

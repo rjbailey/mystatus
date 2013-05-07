@@ -148,6 +148,10 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         if (mDiskSyncTask.getStatus() == AsyncTask.Status.FINISHED) {
         	SyncComplete(mDiskSyncTask.getStatusMessage());
         }
+        
+        // connect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).connectCacheWord();
     }
 
 
@@ -155,6 +159,9 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
     protected void onPause() {
         mDiskSyncTask.setDiskSyncListener(null);
         super.onPause();
+        // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
     }
 
 	

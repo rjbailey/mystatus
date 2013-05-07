@@ -1,11 +1,14 @@
 package edu.washington.cs.mystatus.activities;
 
+import java.io.File;
+
 import info.guardianproject.cacheword.CacheWordActivityHandler;
 import info.guardianproject.cacheword.CacheWordHandler;
 import info.guardianproject.cacheword.ICacheWordSubscriber;
 import edu.washington.cs.mystatus.activities.FormDownloadList;
 import edu.washington.cs.mystatus.activities.MainMenuActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.utilities.MediaUtils;
 
 import edu.washington.cs.mystatus.R;
 
@@ -53,6 +56,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Survey button clicked");
+				//added connect to cache word
+				// @CD
+				((MyStatus)getApplicationContext()).connectCacheWord();
 				startActivity(new Intent(MainActivity.this, SurveysActivity.class));
 			}
 		});
@@ -122,14 +128,25 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	// @CD
 	@Override
 	public void onCacheWordUninitialized() {
+		// clear out all the old history
+		// @CD
+		// clean up temp folder
+		File f1 = new File (MyStatus.FORMS_PATH);
+		File f2 = new File (MyStatus.INSTANCES_PATH);
+		File f3 = new File (MyStatus.METADATA_PATH);
+		deleteAllFilesInDirectory(f1);
+		deleteAllFilesInDirectory(f2);
+		deleteAllFilesInDirectory(f3);
 		showLockScreen();
 	}
 
 	@Override
 	public void onCacheWordLocked() {
-		// TODO: might need to do some more clean up here
 		// such as close database and erase all decrypted media files
 		// @CD
+		// clean up temp folder
+		File f = new File (MyStatus.TEMP_MEDIA_PATH);
+		deleteAllFilesInDirectory(f);
 		showLockScreen();
 	}
 
@@ -144,14 +161,12 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     protected void onPause() {
         super.onPause();
         mCacheWord.onPause();
-        //((MyStatus)getApplicationContext()).disconnectCacheWord();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mCacheWord.onResume();
-        ((MyStatus)getApplicationContext()).connectCacheWord();
     }
     
     /**
@@ -163,6 +178,26 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
         intent.putExtra("originalIntent", getIntent());
         startActivity(intent);
         finish();
+    }
+    /**
+     * Used for clean up all files in temp path directory
+     * @param directory
+     */
+    private void deleteAllFilesInDirectory(File directory) {
+        if (directory.exists()) {
+            if (directory.isDirectory()) {
+                // delete all the files in the directory
+                File[] files = directory.listFiles();
+                for (File f : files) {
+                	// adding recursive calls
+                    if (f.isDirectory()){
+                    	deleteAllFilesInDirectory(f);
+                    }
+                    f.delete();
+                }
+            }
+            directory.delete();
+        }
     }
 
 }

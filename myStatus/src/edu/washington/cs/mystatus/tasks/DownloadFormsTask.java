@@ -246,7 +246,7 @@ public class DownloadFormsTask extends
             FileUtils.getMd5Hash(f)
         };
         String selection = FormsColumns.MD5_HASH + "=?";
-
+     
         Cursor c = null;
         try {
         	c = MyStatus.getInstance().getContentResolver()

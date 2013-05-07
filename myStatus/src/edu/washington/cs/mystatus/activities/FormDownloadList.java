@@ -540,6 +540,9 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
             createAlertDialog(mAlertTitle, mAlertMsg, mShouldExit);
         }
         super.onResume();
+        // connect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).connectCacheWord();
     }
 
 
@@ -549,6 +552,9 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
             mAlertDialog.dismiss();
         }
         super.onPause();
+        // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
     }
 
 
@@ -691,5 +697,5 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
 
         createAlertDialog(getString(R.string.download_forms_result), b.toString().trim(), EXIT);
     }
-
+    
 }

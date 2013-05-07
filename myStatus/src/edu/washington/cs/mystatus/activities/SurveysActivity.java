@@ -1,5 +1,6 @@
 package edu.washington.cs.mystatus.activities;
 
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.VersionHidingCursorAdapter;
 
@@ -50,6 +51,7 @@ public class SurveysActivity extends ListActivity {
 		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
 				this, R.layout.two_item, c, data, view);
 		setListAdapter(instances);
+		
 	}
 
 	@Override
@@ -58,4 +60,24 @@ public class SurveysActivity extends ListActivity {
 		Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
 		startActivity(new Intent(Intent.ACTION_EDIT, formUri));
 	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		 // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		 // connect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).connectCacheWord();
+	}
+	
+	
 }
