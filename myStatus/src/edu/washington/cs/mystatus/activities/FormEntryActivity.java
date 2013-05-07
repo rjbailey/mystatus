@@ -1957,7 +1957,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		super.onResume();
 		FormController formController = MyStatus.getInstance()
 				.getFormController();
-		MyStatus.getInstance().getActivityLogger().open();
+		MyStatus.getInstance().getActivityLogger().open(getApplicationContext());
 
 		if (mFormLoaderTask != null) {
 			mFormLoaderTask.setFormLoaderListener(this);

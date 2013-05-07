@@ -14,6 +14,8 @@
 
 package edu.washington.cs.mystatus.providers;
 
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +33,7 @@ import edu.washington.cs.mystatus.utilities.MediaUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -57,6 +60,7 @@ public class FormsProvider extends ContentProvider {
     private static final int FORM_ID = 2;
 
     private static final UriMatcher sUriMatcher;
+    
 
     /**
      * This class helps open, create, and upgrade the database file.
@@ -66,8 +70,8 @@ public class FormsProvider extends ContentProvider {
         private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";
         private static final String MODEL_VERSION = "modelVersion";
 
-        DatabaseHelper(String databaseName) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+        DatabaseHelper(String databaseName, Context ctx) {
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, ctx);
         }
 
 
@@ -187,7 +191,8 @@ public class FormsProvider extends ContentProvider {
         // must be at the beginning of any activity that can be called from an external intent
         MyStatus.createODKDirs();
 
-        mDbHelper = new DatabaseHelper(DATABASE_NAME);
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
+        
         return true;
     }
 

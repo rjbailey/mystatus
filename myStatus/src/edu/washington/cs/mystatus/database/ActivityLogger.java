@@ -14,6 +14,8 @@
 
 package edu.washington.cs.mystatus.database;
 
+import info.guardianproject.cacheword.CacheWordHandler;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -25,6 +27,7 @@ import edu.washington.cs.mystatus.logic.FormController;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -45,8 +48,8 @@ public final class ActivityLogger {
 	
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 		
-		DatabaseHelper() {
-			super(MyStatus.LOG_PATH, DATABASE_NAME, null, DATABASE_VERSION);
+		DatabaseHelper(Context cw) {
+			super(MyStatus.LOG_PATH, DATABASE_NAME, null, DATABASE_VERSION,cw);
 			new File(MyStatus.LOG_PATH).mkdirs();
 		}
 
@@ -87,7 +90,6 @@ public final class ActivityLogger {
 	private static final String QUESTION = "question";
 	private static final String PARAM1 = "param1";
 	private static final String PARAM2 = "param2";
-	
 	private static final String DATABASE_CREATE =
 			"create table " + DATABASE_TABLE + " (" +
 			ID + " integer primary key autoincrement, " +
@@ -106,25 +108,30 @@ public final class ActivityLogger {
 	private DatabaseHelper mDbHelper = null;
 	private SQLiteDatabase mDb = null;
 	private boolean mIsOpen = false;
+	//aDding cached word for security
+	// @CD
+	private CacheWordHandler mCacheWord;
 	// We buffer scroll actions to make sure there aren't too many pauses
 	// during scrolling.  This list is flushed every time any other type of
 	// action is logged.
 	private LinkedList<ContentValues> mScrollActions = new LinkedList<ContentValues>();
     
-	public ActivityLogger(String deviceId) {
+	public ActivityLogger(String deviceId, Context context) {
 		this.mDeviceId = deviceId;
 		mLoggingEnabled = new File(MyStatus.LOG_PATH, ENABLE_LOGGING).exists();
-        open();
+        open(context);
 	}
 	
 	public boolean isOpen() {
 		return mLoggingEnabled && mIsOpen;
 	}
 	
-    public void open() throws SQLException {
+    public void open(Context context) throws SQLException {
     	if (!mLoggingEnabled || mIsOpen) return;
         try {
-            mDbHelper = new DatabaseHelper();
+        	// initialize mCacheWord
+        	// @CD
+            mDbHelper = new DatabaseHelper(context);
             mDb = mDbHelper.getWritableDatabase();
             mIsOpen = true;
         } catch (SQLiteException e) {

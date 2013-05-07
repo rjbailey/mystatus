@@ -38,6 +38,10 @@ import edu.washington.cs.mystatus.logic.PropertyManager;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.utilities.AgingCredentialsProvider;
 
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
+
 import java.io.File;
 
 /**
@@ -45,7 +49,7 @@ import java.io.File;
  * 
  * @author carlhartung
  */
-public class MyStatus extends Application {
+public class MyStatus extends Application implements ICacheWordSubscriber{
 
     // Storage paths
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
@@ -69,7 +73,12 @@ public class MyStatus extends Application {
     private FormController mFormController = null;
 
     private static MyStatus singleton = null;
-
+    
+    // adding subsribing to cache word
+    // @mCacheWord
+    private CacheWordActivityHandler mCacheWordHandler;
+    
+    
     public static MyStatus getInstance() {
         return singleton;
     }
@@ -196,9 +205,42 @@ public class MyStatus extends Application {
 
         PropertyManager mgr = new PropertyManager(this);
         mActivityLogger = new ActivityLogger(
-                mgr.getSingularProperty(PropertyManager.DEVICE_ID_PROPERTY));
-
+                mgr.getSingularProperty(PropertyManager.DEVICE_ID_PROPERTY),this);
+        
+        mCacheWordHandler = new CacheWordActivityHandler(this);
         SQLiteDatabase.loadLibs(this);
     }
+    
+	public CacheWordActivityHandler getCacheWordHandler(){
+    	return mCacheWordHandler;
+    }
+    
+    // supports method for encrypting database
+    // @CD
+    public void connectCacheWord(){
+    	mCacheWordHandler.connectToService();
+    }
+    
+    public void disconnectCacheWord(){
+    	mCacheWordHandler.disconnect();
+    }
+
+	@Override
+	public void onCacheWordUninitialized() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onCacheWordLocked() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onCacheWordOpened() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

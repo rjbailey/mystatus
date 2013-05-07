@@ -24,6 +24,7 @@ import edu.washington.cs.mystatus.utilities.MediaUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -32,6 +33,9 @@ import net.sqlcipher.database.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -56,14 +60,18 @@ public class InstanceProvider extends ContentProvider {
     private static final int INSTANCE_ID = 2;
 
     private static final UriMatcher sUriMatcher;
+    // adding cache word handler in order to help secure database
+    // @CD
+    private CacheWordActivityHandler mCacheWord;
+    
 
     /**
      * This class helps open, create, and upgrade the database file.
      */
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 
-        DatabaseHelper(String databaseName) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+        DatabaseHelper(String databaseName, Context cw) {
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, cw);
         }
 
 
@@ -111,8 +119,8 @@ public class InstanceProvider extends ContentProvider {
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
         MyStatus.createODKDirs();
-
-        mDbHelper = new DatabaseHelper(DATABASE_NAME);
+        mCacheWord = ((MyStatus)this.getContext()).getCacheWordHandler();
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
         return true;
     }
 

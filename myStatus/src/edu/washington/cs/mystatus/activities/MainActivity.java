@@ -5,6 +5,7 @@ import info.guardianproject.cacheword.CacheWordHandler;
 import info.guardianproject.cacheword.ICacheWordSubscriber;
 import edu.washington.cs.mystatus.activities.FormDownloadList;
 import edu.washington.cs.mystatus.activities.MainMenuActivity;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import edu.washington.cs.mystatus.R;
 
@@ -143,12 +144,14 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     protected void onPause() {
         super.onPause();
         mCacheWord.onPause();
+        //((MyStatus)getApplicationContext()).disconnectCacheWord();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mCacheWord.onResume();
+        ((MyStatus)getApplicationContext()).connectCacheWord();
     }
     
     /**
