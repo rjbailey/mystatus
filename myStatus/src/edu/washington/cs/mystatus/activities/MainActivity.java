@@ -1,29 +1,24 @@
 package edu.washington.cs.mystatus.activities;
 
-import java.io.File;
-
 import info.guardianproject.cacheword.CacheWordActivityHandler;
-import info.guardianproject.cacheword.CacheWordHandler;
 import info.guardianproject.cacheword.ICacheWordSubscriber;
-import edu.washington.cs.mystatus.activities.FormDownloadList;
-import edu.washington.cs.mystatus.activities.MainMenuActivity;
-import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
-import edu.washington.cs.mystatus.utilities.MediaUtils;
 
-import edu.washington.cs.mystatus.R;
+import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.utilities.FileUtils;
 
 /**
  * MainActivity is a simple main menu for myStatus.
@@ -97,7 +92,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 				Log.d(TAG, "Information button clicked");
 			}
 		});
-
 		mHelpBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -106,7 +100,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			}
 		});
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -114,7 +108,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
@@ -139,9 +132,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		File f1 = new File (MyStatus.FORMS_PATH);
 		File f2 = new File (MyStatus.INSTANCES_PATH);
 		File f3 = new File (MyStatus.METADATA_PATH);
-		deleteAllFilesInDirectory(f1);
-		deleteAllFilesInDirectory(f2);
-		deleteAllFilesInDirectory(f3);
+		FileUtils.deleteAllFilesInDirectoryRecursively(f1);
+		FileUtils.deleteAllFilesInDirectoryRecursively(f2);
+		FileUtils.deleteAllFilesInDirectoryRecursively(f3);
 		firstTimeInitialize = true;
 		showLockScreen();
 	}
@@ -158,15 +151,14 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	//TODO: might need to figure out how to support api8
 	// but it's hard otherwise we have to modify the content provider
 	// which will be not good as long term it would be hard to modify.
-	@SuppressLint("NewApi")
     @Override
 	public void onCacheWordOpened() {
 		// reset database for first time log in 
 	    // @CD
 	    if (firstTimeInitialize){
 	        MyStatus.createODKDirs();
-	        getContentResolver().call(FormsColumns.CONTENT_URI, "resetDatabase", null, null);
-	        getContentResolver().call(InstanceColumns.CONTENT_URI, "resetDatabase", null, null);
+	        getContentResolver().update(FormsColumns.CONTENT_URI, null, "resetDb", null);
+	        getContentResolver().update(InstanceColumns.CONTENT_URI, null, "resetDb", null);
 	        firstTimeInitialize = false;
 	    }
 		
@@ -216,29 +208,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	 */
 	private void cleanUpTemporaryFiles(){
 		File f = new File (MyStatus.TEMP_MEDIA_PATH);
-		deleteAllFilesInDirectory(f);
+		FileUtils.deleteAllFilesInDirectoryRecursively(f);
 	}
 
-	/**
-     * Used for clean up all files in temp path directory
-     * @param directory
-     * @CD: borrowed from ODK file utils
-     */
-    private void deleteAllFilesInDirectory(File directory) {
-        if (directory.exists()) {
-            if (directory.isDirectory()) {
-                // delete all the files in the directory
-                File[] files = directory.listFiles();
-                for (File f : files) {
-                	// adding recursive calls
-                    if (f.isDirectory()){
-                    	deleteAllFilesInDirectory(f);
-                    }
-                    f.delete();
-                }
-            }
-            directory.delete();
-        }
-    }
+	
 
 }

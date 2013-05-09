@@ -53,15 +53,18 @@ public class FormsProvider extends ContentProvider {
     private static final String DATABASE_NAME = "forms.db";
     private static final int DATABASE_VERSION = 4;
     private static final String FORMS_TABLE_NAME = "forms";
-
+    // used for reset dB if neccessary
+    // @CD
+    private static final String RESET_DATABASE = "resetDb";
+    
     private static HashMap<String, String> sFormsProjectionMap;
 
     private static final int FORMS = 1;
     private static final int FORM_ID = 2;
-
+    
     private static final UriMatcher sUriMatcher;
     
-
+    
     /**
      * This class helps open, create, and upgrade the database file.
      */
@@ -433,6 +436,13 @@ public class FormsProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+    	// adding some trick to reset database at first login as well as 
+    	// keep supporting for older api
+    	// @CD
+    	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
+    		resetDatabase();
+    		return 0;
+    	}
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int count = 0;
         switch (sUriMatcher.match(uri)) {
@@ -570,7 +580,7 @@ public class FormsProvider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(FormsProviderAPI.AUTHORITY, "forms", FORMS);
         sUriMatcher.addURI(FormsProviderAPI.AUTHORITY, "forms/#", FORM_ID);
-
+        
         sFormsProjectionMap = new HashMap<String, String>();
         sFormsProjectionMap.put(FormsColumns._ID, FormsColumns._ID);
         sFormsProjectionMap.put(FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_NAME);

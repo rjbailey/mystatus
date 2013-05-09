@@ -331,4 +331,27 @@ public class FileUtils {
         }
         return e;
     }
+    
+    
+    /**
+     * Used for clean up all files in temp path directory
+     * @param directory
+     * @CD: borrowed from ODK file utils
+     */
+    public static void deleteAllFilesInDirectoryRecursively(File directory) {
+        if (directory.exists()) {
+            if (directory.isDirectory()) {
+                // delete all the files in the directory
+                File[] files = directory.listFiles();
+                for (File f : files) {
+                	// adding recursive calls
+                    if (f.isDirectory()){
+                    	deleteAllFilesInDirectoryRecursively(f);
+                    }
+                    f.delete();
+                }
+            }
+            directory.delete();
+        }
+    }
 }

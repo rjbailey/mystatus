@@ -53,16 +53,15 @@ public class InstanceProvider extends ContentProvider {
     private static final String DATABASE_NAME = "instances.db";
     private static final int DATABASE_VERSION = 3;
     private static final String INSTANCES_TABLE_NAME = "instances";
-
+    // used for reset dB if neccessary
+    // @CD
+    private static final String RESET_DATABASE = "resetDb";
     private static HashMap<String, String> sInstancesProjectionMap;
 
     private static final int INSTANCES = 1;
     private static final int INSTANCE_ID = 2;
 
     private static final UriMatcher sUriMatcher;
-    // adding cache word handler in order to help secure database
-    // @CD
-    private CacheWordActivityHandler mCacheWord;
     
 
     /**
@@ -119,7 +118,6 @@ public class InstanceProvider extends ContentProvider {
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
         MyStatus.createODKDirs();
-        mCacheWord = ((MyStatus)this.getContext()).getCacheWordHandler();
         mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
         return true;
     }
@@ -322,6 +320,13 @@ public class InstanceProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+    	// adding some trick to reset database at first login as well as 
+    	// keep supporting for older api
+    	// @CD
+    	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
+    		resetDatabase();
+    		return 0;
+    	}
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int count;
         String status = null;
