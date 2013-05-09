@@ -27,12 +27,18 @@ import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
+import edu.washington.cs.mystatus.utilities.FileUtils;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -96,64 +102,79 @@ public class AudioButton extends ImageButton implements OnClickListener {
             // In case we're currently playing sounds.
             stopPlaying();
             
+            // to avoid collision on media files need to create a same folder names inside the 
+            // temp folder
+            // @CD
+            String tempDir = audioFilename.substring(0, audioFilename.lastIndexOf("/"));
+            tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+            
+            // create the temporary folder for cotaining the mediafile
+            // @CD
+            FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+            
             // need to decrypt the audio file first 
             // @CD
-            String tempPathFile = MyStatus.TEMP_MEDIA_PATH + audioFilename.substring(audioFilename.lastIndexOf("/"))+"temp"
+            String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+            		+ File.separator + audioFilename.substring(audioFilename.lastIndexOf("/"))+"temp"
 					+audioFilename.substring(audioFilename.lastIndexOf("."));
-            System.out.println(tempPathFile);
             // check if the file is already exist or not
             // add some number to make the file unique
             // @CD
-            File testFile = new File (tempPathFile);
-            int counter = 0;
-            while (testFile.exists()){
-            	tempPathFile = tempPathFile.substring(0, tempPathFile.lastIndexOf(".")) 
-            					+ counter 
-            					+ tempPathFile.substring(tempPathFile.lastIndexOf("."));
-            	counter++;
-            }
-            
-            
             final File tf = new File (tempPathFile);
-            try {
-				FileOutputStream fos = new FileOutputStream(tf);
-				FileInputStream fis = new FileInputStream(audioFilename);
-				DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
-				dataDecryption.InitCiphers();
-				dataDecryption.CBCDecrypt(fis, fos);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-            
-            
-            
-            player = new MediaPlayer();
-            try {
-                //player.setDataSource(audioFilename);
-                player.setDataSource(tempPathFile);
-                player.prepare();
-                player.start();
-                player.setOnCompletionListener(new OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.release();
-                        // delete the tempFile
-                       // @CD
-                        // not needed will delete it at clean up
-                       // tf.delete();
-                    }
+            // these needed to be use in a thread
+            // @CD
+            final String audioThreadFileName = audioFilename;
+            final String tempThreadPath = tempPathFile;
+            final Context contextThread = c;
+            // adding thread to avoid UI not responding for long decryption which will cause the
+            // not-responding error message pop out         
+            // @CD
+            new AsyncTask<String, String, String>() {
 
-                });
-            } catch (IOException e) {
-                String errorMsg = c.getString(R.string.audio_file_invalid);
-                Log.e(t, errorMsg);
-                Toast.makeText(c, errorMsg, Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
-        	
+				@Override
+				protected String doInBackground(String... params) {
+					if (!tf.exists()){
+	          			 try {
+	          				 // first time decryption
+	          				 FileOutputStream fos = new FileOutputStream(tf);
+	          				 FileInputStream fis = new FileInputStream(audioThreadFileName);
+	          				 DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+	          				 dataDecryption.InitCiphers();
+	          				 dataDecryption.CBCDecrypt(fis, fos);
+	          				 return null;
+	          			 } catch (FileNotFoundException e1) {
+	          				 // TODO Auto-generated catch block
+	          				 e1.printStackTrace();
+	          			 }catch (Exception e){
+	          				 e.printStackTrace();
+	          			 }	 
+	          		 }
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(String result) {
+					player = new MediaPlayer();
+		            try {
+		                //player.setDataSource(audioFilename);
+		                player.setDataSource(tempThreadPath);
+		                player.prepare();
+		                player.start();
+		                player.setOnCompletionListener(new OnCompletionListener() {
+		                    @Override
+		                    public void onCompletion(MediaPlayer mediaPlayer) {
+		                        mediaPlayer.release();
+		                    }
+
+		                });
+		            } catch (IOException e) {
+		                String errorMsg = contextThread.getString(R.string.audio_file_invalid);
+		                Log.e(t, errorMsg);
+		                Toast.makeText(contextThread, errorMsg, Toast.LENGTH_LONG).show();
+		                e.printStackTrace();
+		            }
+				}	
+			}.execute(null,null,null);        	
         }
 
         public void stopPlaying() {

@@ -44,12 +44,12 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	private boolean firstTimeInitialize = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_main);
-		
-		// adding activity handler
+		// adding activity handler used for connecting 
+		// with the cache word service
+		// @CD
 		mCacheWord = new CacheWordActivityHandler(this);
-		
 		mSurveyBtn = (Button) findViewById(R.id.button_survey);
 		mHistoryBtn = (Button) findViewById(R.id.button_history);
 		mGoalsBtn = (Button) findViewById(R.id.button_goals);
@@ -151,11 +151,13 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		// such as close database and erase all decrypted media files
 		// @CD
 		// clean up temp folder
-		File f = new File (MyStatus.TEMP_MEDIA_PATH);
-		deleteAllFilesInDirectory(f);
+		cleanUpTemporaryFiles();
 		showLockScreen();
 	}
-
+	
+	//TODO: might need to figure out how to support api8
+	// but it's hard otherwise we have to modify the content provider
+	// which will be not good as long term it would be hard to modify.
 	@SuppressLint("NewApi")
     @Override
 	public void onCacheWordOpened() {
@@ -170,12 +172,18 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		
 	}
 	
+	// disconnect cacheword service
+	// we have to do this as cacheword wont trigger timeout 
+	// until we dont have any more subscribers.
+	// @CD
 	@Override
     protected void onPause() {
         super.onPause();
         mCacheWord.onPause();
     }
-
+	
+	// reconnect cache word service after disconnect
+	// @CD
     @Override
     protected void onResume() {
         super.onResume();
@@ -192,9 +200,29 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
         startActivity(intent);
         finish();
     }
-    /**
+    
+    // make sure all the temporary files got clean up 
+ 	// right after the app destroy
+ 	// @CD
+	@Override
+	protected void onDestroy() {
+		cleanUpTemporaryFiles();
+		super.onDestroy();	
+	}
+	
+	/**
+	 * Helper used to clean up all files and folder under the temp folder
+	 * @CD
+	 */
+	private void cleanUpTemporaryFiles(){
+		File f = new File (MyStatus.TEMP_MEDIA_PATH);
+		deleteAllFilesInDirectory(f);
+	}
+
+	/**
      * Used for clean up all files in temp path directory
      * @param directory
+     * @CD: borrowed from ODK file utils
      */
     private void deleteAllFilesInDirectory(File directory) {
         if (directory.exists()) {

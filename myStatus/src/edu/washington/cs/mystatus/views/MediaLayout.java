@@ -104,49 +104,66 @@ public class MediaLayout extends RelativeLayout {
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                 return;
             }
+            // to avoid collision on media files need to create a same folder names inside the 
+            // temp folder
+            // @CD
+            String tempDir = videoFilename.substring(0, videoFilename.lastIndexOf("/"));
+            tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+            
+            // create the temporary folder for cotaining the mediafile
+            // @CD
+            FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+            
             // need to decrypt the audio file first 
             // @CD
-            String tempPathFile = MyStatus.TEMP_MEDIA_PATH + videoFilename.substring(videoFilename.lastIndexOf("/"))+"temp"
+            String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+            		+ File.separator + videoFilename.substring(videoFilename.lastIndexOf("/"))+"temp"
 					+videoFilename.substring(videoFilename.lastIndexOf("."));
             // check if the file is already exist or not
             // add some number to make the file unique
             // @CD
-            File testFile = new File (tempPathFile);
-            int counter = 0;
-            while (testFile.exists()){
-            	tempPathFile = tempPathFile.substring(0, tempPathFile.lastIndexOf(".")) 
-            					+ counter 
-            					+ tempPathFile.substring(tempPathFile.lastIndexOf("."));
-            	counter++;
-            }
             final File tf = new File (tempPathFile);
-            try {
-				FileOutputStream fos = new FileOutputStream(tf);
-				FileInputStream fis = new FileInputStream(videoFilename);
-				DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
-				dataDecryption.InitCiphers();
-				dataDecryption.CBCDecrypt(fis, fos);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-            
-            Intent i = new Intent("android.intent.action.VIEW");
-            //i.setDataAndType(Uri.fromFile(videoFile), "video/*");
-            // need to set new file path
-            // TODO: might need to change the way we play video so we can get rid of 
-            // the temporary file....
+            // this needed to be use in a thread
             // @CD
-            i.setDataAndType(Uri.fromFile(tf), "video/*");
-            try {
-                ((Activity) getContext()).startActivity(i);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getContext(),
-                    getContext().getString(R.string.activity_not_found, "view video"),
-                    Toast.LENGTH_SHORT).show();
-            }
+            final String videoThreadFileName = videoFilename;
+            // adding thread to avoid UI not responding for long decryption which will cause the error message pop out
+            // @CD
+            new Thread(){
+          	  public void run(){
+          		  // if file exist NOT need to decrypt again
+          		 if (!tf.exists()){
+          			 try {
+          				 // first time decryption
+          				 FileOutputStream fos = new FileOutputStream(tf);
+          				 FileInputStream fis = new FileInputStream(videoThreadFileName);
+          				 DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+          				 dataDecryption.InitCiphers();
+          				 dataDecryption.CBCDecrypt(fis, fos);
+          			 } catch (FileNotFoundException e1) {
+          				 // TODO Auto-generated catch block
+          				 e1.printStackTrace();
+          			 }catch (Exception e){
+          				 e.printStackTrace();
+          			 }	 
+          		 }
+          		  
+          		  Intent i = new Intent("android.intent.action.VIEW");
+          		  //i.setDataAndType(Uri.fromFile(videoFile), "video/*");
+          		  // need to set new file path
+          		  // TODO: might need to change the way we play video so we can get rid of 
+          		  // the temporary file....
+          		  // @CD
+          		  i.setDataAndType(Uri.fromFile(tf), "video/*");
+          		  try {
+          			  ((Activity) getContext()).startActivity(i);
+          		  } catch (ActivityNotFoundException e) {
+          			  Toast.makeText(getContext(),
+          					  getContext().getString(R.string.activity_not_found, "view video"),
+          					  Toast.LENGTH_SHORT).show();
+          		  }
+          		  
+          	  }
+            }.start();
     	}
     }
 

@@ -215,26 +215,30 @@ public class DownloadFormsTask extends
      */
     private File downloadXform(String formName, String url) throws Exception {
         File f = null;
-
+        Base64Wrapper base64Wrapper = new Base64Wrapper();
         // clean up friendly form name...
         String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
         rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
         rootName = rootName.trim();
+        
         // adding filename encryption to avoid exposed data
         // for now use base 64 encoding
         // @CD
-        rootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
+        String encryptedRootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
                
         // proposed name of xml file...
-        String path = MyStatus.FORMS_PATH + File.separator + rootName + ".xml";
+        String path = MyStatus.FORMS_PATH + File.separator + encryptedRootName +".xml";
         int i = 2;
         f = new File(path);
         while (f.exists()) {
-            path = MyStatus.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
+        	// used encrypted name to avoid expose the extension
+        	// @CD
+        	encryptedRootName = encryptedRootName + "_" + i + ".xml";
+            path = MyStatus.FORMS_PATH + File.separator + encryptedRootName;
             f = new File(path);
             i++;
         }
-
+        
         downloadFile(f, url);
 
         // we've downloaded the file, and we may have renamed it
