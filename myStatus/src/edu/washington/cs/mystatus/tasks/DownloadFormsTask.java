@@ -122,15 +122,34 @@ public class DownloadFormsTask extends
 	                    ContentValues v = new ContentValues();
 	                    v.put(FormsColumns.FORM_FILE_PATH, dl.getAbsolutePath());
 	
-	                    //HashMap<String, String> formInfo = FileUtils.parseXML(dl);
-	                    // added parsing using input stream for more secured
+	                    // to avoid collision on media files need to create a same folder names inside the 
+	                    // temp folder
 	                    // @CD
+	                    String xmlFilePath = dl.getAbsolutePath();
+	                    String tempDir = xmlFilePath.substring(0, xmlFilePath.lastIndexOf("/"));
+	                    tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+	                    
+	                    // create the temporary folder for cotaining the mediafile
+	                    // @CD
+	                    FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+	                    
+	                    // need to decrypt the audio file first as it's now encrypted after downloaded
+	                    // @CD
+	                    String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+	                    		+ File.separator + xmlFilePath.substring(xmlFilePath.lastIndexOf("/"))+"temp"
+	        					+xmlFilePath.substring(xmlFilePath.lastIndexOf("."));
+	                    // following the same process as media files
+	                    // @CD
+	                    File tempXmlFile = new File(tempPathFile);
 	                    FileInputStream fis = new FileInputStream(dl);
 	                    DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
 	                    dataDecryption.InitCiphers();
-	                    ByteArrayInputStream bis = new ByteArrayInputStream(dataDecryption.CBCDecryptAsByteArray
-	                    		 						(fis, dl.length()));
-	                    HashMap<String, String> formInfo = FileUtils.parseXML(bis);
+	                    FileOutputStream fos = new FileOutputStream(tempXmlFile);
+         				dataDecryption.CBCDecrypt(fis, fos);
+         				// now we can use the normal decryption function
+         				// with the path of the temp XMlfile
+         				// @CD 
+	                    HashMap<String, String> formInfo = FileUtils.parseXML(tempXmlFile);
 	                    v.put(FormsColumns.DISPLAY_NAME, formInfo.get(FileUtils.TITLE));
 	                    v.put(FormsColumns.JR_VERSION, formInfo.get(FileUtils.VERSION));
 	                    v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));

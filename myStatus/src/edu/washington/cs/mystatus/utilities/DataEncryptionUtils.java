@@ -139,8 +139,12 @@ public class DataEncryptionUtils {
 		in.close();
 		out.close();
 	}
+	
+	
+	
+	
 	/**
-	 * method for decrypting data
+	 * method for decrypting to a given output stream
 	 * @param in
 	 * @param out
 	 * @throws ShortBufferException
@@ -155,15 +159,6 @@ public class DataEncryptionUtils {
 			throws ShortBufferException, IllegalBlockSizeException,
 			BadPaddingException, DataLengthException, IllegalStateException,
 			InvalidCipherTextException, IOException {
-		// Bytes read from in will be decrypted
-		// Read in the decrypted bytes from in InputStream and and
-		// write them in cleartext to out OutputStream
-
-		// get the IV from the file
-		// DO NOT FORGET TO reinit the cipher with the IV
-		// in.read(IV,0,IV.length);
-		// this.InitCiphers();
-
 		int noBytesRead = 0; // number of bytes read from input
 		int noBytesProcessed = 0; // number of bytes processed
 
@@ -186,7 +181,7 @@ public class DataEncryptionUtils {
 	}
 	
 	/**
-	 * method for decrypting data
+	 * method for decrypting data to byte array
 	 * @param in
 	 * @param out
 	 * @throws ShortBufferException
@@ -201,18 +196,13 @@ public class DataEncryptionUtils {
 			throws ShortBufferException, IllegalBlockSizeException,
 			BadPaddingException, DataLengthException, IllegalStateException,
 			InvalidCipherTextException, IOException {
-	
 		int noBytesRead = 0; // number of bytes read from input
 		int noBytesProcessed = 0; // number of bytes processed
 		ByteBuffer byteBuffer = ByteBuffer.allocateDirect((int) size);
 		//int totalProcesses = 0;
 		while ((noBytesRead = in.read(buf)) >= 0) {
-			// System.out.println(noBytesRead +" bytes read");
 			noBytesProcessed = decryptCipher.processBytes(buf, 0, noBytesRead,
 					obuf, 0);
-			//totalProcesses += noBytesProcessed;
-			// System.out.println(noBytesProcessed +" bytes processed");
-			//out.write(obuf, 0, noBytesProcessed);
 			byteBuffer.put(obuf, 0, noBytesProcessed);
 		}
 		// last byte processed
