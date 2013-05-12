@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import edu.washington.cs.mystatus.R;
-import edu.washington.cs.mystatus.fragments.TimePickerFragment;
 import edu.washington.cs.mystatus.services.NotificationService;
 import edu.washington.cs.mystatus.CalendarCreator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.DialogFragment;
+import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +48,7 @@ public class SettingsActivity extends Activity {
 	private static final String DEFAULT_DAY = "Sunday";
 	private static final int DEFAULT_HOUR = 8;
 	private static final int DEFAULT_MIN = 30;
+	private static final int TIME_PICKER_ID = 0;
 	private static String DAY;
 	private static int HOUR;
 	private static int MINUTE;
@@ -57,6 +59,20 @@ public class SettingsActivity extends Activity {
 	private Spinner mDay;
 	private Button mDayButton;
 	private Button mTime;
+	
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+			new TimePickerDialog.OnTimeSetListener() {
+    	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+			SharedPreferences.Editor editor = prefs.edit();
+			HOUR = hourOfDay;
+			MINUTE = minute;
+			editor.putInt("hour_setting", hourOfDay);
+			editor.putInt("minute_setting", minute);
+			updateEvent(hourOfDay, minute, DAY);
+			editor.commit();
+    	}
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +117,8 @@ public class SettingsActivity extends Activity {
 		mTime.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showTimePickerDialog(v);
+				showDialog(TIME_PICKER_ID);
+				//showTimePickerDialog(v);
 			}
 		});
 		
@@ -176,21 +193,15 @@ public class SettingsActivity extends Activity {
 		enableNotifications(getEventStartTime());
 	}
 	
-	private void showTimePickerDialog(View v) {
-	    DialogFragment newFragment = new TimePickerFragment() {
-	    	@Override
-	    	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-	    		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-				SharedPreferences.Editor editor = prefs.edit();
-				HOUR = hourOfDay;
-				MINUTE = minute;
-				editor.putInt("hour_setting", hourOfDay);
-				editor.putInt("minute_setting", minute);
-				updateEvent(hourOfDay, minute, DAY);
-				editor.commit();
-	    	}
-	    };
-	    newFragment.show(getFragmentManager(), "timePicker");
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Calendar c = Calendar.getInstance();
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Create a new instance of TimePickerDialog and return it
+        return new TimePickerDialog(this, mTimeSetListener, hour, minute, DateFormat.is24HourFormat(this));
+		
 	}
 	
 	// Returns the 2 letter capital abbreviation of the
