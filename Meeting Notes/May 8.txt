@@ -1,0 +1,8 @@
+Focus on getting data instead of generating plots
+
+3 or 4 surveys for demo
+
+from aggregate can extract csv to put to redcap if need redcap
+or just use aggregate for demo
+need to be able to view data
+take from aggregate export to csv to excel
