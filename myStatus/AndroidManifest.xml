@@ -70,6 +70,18 @@
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
+            android:name="edu.washington.cs.mystatus.activities.HistoryActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.FormTypeListActivity">
+        </activity>
+        <!--  TEST ACTIVITY PLOT -->
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.SimpleXYPlotActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
             android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>

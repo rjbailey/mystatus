@@ -67,6 +67,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "History button clicked");
+				// for testing purpose
+				((MyStatus)getApplicationContext()).connectCacheWord();
+				startActivity(new Intent(MainActivity.this, HistoryActivity.class));
 			}
 		});
 
