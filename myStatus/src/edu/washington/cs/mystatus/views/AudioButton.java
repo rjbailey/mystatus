@@ -15,6 +15,9 @@
 package edu.washington.cs.mystatus.views;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.javarosa.core.model.FormIndex;
@@ -23,6 +26,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -91,16 +95,40 @@ public class AudioButton extends ImageButton implements OnClickListener {
 
             // In case we're currently playing sounds.
             stopPlaying();
-
+            
+            // need to decrypt the audio file first 
+            // @CD
+            String tempPathFile = audioFilename.substring(0,audioFilename.lastIndexOf(".") - 1)+"temp"
+					+audioFilename.substring(audioFilename.lastIndexOf("."));
+            final File tf = new File (tempPathFile);
+            try {
+				FileOutputStream fos = new FileOutputStream(tf);
+				FileInputStream fis = new FileInputStream(audioFilename);
+				DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
+				dataDecryption.InitCiphers();
+				dataDecryption.CBCDecrypt(fis, fos);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+            
+            
+            
             player = new MediaPlayer();
             try {
-                player.setDataSource(audioFilename);
+                //player.setDataSource(audioFilename);
+                player.setDataSource(tempPathFile);
                 player.prepare();
                 player.start();
                 player.setOnCompletionListener(new OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         mediaPlayer.release();
+                        // delete the tempFile
+                       // @CD
+                        tf.delete();
                     }
 
                 });

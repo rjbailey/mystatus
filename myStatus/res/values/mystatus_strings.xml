@@ -64,4 +64,16 @@
 	<string name="activity_date">Pick a date for your activity:</string>
 	<string name="pick_date">Choose date</string>
 	<string name="finalize_event">Add event to calendar</string>
+
+    <!-- Lock Screen -->
+    <string name="lock_screen_open">Open</string>
+    <string name="title_activity_lock_screen">myStatus Locked</string>
+    <string name="lock_screen_create_passphrase">Create passphrase</string>
+    <string name="lock_screen_passphrase_hint">Enter passphrase</string>
+    <string name="lock_screen_passphrase_not_set_enter">Enter new passphrase</string>
+    <string name="lock_screen_passphrase_not_set_confirm">Confirm new passphrase</string>
+    <string name="lock_screen_passphrases_not_matching">Passphrases did not match, please try again</string>
+    <string name="pass_err_length">Your passphrase was not long enough</string>
+    <string name="change_timeout_prompt_title">Change Lock Timeout</string>
+    <string name="change_timeout_prompt">After how many minutes of inactivity should NoteCipher lock itself?</string>
 </resources>
