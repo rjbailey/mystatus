@@ -42,6 +42,8 @@
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
         android:name="edu.washington.cs.mystatus.application.MyStatus"
@@ -82,6 +84,11 @@
             android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
             android:theme="@style/myStatus.Plan"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.CreateEventActivity"
+            android:theme="@style/myStatus.Plan"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.GoalsActivity" >
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.HelpActivity"

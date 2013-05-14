@@ -19,3 +19,6 @@ local.properties
 .classpath
 .project
 .metadata
+
+# Mac DS Store files
+*.DS_Store

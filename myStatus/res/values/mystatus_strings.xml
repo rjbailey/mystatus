@@ -24,10 +24,23 @@
 
     <!-- Settings -->
     <string name="settings_title">Notification Settings</string>
-    <string name="notification_enable">Enable notifications</string>
-    <string name="notification_period">Notify every X seconds:</string>
+    
+    <string name="day_setting">Day of the week:</string>
     <string name="notification_title">myStatus Alert</string>
     <string name="notification_message">Tap to check in with myStatus</string>
+    <string-array name="day_array">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+    <string name="day_prompt">Choose a day of the week.</string>
+    <string name="pick_day">Confirm choice of day.</string>
+    <string name="time_setting">Time:</string>
+	<string name="pick_time">Pick time</string>
     
     <!-- Get Help -->
     <string name="help_title">Need help?</string>
@@ -37,19 +50,18 @@
     <string name="call_friend">Call a friend</string>
 
     <!-- Goals -->
-    <string name="menu_settings">Settings</string>
-    <string name="goals_title">Goals</string>
-    <string name="goal_prompt">What goal would you like to set?</string>
-    <string-array name="goal_arrays">
-        <item>I would like to go for a walk everyday.</item>
-        <item>I want to go out once a week.</item>
-    </string-array>
-	<string name="set_goals">Your current goals:</string>
-	<string-array name="set_goals_list">
-	    
-	</string-array>
-	<string name="new_goals">Set a new goal?</string>
-	<string name="remove_goals">Remove a goal?</string>
-	<string name="remove_goal_prompt">Which goal would you like to remove?</string>
-	<string name="select_dropdown">Select</string>
+	<string name="create_activity">Add a new activity to your calendar:</string>
+	<string name="create_activity_prompt">Create calendar event</string>
+	<string name="meds">Manage medications:</string>
+	<string name="add_prescription">Add a new prescription.</string>
+	<string name="manage_side_effects">Manage side effects</string>
+	<string name="side_effects_surveys">Side effects</string>
+	
+	<!--  Create Activity -->
+	<string name="activity_title">What would you like to do?</string>
+	<string name="activity_start_time_prompt">Pick a start time:</string>
+	<string name="activity_end_time_prompt">Pick an end time:</string>
+	<string name="activity_date">Pick a date for your activity:</string>
+	<string name="pick_date">Choose date</string>
+	<string name="finalize_event">Add event to calendar</string>
 </resources>
