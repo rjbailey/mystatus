@@ -7,15 +7,16 @@ import java.util.TimeZone;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.services.NotificationService;
 import edu.washington.cs.mystatus.CalendarCreator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -24,11 +25,15 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TimePicker;
-import android.widget.Spinner;
+import android.widget.TimePicker.OnTimeChangedListener;
 
 /**
  * SettingsActivity provides a UI for managing notification settings.
@@ -40,48 +45,134 @@ import android.widget.Spinner;
  * @see AlarmManager
  * @see NotificationService
  */
-@SuppressLint("NewApi")
+
 public class SettingsActivity extends Activity {
 	
 	private static final String TAG = "mystatus.SettingsActivity";
 	
-	private static final String DEFAULT_DAY = "Sunday";
 	private static final int DEFAULT_HOUR = 8;
 	private static final int DEFAULT_MIN = 30;
 	private static final int TIME_PICKER_ID = 0;
-	private static String DAY;
+	private static boolean[] DAYS;
 	private static int HOUR;
 	private static int MINUTE;
 	private static long EVENT_ID;
 	private static long CALENDAR_ID;
 	
-	//private CheckBox mEnableNotificationsBox;
-	private Spinner mDay;
-	private Button mDayButton;
 	private Button mTime;
-	
-	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
-			new TimePickerDialog.OnTimeSetListener() {
-    	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-    		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-			SharedPreferences.Editor editor = prefs.edit();
-			HOUR = hourOfDay;
-			MINUTE = minute;
-			editor.putInt("hour_setting", hourOfDay);
-			editor.putInt("minute_setting", minute);
-			updateEvent(hourOfDay, minute, DAY);
-			editor.commit();
-    	}
-	};
+	private CheckBox mSun;
+	private CheckBox mMon;
+	private CheckBox mTue;
+	private CheckBox mWed;
+	private CheckBox mThu;
+	private CheckBox mFri;
+	private CheckBox mSat;
+	private TimePicker mTP;
+	private Button mCancel;
+	private Button mSet;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
+		setGlobalVars();
+
+		if (EVENT_ID == -1) {
+			createEvent();
+		}
+		
+		mTime = (Button) findViewById(R.id.time);
+		mTime.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showDialog(TIME_PICKER_ID);
+			}
+		});
+	}
+	
+	private void setSetCancelAndTime(final Dialog d) {
+		mCancel = (Button) d.findViewById(R.id.dialog_cancel);
+		mSet = (Button) d.findViewById(R.id.dialog_set);
+		mTP = (TimePicker) d.findViewById(R.id.settings_time_picker);
+		
+		mCancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				d.cancel();
+			}
+		});
+		
+		mSet.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				setDAYS(mSun, 0, "sun_checked");
+				setDAYS(mMon, 1, "mon_checked");
+				setDAYS(mTue, 2, "tue_checked");
+				setDAYS(mWed, 3, "wed_checked");
+				setDAYS(mThu, 4, "thu_checked");
+				setDAYS(mFri, 5, "fri_checked");
+				setDAYS(mSat, 6, "sat_checked");
+				
+				setHourTime();
+				
+				updateEvent();
+				
+				d.dismiss();
+			}
+		});
+	}
+	
+    private void setHourTime() {
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		HOUR = mTP.getCurrentHour();
+		MINUTE = mTP.getCurrentMinute();
+		editor.putInt("hour_setting", HOUR);
+		editor.putInt("minute_setting", MINUTE);
+		editor.commit();
+    }
+	
+	private void setCheckBoxes(Dialog d) {
+		mSun = (CheckBox) d.findViewById(R.id.sunday);
+		mSun.setChecked(DAYS[0]);
+		mMon = (CheckBox) d.findViewById(R.id.monday);
+		mMon.setChecked(DAYS[1]);
+		mTue = (CheckBox) d.findViewById(R.id.tuesday);
+		mTue.setChecked(DAYS[2]);
+		mWed = (CheckBox) d.findViewById(R.id.wednesday);
+		mWed.setChecked(DAYS[3]);
+		mThu = (CheckBox) d.findViewById(R.id.thursday);
+		mThu.setChecked(DAYS[4]);
+		mFri = (CheckBox) d.findViewById(R.id.friday);
+		mFri.setChecked(DAYS[5]);
+		mSat = (CheckBox) d.findViewById(R.id.saturday);
+		mSun.setChecked(DAYS[6]);
+	}
+	
+	private void setDAYS(CheckBox dayBox, final int id, final String dayString) {
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		if (dayBox.isChecked()) {
+			editor.putBoolean(dayString, true);
+			DAYS[id] = true;
+		} else {
+			editor.putBoolean(dayString, false);
+			DAYS[id] = false;
+		}
+		editor.commit();
+	}
+	
+	private void setGlobalVars() {
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		DAY = settings.getString("day_setting", DEFAULT_DAY);
-		int notDefaultDayPosition = settings.getInt("day_position_setting", 4);
+		DAYS = new boolean[7];
+		DAYS[0] = settings.getBoolean("su_checked", false);
+		DAYS[1] = settings.getBoolean("mo_checked", true);
+		DAYS[2] = settings.getBoolean("tu_checked", true);
+		DAYS[3] = settings.getBoolean("we_checked", true);
+		DAYS[4] = settings.getBoolean("th_checked", true);
+		DAYS[5] = settings.getBoolean("fr_checked", true);
+		DAYS[6] = settings.getBoolean("sa_checked", false);
 		HOUR = settings.getInt("hour_setting", DEFAULT_HOUR);
 		MINUTE = settings.getInt("minute_setting", DEFAULT_MIN);
 		EVENT_ID = settings.getLong("event_id", -1);
@@ -92,55 +183,33 @@ public class SettingsActivity extends Activity {
 			CalendarCreator.addCalendar(cal, cr);
 			CALENDAR_ID = getCalendarId();
 		}
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.settings_dialog);
+        dialog.setTitle(R.string.settings_dialog_title);
+        
+        setSetCancelAndTime(dialog);
+		setCheckBoxes(dialog);
 		
-		mDay = (Spinner) findViewById(R.id.day);
-		mDayButton = (Button) findViewById(R.id.day_button);
-		
-		mDayButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-				SharedPreferences.Editor editor = prefs.edit();
-				
-				DAY = String.valueOf(mDay.getSelectedItem());
-				editor.putString("day_setting", String.valueOf(mDay.getSelectedItem()));
-				editor.putInt("day_position_setting", mDay.getSelectedItemPosition());
-				String day = String.valueOf(mDay.getSelectedItem());
-				updateEvent(HOUR, MINUTE, day);
-				editor.commit();
-			}
-		});
-		
-		mDay.setSelection(notDefaultDayPosition);
-
-		mTime = (Button) findViewById(R.id.time);
-		mTime.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showDialog(TIME_PICKER_ID);
-				//showTimePickerDialog(v);
-			}
-		});
-		
-		// TODO: make only appear once, edit from then on
-		if (EVENT_ID == -1) {
-			createEvent(DAY, HOUR, MINUTE);
-		}
+		return dialog;	
 	}
 	
 	// Creates a calendar event in the myStatus Calendar with the date and time provided
 	// in the parameters
-	private void createEvent(String day, int hour, int min) {
+	private void createEvent() {
 		// create beginning of event and end of event
 		Date beginTime = new Date();
-		beginTime.setDate(getDate(beginTime, day));
-		beginTime.setHours(hour);
-		beginTime.setMinutes(min);
+		beginTime.setDate(getDate(beginTime, DAYS));
+		beginTime.setHours(HOUR);
+		beginTime.setMinutes(MINUTE);
 		
 		Date  endTime = new Date();
-		endTime.setDate(getDate(endTime, day));
-		endTime.setHours(hour + 1);
-		endTime.setMinutes(min);
+		endTime.setDate(getDate(endTime, DAYS));
+		endTime.setHours(HOUR + 1);
+		endTime.setMinutes(MINUTE);
 		Calendar cal = Calendar.getInstance();
 		TimeZone tz = cal.getTimeZone();
 		// create the event
@@ -151,10 +220,10 @@ public class SettingsActivity extends Activity {
 		values.put(Events.TITLE, "myStatus");
 		values.put(Events.CALENDAR_ID, CALENDAR_ID);
 		values.put(Events.EVENT_TIMEZONE, tz.getDisplayName());
-		values.put(Events.RRULE, "FREQ=WEEKLY;BYDAY=" + getWeekdayAbr(day));
+		values.put(Events.RRULE, "FREQ=WEEKLY;BYDAY=" + getWeekdayAbr(DAYS));
 		
 		// add the event
-		Uri uri = cr.insert(Events.CONTENT_URI, values);
+		Uri uri = cr.insert(Uri.parse("content://com.android.calendar/events"), values);
 		EVENT_ID = Long.parseLong(uri.getLastPathSegment());
 		Log.i(TAG, "Created event.");
 		
@@ -163,52 +232,69 @@ public class SettingsActivity extends Activity {
 		editor.putLong("event_id", EVENT_ID);
 		editor.commit();
 		
-		long startTime = getEventStartTime();
-		enableNotifications(startTime);
+		// TODO: start alarm manager for each day checked
+		Date today = new Date();
+		today.setHours(HOUR);
+		today.setMinutes(MINUTE);
+		today.setSeconds(0);
+		int[] dates = getDates(today);
+		for (int i = 0; i < 7; i++) {
+			if (dates[i] != Integer.MAX_VALUE) {
+				today.setDate(dates[i]);
+				enableNotifications(today.getTime(), i);
+			}
+		}
 	}
 	
 	// Updates the date and time of the calendar event to the parameters given
-	private void updateEvent(int hour, int min, String day) {
+	private void updateEvent() {
 		disableNotifications();
 		
 		ContentResolver cr = getContentResolver();
 		ContentValues values = new ContentValues();
-		Uri updateUri = null;
 		
 		Date beginTime = new Date();
-		beginTime.setHours(hour);
-		beginTime.setMinutes(min);
-		beginTime.setDate(getDate(beginTime, day));
+		beginTime.setHours(HOUR);
+		beginTime.setMinutes(MINUTE);
+		beginTime.setDate(getDate(beginTime, DAYS));
 		values.put(Events.DTSTART, beginTime.getTime());
 		Date endTime = new Date();
-		endTime.setHours(hour + 1);
-		endTime.setMinutes(min);
-		endTime.setDate(getDate(endTime, day));
+		endTime.setHours(HOUR + 1);
+		endTime.setMinutes(MINUTE);
+		endTime.setDate(getDate(endTime, DAYS));
 		values.put(Events.DTEND, endTime.getTime());
-		values.put(Events.RRULE, "FREQ=WEEKLY;BYDAY=" + getWeekdayAbr(day));
+		values.put(Events.RRULE, "FREQ=WEEKLY;BYDAY=" + getWeekdayAbr(DAYS));
 
-		int rows = cr.update(Events.CONTENT_URI, values, Events._ID + " =? ", new String[]{Long.toString(EVENT_ID)});
+		int rows = cr.update(Uri.parse("content://com.android.calendar/events"),
+				values, Events._ID + " =? ", new String[]{Long.toString(EVENT_ID)});
 		Log.i(TAG, "Rows updated: " + rows);
-		
-		enableNotifications(getEventStartTime());
-	}
-	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Calendar c = Calendar.getInstance();
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-        // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(this, mTimeSetListener, hour, minute, DateFormat.is24HourFormat(this));
-		
+		// TODO: enable notifications for each day checked
+		Date today = new Date();
+		today.setHours(HOUR);
+		today.setMinutes(MINUTE);
+		today.setSeconds(0);
+		int[] dates = getDates(today);
+		for (int i = 0; i < 7; i++) {
+			if (dates[i] != Integer.MAX_VALUE) {
+				today.setDate(dates[i]);
+				enableNotifications(today.getTime(), i);
+			}
+		}	
 	}
 	
 	// Returns the 2 letter capital abbreviation of the
 	// weekday passed
-	private String getWeekdayAbr(String weekday) {
-		String ret = weekday.substring(0, 2).toUpperCase();
-		return ret;
+	private String getWeekdayAbr(boolean[] weekdays) {
+		String[] days = {"SU", "MO", "TU", "WE", "TH", "FR", "SA"};
+		String ret = "";
+		for (int i = 0; i < 7; i++) {
+			if (weekdays[i])
+				ret += days[i] + ",";
+		}
+		if (ret.length() > 3)
+			return ret.substring(0, ret.length() - 1);
+		else
+			return ret;
 	}
 	
 	// gets the calendar ID for the myStatus calendar
@@ -226,24 +312,9 @@ public class SettingsActivity extends Activity {
 		return -1;
 	}
 	
-	// Get the calendar event's start time in milliseconds
-	private long getEventStartTime() {
-		ContentResolver cr = getContentResolver();
-		Cursor cursor = cr.query(Uri.parse("content://com.android.calendar/events"),
-				(new String[] {"title", "dtstart"} ), "calendar_id=" + CALENDAR_ID, null, null);
-		while(cursor.moveToNext()) {
-			String eventName = cursor.getString(0);
-			if (eventName.equals("myStatus")) {
-				return Long.parseLong(cursor.getString(1));
-			}
-		}
-		return 0;
-		
-	}
-	
 	// Enables an AlarmManager to create an alarm when its time for the calendar event
-	private void enableNotifications(long startTime) {
-		PendingIntent notifyIntent = PendingIntent.getService(this, 0,
+	private void enableNotifications(long startTime, int id) {
+		PendingIntent notifyIntent = PendingIntent.getService(this, id,
 				new Intent(this, NotificationService.class), 0);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, startTime, 604800000, notifyIntent);
@@ -252,39 +323,67 @@ public class SettingsActivity extends Activity {
 	
 	 // Cancels the AlarmManager alarm that generates notifications.
 	private void disableNotifications() {
+		// TODO: for all days
 		Log.w(TAG, "Disabling notifications");
-		PendingIntent notificationIntent = PendingIntent.getService(this, 0,
-				new Intent(this, NotificationService.class), 0);
-		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		am.cancel(notificationIntent);
+		for (int i = 0; i < 7; i++) {
+			PendingIntent notificationIntent = PendingIntent.getService(this, i,
+					new Intent(this, NotificationService.class), 0);
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			am.cancel(notificationIntent);
+		}
 	}
 	
 	// get the day of the month for the next day of the week.
-	private int getDate(Date today, String desiredDay) {
+	private int getDate(Date today, boolean[] desiredDays) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
 		int todaysDate = cal.get(Calendar.DAY_OF_WEEK);
-		int desiredDayNum = getDay(desiredDay);
+		int desiredDayNum = 0;
+		// Start from todaysDate day of the week so that
+		// days are not skipped when initializing the event
+		for (int i = todaysDate; i < 7; i++) {
+			if (desiredDays[i]) {
+				desiredDayNum = i + 1;
+				break;
+			}
+		}
+		// if the day was not set;
+		if (desiredDayNum == 0) {
+			for (int i = 0; i < todaysDate; i++) {
+				if (desiredDays[i]) {
+					desiredDayNum = i + 1;
+					break;
+				}
+			}
+		}
 		int diff = desiredDayNum - todaysDate;
 		return cal.get(Calendar.DATE) + diff;	
 	}
 	
-	// get the integer value from the String of a day of the week as
-	// it appears for Calendar 
-	private int getDay(String desiredDay) {
-		if (desiredDay.equals("Monday"))
-			return 1;
-		else if (desiredDay.equals("Tuesday"))
-			return 2;
-		else if (desiredDay.equals("Wednesday"))
-			return 3;
-		else if (desiredDay.equals("Thursday"))
-			return 4;
-		else if (desiredDay.equals("Friday"))
-			return 5;
-		else if (desiredDay.equals("Saturday"))
-			return 6;
-		else
-			return 7;
+	private int[] getDates(Date today) {
+		int x = -7; // value that 
+		int[] dates = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
+				Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE};
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		int todaysDate = cal.get(Calendar.DAY_OF_WEEK);
+		for (int i = 0; i < 7; i++) {
+			if (DAYS[i]) {
+				dates[i] = i + 1;
+			}
+		}
+		// get difference
+		for (int i = 0; i < 7; i++) {
+			if (dates[i] != Integer.MAX_VALUE) {
+				dates[i] = dates[i] - todaysDate;
+			}
+		}
+		// get final date
+		for (int i = 0; i < 7; i++) {
+			if (dates[i] != Integer.MAX_VALUE) {
+				dates[i] = cal.get(Calendar.DATE) + dates[i];
+			}
+		}
+		return dates;
 	}
 }

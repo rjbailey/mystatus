@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_settings">Settings</string>
     <string name="action_odk_menu">ODK Collect menu</string>
 
     <!-- Main menu -->
@@ -19,8 +18,7 @@
     <string name="survey_menu">Go back to the list of surveys.</string>
 
     <!-- Settings -->
-    <string name="settings_title">Notification Settings</string>
-    
+    <string name="settings_title">Notification Settings</string>    
     <string name="day_setting">Day of the week:</string>
     <string name="notification_title">myStatus Alert</string>
     <string name="notification_message">Tap to check in with myStatus</string>
@@ -33,10 +31,18 @@
         <item>Friday</item>
         <item>Saturday</item>
     </string-array>
-    <string name="day_prompt">Choose a day of the week.</string>
-    <string name="pick_day">Confirm choice of day.</string>
     <string name="time_setting">Time:</string>
 	<string name="pick_time">Pick time</string>
+	<string name="chk_sun">Su</string>
+	<string name="chk_mon">Mo</string>
+	<string name="chk_tue">Tu</string>
+	<string name="chk_wed">We</string>
+	<string name="chk_thu">Th</string>
+	<string name="chk_fri">Fr</string>
+	<string name="chk_sat">Sa</string>
+	<string name="settings_dialog_title">Pick days to take surveys</string>
+	<string name="settings_pos_button">Set</string>
+	<string name="settings_neg_button">Cancel</string>
     
     <!-- Get Help -->
     <string name="help_title">Need help?</string>
@@ -60,4 +66,10 @@
 	<string name="activity_date">Pick a date for your activity:</string>
 	<string name="pick_date">Choose date</string>
 	<string name="finalize_event">Add event to calendar</string>
+	
+	<!-- Pill Activity -->
+	<string name="edit_prescription">Edit Prescription</string>
+	<string name="prescription_name">Name</string>
+	<string name="prescription_quantity">Quantity</string>
+	<string name="prescription_mg">mg</string>
 </resources>
