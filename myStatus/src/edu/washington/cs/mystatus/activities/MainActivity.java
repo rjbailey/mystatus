@@ -95,6 +95,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		case R.id.action_odk_menu:
+			((MyStatus)getApplicationContext()).connectCacheWord();
 			startActivity(new Intent(this, MainMenuActivity.class));
 			return true;
 		default:

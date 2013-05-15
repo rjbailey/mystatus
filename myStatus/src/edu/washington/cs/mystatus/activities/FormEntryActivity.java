@@ -1082,7 +1082,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 									R.string.save_as_error,
 									Toast.LENGTH_SHORT).show();
 						} else {
-							saveDataToDisk(EXIT, instanceComplete.isChecked(),
+							// fixed Uri in case it's null
+							if (mFormUri == null)
+								mFormUri = getIntent().getStringExtra("formUri");
+							saveDataToDisk (EXIT, instanceComplete.isChecked(),
 									saveAs.getText().toString());
 						}
 						finish();
@@ -1631,6 +1634,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 										.logInstanceAction(this,
 												"createQuitDialog",
 												"saveAndExit");
+								// give it uri form if need to
+								// fixed Uri in case it's null
+								if (mFormUri == null)
+									mFormUri = getIntent().getStringExtra("formUri");
 								saveDataToDisk(EXIT, isInstanceComplete(false),
 										null);
 							} else {

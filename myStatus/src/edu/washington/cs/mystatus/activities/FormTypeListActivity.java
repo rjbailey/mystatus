@@ -2,6 +2,7 @@ package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProvider;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
@@ -43,9 +44,11 @@ public class FormTypeListActivity extends ListActivity {
 		TextView tv = (TextView) findViewById(R.id.status_text);
 		tv.setVisibility(View.GONE);
 		// edit selection to get only the form needed
-		String selection = InstanceColumns.STATUS + " != ? AND "
+		String selection = InstanceColumns.STATUS + " != ? "+ "OR "
+						  +InstanceColumns.STATUS+ " != ? " +"AND "
 				+ InstanceColumns.DISPLAY_NAME + " = " + "\"" +formName+"\"";
-		String[] selectionArgs = { InstanceProviderAPI.STATUS_SUBMITTED };
+		//String[] selectionArgs = { InstanceProviderAPI.STATUS_SUBMITTED };
+		String[] selectionArgs = { InstanceProviderAPI.STATUS_COMPLETE, InstanceProviderAPI.STATUS_SUBMITTED};
 		String sortOrder = InstanceColumns.STATUS + " DESC, "
 				+ InstanceColumns.DISPLAY_NAME + " ASC";
 		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
@@ -75,7 +78,7 @@ public class FormTypeListActivity extends ListActivity {
 		Uri instanceUri = ContentUris.withAppendedId(
 				InstanceColumns.CONTENT_URI,
 				c.getLong(c.getColumnIndex(InstanceColumns._ID)));
-
+		
 		MyStatus.getInstance().getActivityLogger()
 				.logAction(this, "onListItemClick", instanceUri.toString());
 
@@ -102,9 +105,33 @@ public class FormTypeListActivity extends ListActivity {
 				return;
 			}
 			// caller wants to view/edit a form, so launch formentryactivity
-			startActivity(new Intent(Intent.ACTION_EDIT, instanceUri));
+			Intent intent = new Intent (this, FormEntryActivity.class);
+			intent.setData(instanceUri);
+			intent.putExtra("formUri", getFormsUri(c.getString
+													(c.getColumnIndex
+															(InstanceColumns.DISPLAY_NAME))));
+			startActivity(intent);
+			//startActivity(new Intent(Intent.ACTION_EDIT, instanceUri, this, FormEntryActivity.class));
 		}
 		finish();
+	}
+	
+	private String getFormsUri (String instanceDisplayName){
+		// edit selection to get only the form needed
+		String selection = FormsColumns.DISPLAY_NAME + " = " + "\"" +instanceDisplayName+"\"";
+//		 String[] projection = {
+//                 FormsColumns._ID, FormsColumns.FORM_FILE_PATH
+//         };
+		 
+		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection,
+				null, null);
+		startManagingCursor(c);
+		c.moveToFirst();
+		Uri formUri = ContentUris.withAppendedId(
+				FormsColumns.CONTENT_URI,
+				c.getLong(c.getColumnIndex(FormsColumns._ID)));
+		return formUri.toString();
+		
 	}
 
 	@Override
@@ -165,10 +192,13 @@ public class FormTypeListActivity extends ListActivity {
 	    textViewSave.setText(savedString);
 	    if (savedString.contains("Saved")){
 	    	// TODO: set icon for saved item
-	    	imageView.setImageResource(android.R.drawable.checkbox_off_background);
-	    }else{
+	    	imageView.setImageResource(R.drawable.btn_star_big_off);
+	    }else if (savedString.contains("Finalized")){
 	    	// TODO: set icon for submitted item
-	    	imageView.setImageResource(android.R.drawable.checkbox_on_background);
+	    	imageView.setImageResource(R.drawable.btn_star_big_on_disable);
+	    }else {
+	    	// TODO: set icon for submitted item
+	    	imageView.setImageResource(R.drawable.btn_star_big_on_selected);
 	    }
 	}
 

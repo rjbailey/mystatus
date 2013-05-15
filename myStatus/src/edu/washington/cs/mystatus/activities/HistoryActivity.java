@@ -14,23 +14,29 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class HistoryActivity extends ListActivity {
 	private HashMap<String, Integer> formTypes;
 	private List<String> formNameList;
-
+	private final String NOT_YET_RECORDED = "Not Yet Recorded";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.chooser_list_layout);
+		setContentView(R.layout.mystatus_surveys);
+		TextView view = (TextView) findViewById(android.R.id.empty);
+		view.setText(NOT_YET_RECORDED);
 		// initialize hashmap for storing data types
 		// @CD
+		ArrayAdapter<String> adapter ;
 		formTypes = new HashMap<String, Integer>();
 		formNameList = new ArrayList<String>();
 		String selection = InstanceColumns.STATUS + " != ?";
-		String[] selectionArgs = { InstanceProviderAPI.STATUS_SUBMITTED };
+		//String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
+		String[] selectionArgs = {InstanceProviderAPI.STATUS_COMPLETE};
 		String sortOrder = InstanceColumns.STATUS + " DESC, "
 				+ InstanceColumns.DISPLAY_NAME + " ASC";
 		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
@@ -38,28 +44,29 @@ public class HistoryActivity extends ListActivity {
 
 		// iterate through cursor to get all form types......
 		// @CD
-		c.moveToFirst();
-		do {
-			String key = c.getString(c
-					.getColumnIndex(InstanceColumns.DISPLAY_NAME));
-			if (!formTypes.containsKey(key)) {
-				// add new name to the list
-				formTypes.put(key, 0);
-				formNameList.add(key);
-			} else {
-				// keep counting for reference
-				int oldCount = formTypes.get(key);
-				formTypes.put(key, ++oldCount);
-			}
+		if (c.getCount() > 0){
+			c.moveToFirst();
+			do {
+				String key = c.getString(c
+						.getColumnIndex(InstanceColumns.DISPLAY_NAME));
+				if (!formTypes.containsKey(key)) {
+					// add new name to the list
+					formTypes.put(key, 0);
+					formNameList.add(key);
+				} else {
+					// keep counting for reference
+					int oldCount = formTypes.get(key);
+					formTypes.put(key, ++oldCount);
+				}
 
-		} while (c.moveToNext());
-		// return cursor to the beginning
-		c.moveToFirst();
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, formNameList);
-
+			} while (c.moveToNext());
+			// return cursor to the beginning
+			c.moveToFirst();
+		}
+		adapter = new ArrayAdapter<String>(this,
+								android.R.layout.simple_list_item_1, formNameList);
 		setListAdapter(adapter);
+		
 	}
 
 	/**
