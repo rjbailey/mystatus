@@ -8,12 +8,18 @@ import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -50,8 +56,11 @@ public class FormTypeListActivity extends ListActivity {
 		int[] view = new int[] { R.id.text1, R.id.text2 };
 
 		// render total instance view
-		SimpleCursorAdapter instances = new SimpleCursorAdapter(this,
-				R.layout.two_item, c, data, view);
+//		SimpleCursorAdapter instances = new SimpleCursorAdapter(this,
+//				R.layout.two_item, c, data, view);
+		// render total instance view
+		MySimpleCursorAdapter instances = new MySimpleCursorAdapter(this,
+					c);
 		setListAdapter(instances);
 	}
 
@@ -137,5 +146,38 @@ public class FormTypeListActivity extends ListActivity {
 		mAlertDialog.setButton(getString(R.string.ok), errorListener);
 		mAlertDialog.show();
 	}
+	// Helper used to show better list in history
+	public class MySimpleCursorAdapter extends CursorAdapter {
 
+		public MySimpleCursorAdapter(Context context, Cursor c) {
+			super(context, c);
+		}
+
+
+	@Override
+	public void bindView(View view, Context context, Cursor cursor) {
+		TextView textViewLabel = (TextView) view.findViewById(R.id.label);
+		TextView textViewSave = (TextView) view.findViewById(R.id.status);
+	    ImageView imageView = (ImageView) view.findViewById(R.id.icon);
+	    String labelString = cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_NAME));
+	    String savedString = cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_SUBTEXT));
+	    textViewLabel.setText(labelString);
+	    textViewSave.setText(savedString);
+	    if (savedString.contains("Saved")){
+	    	// TODO: set icon for saved item
+	    	imageView.setImageResource(android.R.drawable.checkbox_off_background);
+	    }else{
+	    	// TODO: set icon for submitted item
+	    	imageView.setImageResource(android.R.drawable.checkbox_on_background);
+	    }
+	}
+
+	@Override
+	public View newView(Context ctx, Cursor context, ViewGroup parent) {
+		LayoutInflater inflater = (LayoutInflater) ctx
+		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View view = inflater.inflate(R.layout.row_layout, parent, false);
+		return view;
+	}
+	} 
 }

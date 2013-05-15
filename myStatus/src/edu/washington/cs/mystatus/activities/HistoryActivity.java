@@ -9,21 +9,13 @@ import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.ContentUris;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 public class HistoryActivity extends ListActivity {
 	private HashMap<String, Integer> formTypes;
@@ -96,5 +88,7 @@ public class HistoryActivity extends ListActivity {
 		MyStatus.getInstance().getActivityLogger().logOnStop(this);
 		super.onStop();
 	}
+	
+
 
 }
