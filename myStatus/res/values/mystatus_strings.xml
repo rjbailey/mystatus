@@ -67,9 +67,27 @@
 	<string name="pick_date">Choose date</string>
 	<string name="finalize_event">Add event to calendar</string>
 	
-	<!-- Pill Activity -->
+	<!-- Manage Prescriptions -->
+	<string name="my_prescriptions">My Prescriptions</string>
+	<string name="add_new_prescription">Add New Prescription</string>
+	<string name="a_prescription">A Prescription</string>
+	
+	<!-- Edit Prescription -->
 	<string name="edit_prescription">Edit Prescription</string>
-	<string name="prescription_name">Name</string>
-	<string name="prescription_quantity">Quantity</string>
-	<string name="prescription_mg">mg</string>
+	<string name="pres_name">Name</string>
+	<string name="pres_quantity">Quantity</string>
+	<string name="pres_mg">mg</string>
+	<string name="pres_time">Take it at</string>
+	<string name="add_pres_time">Add another reminder</string>
+	<string name="delete_pres_time">Delete last reminder</string>
+	<string name="add_pres_pic">Take Picture</string>
+	<string name="edit_pres_cancel">Cancel</string>
+	<string name="edit_pres_save">Save</string>
+	<string name="dialog_name_warning">Please fill out the "Name" field.</string>
+	<string name="fire">OK</string>
+	<string name="dialog_quantity_warning">Please fill out the "Quantity" field.</string>
+	
+	<!-- Prescription Notification -->
+	<string name="pres_notification_title">myStatus</string>
+	<string name="pres_notificaiton_text">This is your ___ reminder.</string>
 </resources>

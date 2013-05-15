@@ -34,6 +34,7 @@ public class NotificationService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.w(TAG, "Generating notification");
 		Notification surveyNotification = createSurveyNotification();
+		surveyNotification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(NOTIFICATION_ID, surveyNotification);
 
