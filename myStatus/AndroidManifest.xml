@@ -42,6 +42,8 @@
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
         android:name="edu.washington.cs.mystatus.application.MyStatus"
@@ -50,10 +52,10 @@
         android:theme="@style/myStatus"
         android:allowBackup="false" >
         
+        <!-- myStatus Components -->
         <activity
             android:name="edu.washington.cs.mystatus.activities.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +64,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.activities.SurveysActivity"
+            android:name="edu.washington.cs.mystatus.activities.SurveyListTabs"
+            android:theme="@style/myStatus.Track"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.DueSurveysList"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
+            android:name="edu.washington.cs.mystatus.activities.AllSurveysList"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
@@ -83,13 +94,21 @@
         </activity>
         <activity
             android:name="edu.washington.cs.mystatus.activities.GoalsActivity"
+            android:theme="@style/myStatus.Plan"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
+            android:name="edu.washington.cs.mystatus.activities.CreateEventActivity"
+            android:theme="@style/myStatus.Plan"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.GoalsActivity" >
+        </activity>
+        <activity
             android:name="edu.washington.cs.mystatus.activities.HelpActivity"
+            android:theme="@style/myStatus.Help"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
 
+        <!-- ODK Collect Components -->
         <service
             android:name="edu.washington.cs.mystatus.services.NotificationService"
             android:enabled="true" >
@@ -107,61 +126,35 @@
         <activity
             android:name="edu.washington.cs.mystatus.activities.MainMenuActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/myStatus.Track"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.SurveyListTabs" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.DrawActivity"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.InstanceChooserList"
             android:label="@string/app_name" />
-
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <action android:name="android.intent.action.EDIT" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-
-            <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
-        </intent-filter>
-
         <activity
             android:name="edu.washington.cs.mystatus.activities.InstanceChooserTabs"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormChooserList"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormManagerList"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.FormDownloadList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/myStatus.Setup"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
             android:name="edu.washington.cs.mystatus.activities.DataManagerList"
             android:label="@string/app_name" />
@@ -206,16 +199,7 @@
         <activity
             android:name="edu.washington.cs.mystatus.activities.AndroidShortcuts"
             android:label="ODK Form"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-         
-        
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <receiver
             android:name="edu.washington.cs.mystatus.receivers.NetworkReceiver"
             android:enabled="true" >

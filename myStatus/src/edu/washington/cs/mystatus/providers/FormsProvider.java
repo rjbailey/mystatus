@@ -27,6 +27,7 @@ import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.ODKSQLiteOpenHelper;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
@@ -51,7 +52,7 @@ public class FormsProvider extends ContentProvider {
     private static final String t = "FormsProvider";
 
     private static final String DATABASE_NAME = "forms.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String FORMS_TABLE_NAME = "forms";
     // used for reset dB if neccessary
     // @CD
@@ -70,7 +71,7 @@ public class FormsProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
         // These exist in database versions 2 and 3, but not in 4...
-        private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";
+        private static final String TEMP_FORMS_TABLE_NAME = "forms_v5";
         private static final String MODEL_VERSION = "modelVersion";
 
         DatabaseHelper(String databaseName, Context ctx) {
@@ -98,7 +99,11 @@ public class FormsProvider extends ContentProvider {
                     + FormsColumns.LANGUAGE + " text, "
                     + FormsColumns.SUBMISSION_URI + " text, "
                     + FormsColumns.BASE64_RSA_PUBLIC_KEY + " text, "
-                    + FormsColumns.JRCACHE_FILE_PATH + " text not null );");
+                    + FormsColumns.JRCACHE_FILE_PATH + " text not null, "
+                    + FormsColumns.LAST_RESPONSE + " integer, " // milliseconds (date)
+                    + FormsColumns.FORM_TYPE + " integer not null, "
+                    + FormsColumns.PREDICATE + " text, "
+                    + FormsColumns.NEEDS_RESPONSE + " integer not null );"); // boolean (0 or 1)
         }
 
         @Override
@@ -127,8 +132,13 @@ public class FormsProvider extends ContentProvider {
                         + FormsColumns.LANGUAGE + ", "
                         + FormsColumns.SUBMISSION_URI + ", "
                         + FormsColumns.JR_VERSION + ", "
-                        + ((oldVersion != 3) ? "" : (FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "))
-                        + FormsColumns.JRCACHE_FILE_PATH + ") SELECT "
+                        + ((oldVersion < 3) ? "" : (FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "))
+                        + FormsColumns.JRCACHE_FILE_PATH + ", "
+                        + ((oldVersion < 5) ? "" : (FormsColumns.LAST_RESPONSE + ", "))
+                        + FormsColumns.FORM_TYPE + ", "
+                        + ((oldVersion < 5) ? "" : (FormsColumns.PREDICATE + ", "))
+                        + FormsColumns.NEEDS_RESPONSE
+                        + ") SELECT "
                 		+ FormsColumns._ID + ", "
                 		+ FormsColumns.DISPLAY_NAME + ", "
                         + FormsColumns.DISPLAY_SUBTEXT + ", "
@@ -140,10 +150,15 @@ public class FormsProvider extends ContentProvider {
                         + FormsColumns.FORM_FILE_PATH + ", "
                         + FormsColumns.LANGUAGE + ", "
                         + FormsColumns.SUBMISSION_URI + ", "
-                        + "CASE WHEN " + MODEL_VERSION + " IS NOT NULL THEN " +
-                        			"CAST(" + MODEL_VERSION + " AS TEXT) ELSE NULL END, "
-                        + ((oldVersion != 3) ? "" : (FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "))
-                        + FormsColumns.JRCACHE_FILE_PATH + " FROM " + FORMS_TABLE_NAME);
+                        + ((oldVersion < 4) ? ("CASE WHEN " + MODEL_VERSION + " IS NOT NULL THEN " +
+                        			"CAST(" + MODEL_VERSION + " AS TEXT) ELSE NULL END, ") : "NULL, ")
+                        + ((oldVersion < 3) ? "" : (FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "))
+                        + FormsColumns.JRCACHE_FILE_PATH + ", "
+                        + ((oldVersion < 5) ? "" : (FormsColumns.LAST_RESPONSE + ", "))
+                        + ((oldVersion < 5) ? FormTypes.PASSIVE : FormsColumns.FORM_TYPE) + ", "
+                        + ((oldVersion < 5) ? "" : (FormsColumns.PREDICATE + ", "))
+                        + ((oldVersion < 5) ? "1" : FormsColumns.NEEDS_RESPONSE)
+                        + " FROM " + FORMS_TABLE_NAME);
 
         		// risky failures here...
         		db.execSQL("DROP TABLE IF EXISTS " + FORMS_TABLE_NAME);
@@ -162,7 +177,12 @@ public class FormsProvider extends ContentProvider {
                         + FormsColumns.SUBMISSION_URI + ", "
                         + FormsColumns.JR_VERSION + ", "
                         + FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "
-                        + FormsColumns.JRCACHE_FILE_PATH + ") SELECT "
+                        + FormsColumns.JRCACHE_FILE_PATH + ", "
+                        + FormsColumns.LAST_RESPONSE + ", "
+                        + FormsColumns.FORM_TYPE + ", "
+                        + FormsColumns.PREDICATE + ", "
+                        + FormsColumns.NEEDS_RESPONSE
+                        + ") SELECT "
                 		+ FormsColumns._ID + ", "
                 		+ FormsColumns.DISPLAY_NAME + ", "
                         + FormsColumns.DISPLAY_SUBTEXT + ", "
@@ -176,7 +196,12 @@ public class FormsProvider extends ContentProvider {
                         + FormsColumns.SUBMISSION_URI + ", "
                         + FormsColumns.JR_VERSION + ", "
                         + FormsColumns.BASE64_RSA_PUBLIC_KEY + ", "
-                        + FormsColumns.JRCACHE_FILE_PATH + " FROM " + TEMP_FORMS_TABLE_NAME);
+                        + FormsColumns.JRCACHE_FILE_PATH + ", "
+                        + FormsColumns.LAST_RESPONSE + ", "
+                        + FormsColumns.FORM_TYPE + ", "
+                        + FormsColumns.PREDICATE + ", "
+                        + FormsColumns.NEEDS_RESPONSE
+                        + " FROM " + TEMP_FORMS_TABLE_NAME);
         		db.execSQL("DROP TABLE IF EXISTS " + TEMP_FORMS_TABLE_NAME);
 
 	            Log.w(t, "Successfully upgraded database from version " + initialVersion + " to " + newVersion
@@ -302,6 +327,18 @@ public class FormsProvider extends ContentProvider {
             String pathNoExtension = filePath.substring(0, filePath.lastIndexOf("."));
             String mediaPath = pathNoExtension + "-media";
             values.put(FormsColumns.FORM_MEDIA_PATH, mediaPath);
+        }
+
+        // make sure we have a valid form type
+        Integer formType = values.getAsInteger(FormsColumns.FORM_TYPE);
+        if (formType == null ||
+                (formType != FormTypes.PASSIVE && formType != FormTypes.TRIGGERED)) {
+            values.put(FormsColumns.FORM_TYPE, FormTypes.PASSIVE);
+        }
+        // by default, set needsResponse to true for new forms
+        Integer needsResponse = values.getAsInteger(FormsColumns.NEEDS_RESPONSE);
+        if (needsResponse == null || (needsResponse != 0 && needsResponse != 1)) {
+            values.put(FormsColumns.NEEDS_RESPONSE, 1);
         }
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -596,6 +633,10 @@ public class FormsProvider extends ContentProvider {
         sFormsProjectionMap.put(FormsColumns.FORM_FILE_PATH, FormsColumns.FORM_FILE_PATH);
         sFormsProjectionMap.put(FormsColumns.JRCACHE_FILE_PATH, FormsColumns.JRCACHE_FILE_PATH);
         sFormsProjectionMap.put(FormsColumns.LANGUAGE, FormsColumns.LANGUAGE);
+        sFormsProjectionMap.put(FormsColumns.LAST_RESPONSE, FormsColumns.LAST_RESPONSE);
+        sFormsProjectionMap.put(FormsColumns.FORM_TYPE, FormsColumns.FORM_TYPE);
+        sFormsProjectionMap.put(FormsColumns.PREDICATE, FormsColumns.PREDICATE);
+        sFormsProjectionMap.put(FormsColumns.NEEDS_RESPONSE, FormsColumns.NEEDS_RESPONSE);
     }
     // reset database used for first initiaized
     // @CD

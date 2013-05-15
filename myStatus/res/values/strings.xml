@@ -249,16 +249,4 @@
 <string name="change_url_default">URL</string>
 <string name="launch_printer">Initiate Printing</string>
 <string name="no_printer">The requested printer is not installed. Please install the printer.</string>
-
-
-<string name="lock_screen_open">Open</string>
-<string name="title_activity_lock_screen">MyStatus Locked</string>
-<string name="lock_screen_create_passphrase">Create passphrase</string>
-<string name="lock_screen_passphrase_hint">Enter passphrase</string>
-<string name="lock_screen_passphrase_not_set_enter">Enter new passphrase</string>
-<string name="lock_screen_passphrase_not_set_confirm">Confirm new passphrase</string>
-<string name="lock_screen_passphrases_not_matching">Passphrases did not match, please try again</string>
-<string name="pass_err_length">Your passphrase was not long enough</string>	
-<string name="change_timeout_prompt_title">Change Lock Timeout</string>
-<string name="change_timeout_prompt">After how many minutes of inactivity should NoteCipher lock itself?</string>
 </resources>

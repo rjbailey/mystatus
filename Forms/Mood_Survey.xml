@@ -1,0 +1,644 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Mood Survey</h:title>
+    <model>
+      <submission action="https://uwmystatus.appspot.com/submission" method="form-data-post"/>
+      <instance>
+        <Mood_Survey id="mood_survey">
+          <depression>
+            <depressionlabel/>
+            <sad/>
+            <discouraged/>
+            <selfesteem/>
+            <inadequate/>
+            <satisfaction/>
+          </depression>
+          <suicide>
+            <suicidelabel/>
+            <suicidalthoughts/>
+            <suicidalurges/>
+          </suicide>
+          <anxiety>
+            <anxietylabel/>
+            <anxious/>
+            <frightened/>
+            <worrying/>
+            <tense/>
+            <nervous/>
+          </anxiety>
+          <anger>
+            <angerlabel/>
+            <frustrated/>
+            <annoyed/>
+            <resentful/>
+            <angry/>
+            <irritated/>
+          </anger>
+          <violence>
+            <violencelabel/>
+            <violentthoughts/>
+            <violenturges/>
+          </violence>
+          <meta>
+            <instanceID/>
+          </meta>
+        </Mood_Survey>
+      </instance>
+      <bind nodeset="/Mood_Survey/depression/depressionlabel" type="select1"/>
+      <bind nodeset="/Mood_Survey/depression/sad" type="select1"/>
+      <bind nodeset="/Mood_Survey/depression/discouraged" type="select1"/>
+      <bind nodeset="/Mood_Survey/depression/selfesteem" type="select1"/>
+      <bind nodeset="/Mood_Survey/depression/inadequate" type="select1"/>
+      <bind nodeset="/Mood_Survey/depression/satisfaction" type="select1"/>
+      <bind nodeset="/Mood_Survey/suicide/suicidelabel" type="select1"/>
+      <bind nodeset="/Mood_Survey/suicide/suicidalthoughts" type="select1"/>
+      <bind nodeset="/Mood_Survey/suicide/suicidalurges" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/anxietylabel" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/anxious" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/frightened" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/worrying" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/tense" type="select1"/>
+      <bind nodeset="/Mood_Survey/anxiety/nervous" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/angerlabel" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/frustrated" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/annoyed" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/resentful" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/angry" type="select1"/>
+      <bind nodeset="/Mood_Survey/anger/irritated" type="select1"/>
+      <bind nodeset="/Mood_Survey/violence/violencelabel" type="select1"/>
+      <bind nodeset="/Mood_Survey/violence/violentthoughts" type="select1"/>
+      <bind nodeset="/Mood_Survey/violence/violenturges" type="select1"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/Mood_Survey/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list" ref="/Mood_Survey/depression">
+      <select1 appearance="label" ref="/Mood_Survey/depression/depressionlabel">
+        <label>Depression</label>
+        <hint>How do you feel right now?</hint>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/depression/sad">
+        <label>Sad or down in the dumps</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/depression/discouraged">
+        <label>Discouraged or hopeless</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/depression/selfesteem">
+        <label>Low self-esteem</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/depression/inadequate">
+        <label>Worthless or inadequate</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/depression/satisfaction">
+        <label>Loss of pleasure or satisfaction in life</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/Mood_Survey/suicide">
+      <select1 appearance="label" ref="/Mood_Survey/suicide/suicidelabel">
+        <label>Suicidal Urges</label>
+        <hint>How have you felt recently?</hint>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/suicide/suicidalthoughts">
+        <label>Do you have any suicidal thoughts?</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/suicide/suicidalurges">
+        <label>Would you like to end your life?</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/Mood_Survey/anxiety">
+      <select1 appearance="label" ref="/Mood_Survey/anxiety/anxietylabel">
+        <label>Anxiety</label>
+        <hint>How do you feel right now?</hint>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anxiety/anxious">
+        <label>Anxious</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anxiety/frightened">
+        <label>Frightened</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anxiety/worrying">
+        <label>Worrying about things</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anxiety/tense">
+        <label>Tense or on edge</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anxiety/nervous">
+        <label>Nervous</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/Mood_Survey/anger">
+      <select1 appearance="label" ref="/Mood_Survey/anger/angerlabel">
+        <label>Anger</label>
+        <hint>How do you feel right now?</hint>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anger/frustrated">
+        <label>Frustrated</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anger/annoyed">
+        <label>Annoyed</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anger/resentful">
+        <label>Resentful</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anger/angry">
+        <label>Angry</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/anger/irritated">
+        <label>Irritated</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/Mood_Survey/violence">
+      <select1 appearance="label" ref="/Mood_Survey/violence/violencelabel">
+        <label>Violent Urges</label>
+        <hint>How have you felt recently?</hint>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/violence/violentthoughts">
+        <label>I have thoughts or fantasies of hurting people.</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/Mood_Survey/violence/violenturges">
+        <label>I have the urge to do something harmful or violent.</label>
+        <item>
+          <label>0</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>1</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>2</label>
+          <value>2</value>
+        </item>
+        <item>
+          <label>3</label>
+          <value>3</value>
+        </item>
+        <item>
+          <label>4</label>
+          <value>4</value>
+        </item>
+      </select1>
+    </group>
+  </h:body>
+</h:html>

@@ -21,6 +21,7 @@ import org.kxml2.kdom.Node;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -53,6 +54,8 @@ public class FileUtils {
     public static final String TITLE = "title";
     public static final String SUBMISSIONURI = "submission";
     public static final String BASE64_RSA_PUBLIC_KEY = "base64RsaPublicKey";
+    public static final String PREDICATE = "predicate";
+    public static final String TRIGGER = "trigger";
 
     
     public static boolean createFolder(String path) {
@@ -312,6 +315,22 @@ public class FileUtils {
             } catch (Exception e) {
                 Log.i(t, xmlFile.getAbsolutePath() + " does not have a submission element");
                 // and that's totally fine.
+            }
+            try {
+                String predicate = model.getAttributeValue(null, "predicate");
+                if (!TextUtils.isEmpty(predicate)) {
+                    fields.put(PREDICATE, predicate);
+                }
+            } catch (Exception e) {
+                Log.i(t, xmlFile.getAbsolutePath() + " does not have a predicate attribute");
+            }
+            try {
+                String trigger = model.getAttributeValue(null, "trigger");
+                if (!TextUtils.isEmpty(trigger)) {
+                    fields.put(TRIGGER, trigger);
+                }
+            } catch (Exception e) {
+                Log.i(t, xmlFile.getAbsolutePath() + " does not have a trigger attribute");
             }
 
         }

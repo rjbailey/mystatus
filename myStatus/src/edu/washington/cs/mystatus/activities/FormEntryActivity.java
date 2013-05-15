@@ -108,8 +108,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		FormLoaderListener, FormSavedListener, AdvanceToNextListener,
 		OnGestureListener {
 	private static final String t = "FormEntryActivity";
-	private static final String ODK_FORMS_URI = "content://org.odk.collect.android.provider.odk.forms/forms/";
-	private static int FORMS_URI_NUM = 1;
 	
 	// save with every swipe forward or back. Timings indicate this takes .25
 	// seconds.
@@ -149,6 +147,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	// Identifies the gp of the form used to launch form entry
 	public static final String KEY_FORMPATH = "formpath";
+	public static final String KEY_FORM_URI= "formuri";
 
 	// Identifies whether this is a new form, or reloading a form after a screen
 	// rotation (or similar)
@@ -172,6 +171,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	private static final int DELETE_REPEAT = 654321;
 
 	private String mFormPath;
+	private String mFormUri;
 	private GestureDetector mGestureDetector;
 
 	private Animation mInAnimation;
@@ -264,6 +264,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(KEY_FORMPATH)) {
 				mFormPath = savedInstanceState.getString(KEY_FORMPATH);
+			}
+			if (savedInstanceState.containsKey(KEY_FORM_URI)) {
+				mFormUri = savedInstanceState.getString(KEY_FORM_URI);
 			}
 			if (savedInstanceState.containsKey(KEY_INSTANCEPATH)) {
 				instancePath = savedInstanceState.getString(KEY_INSTANCEPATH);
@@ -428,6 +431,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							this.createErrorDialog("Bad URI: " + uri, EXIT);
 							return;
 						} else {
+							mFormUri = uri.toString();
 							c.moveToFirst();
 							mFormPath = c
 									.getString(c
@@ -508,6 +512,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_FORMPATH, mFormPath);
+		outState.putString(KEY_FORM_URI, mFormUri);
 		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		if (formController != null) {
@@ -1077,7 +1082,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 									R.string.save_as_error,
 									Toast.LENGTH_SHORT).show();
 						} else {
-							saveDataToDisk(EXIT, false,
+							saveDataToDisk(EXIT, instanceComplete.isChecked(),
 									saveAs.getText().toString());
 						}
 						finish();
@@ -1559,7 +1564,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		}
 
 		mSaveToDiskTask = new SaveToDiskTask(getIntent().getData(), exit,
-				complete, updatedSaveName);
+				complete, updatedSaveName, Uri.parse(mFormUri));
 		mSaveToDiskTask.setFormSavedListener(this);
 		showDialog(SAVING_DIALOG);
 		// show dialog before we execute...

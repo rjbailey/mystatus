@@ -20,7 +20,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Convenience definitions for NotePadProvider
+ * Convenience definitions for FormsProvider
  */
 public final class FormsProviderAPI {
     public static final String AUTHORITY = "edu.washington.cs.mystatus.provider.odk.forms";
@@ -29,7 +29,7 @@ public final class FormsProviderAPI {
     private FormsProviderAPI() {}
     
     /**
-     * Notes table
+     * Forms table
      */
     public static final class FormsColumns implements BaseColumns {
         // This class cannot be instantiated
@@ -37,8 +37,8 @@ public final class FormsProviderAPI {
 
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/forms");
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.odk.form";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.odk.form";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.mystatus.form";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.mystatus.form";
 
         // These are the only things needed for an insert
         public static final String DISPLAY_NAME = "displayName";
@@ -60,6 +60,27 @@ public final class FormsProviderAPI {
         // this is null on create, and can only be set on an update.
         public static final String LANGUAGE = "language";
         
-        
+        // columns added for myStatus features
+        public static final String LAST_RESPONSE = "lastResponse"; // can be null
+        public static final String FORM_TYPE = "formType";
+        public static final String PREDICATE = "predicate"; // can be null
+        public static final String NEEDS_RESPONSE = "needsResponse"; // boolean (0 or 1)
+    }
+    
+    /**
+     * Enumerates the different types of myStatus forms.
+     * <p>
+     * Passive forms are displayed in the survey list if their predicate
+     * evaluates to true or is null.
+     * <p>
+     * Triggered forms are not displayed in the survey list, and request a
+     * response whenever their triggering event fires.
+     */
+    public static final class FormTypes {
+        // This class cannot be instantiated
+        private FormTypes() {}
+
+        public static final int PASSIVE = 0;
+        public static final int TRIGGERED = 1;
     }
 }

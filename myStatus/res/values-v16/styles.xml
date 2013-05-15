@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="myStatus" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:actionBarStyle">@style/Widget.myStatus.ActionBar</item>
+    </style>
+
+    <style name="Widget.myStatus.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">#666</item>
+        <item name="android:backgroundStacked">#444</item>
+        <item name="android:backgroundSplit">#666</item>
+    </style>
+
+    <style name="btn_menu_text" parent="btn_menu_text_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+</resources>

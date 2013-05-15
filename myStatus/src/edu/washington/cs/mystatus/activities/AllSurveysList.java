@@ -1,6 +1,8 @@
 package edu.washington.cs.mystatus.activities;
 
+
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.VersionHidingCursorAdapter;
 
@@ -18,27 +20,24 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * SurveysActivity should provide a list of all surveys which currently need a
- * response. Surveys needing a response are those surveys that the user has
- * subscribed to, but not responded to within their set period (i.e., if a
- * survey requires a response every N days, and it has been N days since the
- * user last responded to it, it will appear in the list).
+ * Provides a list of all passive surveys.
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  */
-public class SurveysActivity extends ListActivity {
+public class AllSurveysList extends ListActivity {
 
-	private static final String TAG = "mystatus.SurveysActivity";
+	private static final String TAG = "AllSurveysList";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_surveys);
+		setContentView(R.layout.mystatus_surveys);
 		Log.d(TAG, "Surveys activity created.");
 
 		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
-		Cursor c = getContentResolver()
-				.query(FormsColumns.CONTENT_URI, null, null, null, sortOrder);
+		String selection = FormsColumns.FORM_TYPE + " = ?";
+		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
+		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
 
 		String[] data = new String[] {
 				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
@@ -47,7 +46,6 @@ public class SurveysActivity extends ListActivity {
 				R.id.text1, R.id.text2, R.id.text3
 		};
 
-		// TODO: filter results based on whether the surveys need a response.
 		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
 				this, R.layout.two_item, c, data, view);
 		setListAdapter(instances);
@@ -58,7 +56,7 @@ public class SurveysActivity extends ListActivity {
 	protected void onListItemClick(ListView listView, View view, int position, long id) {
 		long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
 		Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
-		startActivity(new Intent(Intent.ACTION_EDIT, formUri));
+		startActivity(new Intent(Intent.ACTION_EDIT, formUri, this, FormEntryActivity.class));
 	}
 
 	@Override

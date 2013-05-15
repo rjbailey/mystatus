@@ -1,0 +1,297 @@
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>PHQ-9</h:title>
+    <model predicate="1209600000">
+      <instance>
+        <data id="build_PHQ-9_1366497398">
+          <meta>
+            <instanceID/>
+          </meta>
+          <introduction/>
+          <interest/>
+          <depression/>
+          <sleep/>
+          <energy/>
+          <appetite/>
+          <selfesteem/>
+          <concentration/>
+          <movement/>
+          <selfharm/>
+          <difficulty/>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="eng">
+          <text id="/data/introduction:label">
+            <value>Over the last two weeks, how often have you been bothered by any of the following problems?</value>
+          </text>
+          <text id="/data/introduction:hint">
+            <value>Tap a radio button to indicate your answer</value>
+          </text>
+          <text id="/data/interest:label">
+            <value>Little interest or pleasure in doing things</value>
+          </text>
+          <text id="/data/depression:label">
+            <value>Feeling down, depressed, or hopeless</value>
+          </text>
+          <text id="/data/sleep:label">
+            <value>Trouble falling or staying asleep, or sleeping too much</value>
+          </text>
+          <text id="/data/energy:label">
+            <value>Feeling tired or having little energy</value>
+          </text>
+          <text id="/data/appetite:label">
+            <value>Poor appetite or overeating</value>
+          </text>
+          <text id="/data/selfesteem:label">
+            <value>Feeling bad about yourself or that you are a failure or have let yourself or your family down</value>
+          </text>
+          <text id="/data/concentration:label">
+            <value>Trouble concentrating on things, such as reading the newspaper or watching television</value>
+          </text>
+          <text id="/data/movement:label">
+            <value>Moving or speaking so slowly that other people could have noticed. Or the opposite--being so fidgety and restless that you have been moving around a lot more than usual</value>
+          </text>
+          <text id="/data/selfharm:label">
+            <value>Thoughts that you would be better off dead, or of hurting yourself</value>
+          </text>
+          <text id="/data/difficulty:label">
+            <value>How difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?</value>
+          </text>
+          <text id="/data/options:option0">
+            <value>Not at all</value>
+          </text>
+          <text id="/data/options:option1">
+            <value>Several days</value>
+          </text>
+          <text id="/data/options:option2">
+            <value>More than half the days</value>
+          </text>
+          <text id="/data/options:option3">
+            <value>Nearly every day</value>
+          </text>
+          <text id="/data/options:difficulty0">
+            <value>Not difficult at all</value>
+          </text>
+          <text id="/data/options:difficulty1">
+            <value>Somewhat difficult</value>
+          </text>
+          <text id="/data/options:difficulty2">
+            <value>Very difficult</value>
+          </text>
+          <text id="/data/options:difficulty3">
+            <value>Extremely difficult</value>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+      <bind nodeset="/data/introduction" type="string" readonly="true()"/>
+      <bind nodeset="/data/interest" type="select1" required="true()"/>
+      <bind nodeset="/data/depression" type="select1" required="true()"/>
+      <bind nodeset="/data/sleep" type="select1" required="true()"/>
+      <bind nodeset="/data/energy" type="select1" required="true()"/>
+      <bind nodeset="/data/appetite" type="select1" required="true()"/>
+      <bind nodeset="/data/selfesteem" type="select1" required="true()"/>
+      <bind nodeset="/data/concentration" type="select1" required="true()"/>
+      <bind nodeset="/data/movement" type="select1" required="true()"/>
+      <bind nodeset="/data/selfharm" type="select1" required="true()"/>
+      <bind nodeset="/data/difficulty" type="select1" required="true()" relevant="/data/interest &gt; 0 or /data/depression &gt; 0 or /data/sleep &gt; 0 or /data/energy &gt; 0 or /data/appetite &gt; 0 or /data/selfesteem &gt; 0 or /data/concentration &gt; 0 or /data/movement &gt; 0 or /data/selfharm &gt; 0"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/introduction">
+      <label ref="jr:itext('/data/introduction:label')"/>
+      <hint ref="jr:itext('/data/introduction:hint')"/>
+    </input>
+    <select1 appearance="quick" ref="/data/interest">
+      <label ref="jr:itext('/data/interest:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/depression">
+      <label ref="jr:itext('/data/depression:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/sleep">
+      <label ref="jr:itext('/data/sleep:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/energy">
+      <label ref="jr:itext('/data/energy:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/appetite">
+      <label ref="jr:itext('/data/appetite:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/selfesteem">
+      <label ref="jr:itext('/data/selfesteem:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/concentration">
+      <label ref="jr:itext('/data/concentration:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/movement">
+      <label ref="jr:itext('/data/movement:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/selfharm">
+      <label ref="jr:itext('/data/selfharm:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:option0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:option3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/data/difficulty">
+      <label ref="jr:itext('/data/difficulty:label')"/>
+      <item>
+        <label ref="jr:itext('/data/options:difficulty0')"/>
+        <value>0</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:difficulty1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:difficulty2')"/>
+        <value>2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('/data/options:difficulty3')"/>
+        <value>3</value>
+      </item>
+    </select1>
+  </h:body>
+</h:html>

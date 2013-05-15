@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="myStatus.Help" parent="myStatus">
+        <item name="android:actionBarStyle">@style/Widget.myStatus.ActionBar.Help</item>
+    </style>
+
+    <style name="Widget.myStatus.ActionBar.Help" parent="Widget.myStatus.ActionBar">
+        <item name="android:background">@color/help_color</item>
+        <item name="android:backgroundSplit">@color/help_color</item>
+    </style>
+
+</resources>

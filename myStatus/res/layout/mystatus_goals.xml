@@ -10,13 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".GoalsActivity" >
 
-    <TextView
-        android:id="@+id/goals_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goals_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,17 +17,17 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/set_goals"
+            android:id="@+id/create_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_goals"
+            android:text="@string/create_activity"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ListView
-            android:id="@+id/set_goals_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/set_goals_list" />
+            
+        <Button
+        	android:id="@+id/create_activity_button"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/create_activity_prompt" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,24 +37,17 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/new_goals"
+            android:id="@+id/medications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/new_goals"
+            android:text="@string/meds"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Spinner
-            android:id="@+id/goal_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/goal_arrays"
-            android:prompt="@string/goal_prompt" />
-
         <Button
-            android:id="@+id/choose_new_goal"
+            android:id="@+id/new_prescription_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_dropdown" />
+            android:text="@string/add_prescription" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,22 +57,17 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/remove_goals"
+            android:id="@+id/side_effects"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/remove_goals"
+            android:text="@string/manage_side_effects"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Spinner
-            android:id="@+id/remove_goals_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
         <Button
-            android:id="@+id/remove_goal_choice"
+            android:id="@+id/side_effects_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_dropdown" />
+            android:text="@string/side_effects_surveys" />
     </LinearLayout>
 
 </LinearLayout>

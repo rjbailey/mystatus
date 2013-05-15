@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Prescription</h:title>
+    <model>
+      <instance>
+        <Prescription id="Prescription">
+          <pill_taken/>
+          <reward1/>
+          <reason_no_pill/>
+          <no_pill_other_answer/>
+          <take_now/>
+          <reason_not_now/>
+          <reward2/>
+          <not_now_other_answer/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </Prescription>
+      </instance>
+      <bind nodeset="/Prescription/pill_taken" required="true()" type="select1"/>
+      <bind nodeset="/Prescription/reward1" readonly="true()" relevant="selected( /Prescription/pill_taken , 'yes')" type="string"/>
+      <bind nodeset="/Prescription/reason_no_pill" relevant="selected( /Prescription/pill_taken , 'no')" required="true()" type="select"/>
+      <bind nodeset="/Prescription/no_pill_other_answer" relevant="selected( /Prescription/reason_no_pill , 'other')" required="true()" type="string"/>
+      <bind nodeset="/Prescription/take_now" relevant="selected( /Prescription/pill_taken , 'no')" required="true()" type="select1"/>
+      <bind nodeset="/Prescription/reason_not_now" relevant="selected( /Prescription/take_now , 'no')" required="true()" type="select1"/>
+      <bind nodeset="/Prescription/reward2" readonly="true()" relevant="selected( /Prescription/take_now , 'yes')" type="string"/>
+      <bind nodeset="/Prescription/not_now_other_answer" relevant="selected( /Prescription/reason_not_now , 'other')" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/Prescription/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/Prescription/pill_taken">
+      <label>Did you take your pill today?</label>
+      <item>
+        <label>Yes</label>
+        <value>yes</value>
+      </item>
+      <item>
+        <label>No</label>
+        <value>no</value>
+      </item>
+    </select1>
+    <input ref="/Prescription/reward1">
+      <label>Great!</label>
+    </input>
+    <select ref="/Prescription/reason_no_pill">
+      <label>Why not?</label>
+      <item>
+        <label>I was busy.</label>
+        <value>busy</value>
+      </item>
+      <item>
+        <label>I forgot.</label>
+        <value>forgot</value>
+      </item>
+      <item>
+        <label>It was too far away.</label>
+        <value>too_far</value>
+      </item>
+      <item>
+        <label>Something else.</label>
+        <value>other</value>
+      </item>
+    </select>
+    <input ref="/Prescription/no_pill_other_answer">
+      <label>What was your other reason for not taking your pill?</label>
+    </input>
+    <select1 ref="/Prescription/take_now">
+      <label>Can you take it now?</label>
+      <item>
+        <label>Yes</label>
+        <value>yes</value>
+      </item>
+      <item>
+        <label>No</label>
+        <value>no</value>
+      </item>
+    </select1>
+    <select1 ref="/Prescription/reason_not_now">
+      <label>Why not?</label>
+      <item>
+        <label>I'm busy right now.</label>
+        <value>busy</value>
+      </item>
+      <item>
+        <label>It's too far away.</label>
+        <value>too_far</value>
+      </item>
+      <item>
+        <label>Something else.</label>
+        <value>other</value>
+      </item>
+    </select1>
+    <input ref="/Prescription/reward2">
+      <label>Great!</label>
+    </input>
+    <input ref="/Prescription/not_now_other_answer">
+      <label>What is your other reason for not taking your pill now?</label>
+    </input>
+  </h:body>
+</h:html>

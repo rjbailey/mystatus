@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_color">#e5e5e5</color>
+    <color name="track_color">#529452</color>
+    <color name="setup_color">#3f9fe0</color>
+    <color name="plan_color">#805180</color>
+    <color name="help_color">#f3832d</color>
+
+    <style name="myStatus">
+      <item name="android:windowBackground">@color/background_color</item>
+    </style>
+
+    <style name="btn_menu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
+    <style name="btn_menu_text_base">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="btn_menu_text" parent="btn_menu_text_base" />
+
+    <style name="btn_menu_subtext" parent="btn_menu_text">
+        <item name="android:textColor">#8e8e8e</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+</resources>

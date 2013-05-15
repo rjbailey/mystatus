@@ -13,12 +13,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.Button;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.utilities.FileUtils;
+
 
 /**
  * MainActivity is a simple main menu for myStatus.
@@ -29,73 +31,48 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 	private static final String TAG = "mystatus.MainActivity";
 
-	private Button mSurveyBtn;
-	private Button mHistoryBtn;
-	private Button mGoalsBtn;
-	private Button mManageSurveysBtn;
-	private Button mInformationBtn;
-	private Button mHelpBtn;
 	private CacheWordActivityHandler mCacheWord;
 	private boolean firstTimeInitialize = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);	
-		setContentView(R.layout.activity_main);
-		// adding activity handler used for connecting 
-		// with the cache word service
-		// @CD
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.mystatus_main);
+
+		View trackBtn = findViewById(R.id.button_track);
+		View setupBtn = findViewById(R.id.button_setup);
+		View planBtn  = findViewById(R.id.button_plan);
+		View helpBtn  = findViewById(R.id.button_help);
+
+		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
-		mSurveyBtn = (Button) findViewById(R.id.button_survey);
-		mHistoryBtn = (Button) findViewById(R.id.button_history);
-		mGoalsBtn = (Button) findViewById(R.id.button_goals);
-		mManageSurveysBtn = (Button) findViewById(R.id.button_manage_surveys);
-		mInformationBtn = (Button) findViewById(R.id.button_information);
-		mHelpBtn = (Button) findViewById(R.id.button_help);
 
-		mSurveyBtn.setOnClickListener(new View.OnClickListener() {
+		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Survey button clicked");
-				//added connect to cache word
-				// @CD
+				Log.d(TAG, "Track button clicked");
 				((MyStatus)getApplicationContext()).connectCacheWord();
-				startActivity(new Intent(MainActivity.this, SurveysActivity.class));
+				startActivity(new Intent(MainActivity.this, SurveyListTabs.class));
 			}
 		});
 
-		mHistoryBtn.setOnClickListener(new View.OnClickListener() {
+		setupBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "History button clicked");
-				// for testing purpose
-				((MyStatus)getApplicationContext()).connectCacheWord();
-				startActivity(new Intent(MainActivity.this, HistoryActivity.class));
-			}
-		});
-
-		mGoalsBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Goals button clicked");
-				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
-			}
-		});
-
-		mManageSurveysBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Manage Surveys button clicked");
+				Log.d(TAG, "Setup button clicked");
 				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 			}
 		});
 
-		mInformationBtn.setOnClickListener(new View.OnClickListener() {
+		planBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Information button clicked");
+				Log.d(TAG, "Plan button clicked");
+				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
 			}
 		});
-		mHelpBtn.setOnClickListener(new View.OnClickListener() {
+
+		helpBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Help button clicked");

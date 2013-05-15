@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="myStatus.Setup" parent="myStatus">
+        <item name="android:actionBarStyle">@style/Widget.myStatus.ActionBar.Setup</item>
+    </style>
+
+    <style name="Widget.myStatus.ActionBar.Setup" parent="Widget.myStatus.ActionBar">
+        <item name="android:background">@color/setup_color</item>
+        <item name="android:backgroundSplit">@color/setup_color</item>
+    </style>
+
+</resources>

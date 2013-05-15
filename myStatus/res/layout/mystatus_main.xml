@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/button_track"
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_track" >
+
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_track" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_track_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_setup"
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_setup" >
+
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_setup" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_setup_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_plan"
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_plan" >
+
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_plan" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_plan_subtext" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_help"
+        style="@style/btn_menu"
+        android:background="@drawable/btn_menu_help" >
+
+        <TextView
+            style="@style/btn_menu_text"
+            android:text="@string/button_help" />
+
+        <TextView
+            style="@style/btn_menu_subtext"
+            android:text="@string/button_help_subtext" />
+    </LinearLayout>
+
+</LinearLayout>

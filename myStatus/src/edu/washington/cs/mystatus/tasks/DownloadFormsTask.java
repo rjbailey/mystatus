@@ -42,6 +42,7 @@ import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
 import edu.washington.cs.mystatus.logic.FormDetails;
+import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.Base64Wrapper;
 import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
@@ -155,6 +156,10 @@ public class DownloadFormsTask extends
 	                    v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));
 	                    v.put(FormsColumns.SUBMISSION_URI, formInfo.get(FileUtils.SUBMISSIONURI));
 	                    v.put(FormsColumns.BASE64_RSA_PUBLIC_KEY, formInfo.get(FileUtils.BASE64_RSA_PUBLIC_KEY));
+	                    v.put(FormsColumns.PREDICATE, formInfo.get(FileUtils.PREDICATE));
+	                    v.put(FormsColumns.FORM_TYPE,
+	                            formInfo.containsKey(FileUtils.TRIGGER) ? FormTypes.TRIGGERED
+	                                                                    : FormTypes.PASSIVE);
 	                    uri =
 	                        MyStatus.getInstance().getContentResolver()
 	                                .insert(FormsColumns.CONTENT_URI, v);
