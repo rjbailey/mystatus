@@ -34,14 +34,14 @@ public class HistoryActivity extends ListActivity {
 		ArrayAdapter<String> adapter ;
 		formTypes = new HashMap<String, Integer>();
 		formNameList = new ArrayList<String>();
-		String selection = InstanceColumns.STATUS + " != ?";
+		//String selection = InstanceColumns.STATUS + " != ?";
 		//String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
-		String[] selectionArgs = {InstanceProviderAPI.STATUS_COMPLETE};
+		//String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
 		String sortOrder = InstanceColumns.STATUS + " DESC, "
 				+ InstanceColumns.DISPLAY_NAME + " ASC";
-		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
-				selectionArgs, sortOrder);
-
+		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, null,
+				null, sortOrder);
+		
 		// iterate through cursor to get all form types......
 		// @CD
 		if (c.getCount() > 0){

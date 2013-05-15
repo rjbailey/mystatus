@@ -44,15 +44,13 @@ public class FormTypeListActivity extends ListActivity {
 		TextView tv = (TextView) findViewById(R.id.status_text);
 		tv.setVisibility(View.GONE);
 		// edit selection to get only the form needed
-		String selection = InstanceColumns.STATUS + " != ? "+ "OR "
-						  +InstanceColumns.STATUS+ " != ? " +"AND "
-				+ InstanceColumns.DISPLAY_NAME + " = " + "\"" +formName+"\"";
+		String selection = InstanceColumns.DISPLAY_NAME + " = " + "\"" +formName+"\"";
 		//String[] selectionArgs = { InstanceProviderAPI.STATUS_SUBMITTED };
-		String[] selectionArgs = { InstanceProviderAPI.STATUS_COMPLETE, InstanceProviderAPI.STATUS_SUBMITTED};
+		//String[] selectionArgs = { InstanceProviderAPI.STATUS_COMPLETE, InstanceProviderAPI.STATUS_SUBMITTED};
 		String sortOrder = InstanceColumns.STATUS + " DESC, "
 				+ InstanceColumns.DISPLAY_NAME + " ASC";
 		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
-				selectionArgs, sortOrder);
+				null, sortOrder);
 
 		String[] data = new String[] { InstanceColumns.DISPLAY_NAME,
 				InstanceColumns.DISPLAY_SUBTEXT };
