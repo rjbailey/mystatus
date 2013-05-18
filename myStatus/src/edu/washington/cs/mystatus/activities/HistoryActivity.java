@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +31,8 @@ public class HistoryActivity extends ListActivity {
 		setContentView(R.layout.mystatus_surveys);
 		TextView view = (TextView) findViewById(android.R.id.empty);
 		view.setText(NOT_YET_RECORDED);
+		//LinearLayout layout = (LinearLayout) findViewById(R.id.)
+		
 		// initialize hashmap for storing data types
 		// @CD
 		ArrayAdapter<String> adapter ;
@@ -66,6 +70,11 @@ public class HistoryActivity extends ListActivity {
 		adapter = new ArrayAdapter<String>(this,
 								android.R.layout.simple_list_item_1, formNameList);
 		setListAdapter(adapter);
+		
+		// add button for display table
+		// @CD
+		Button viewAsTableBtn = new Button (this);
+		this.addContentView(viewAsTableBtn, params);
 		
 	}
 
