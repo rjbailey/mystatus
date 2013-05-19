@@ -250,4 +250,5 @@
 <string name="launch_printer">Initiate Printing</string>
 <string name="no_printer">The requested printer is not installed. Please install the printer.</string>
 <string name="history">HISTORY</string>
+    <string name="viewAsTable">View Table</string>
 </resources>

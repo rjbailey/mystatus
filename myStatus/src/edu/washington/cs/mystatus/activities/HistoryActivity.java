@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,10 +26,12 @@ public class HistoryActivity extends ListActivity {
 	private HashMap<String, Integer> formTypes;
 	private List<String> formNameList;
 	private final String NOT_YET_RECORDED = "Not Yet Recorded";
+	private Button btnViewTable;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.mystatus_surveys);
+		//setContentView(R.layout.mystatus_surveys);
+		setContentView(R.layout.mysurveys_with_view_btn);
 		TextView view = (TextView) findViewById(android.R.id.empty);
 		view.setText(NOT_YET_RECORDED);
 		//LinearLayout layout = (LinearLayout) findViewById(R.id.)
@@ -72,9 +75,17 @@ public class HistoryActivity extends ListActivity {
 		setListAdapter(adapter);
 		
 		// add button for display table
-		// @CD
-		Button viewAsTableBtn = new Button (this);
-		this.addContentView(viewAsTableBtn, params);
+//		// @CD
+		btnViewTable = (Button) findViewById(R.id.viewAsTable);
+		btnViewTable.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+              // TODO: launch the table view
+              startActivity(new Intent(HistoryActivity.this, 
+                                              DisplayHistoryAsTable.class));
+            }
+        });
 		
 	}
 

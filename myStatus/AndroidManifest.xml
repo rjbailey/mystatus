@@ -73,6 +73,10 @@
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
+            android:name="edu.washington.cs.mystatus.activities.DisplayHistoryAsTable"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
+        </activity>
+        <activity
             android:name="edu.washington.cs.mystatus.activities.AllSurveysList"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
