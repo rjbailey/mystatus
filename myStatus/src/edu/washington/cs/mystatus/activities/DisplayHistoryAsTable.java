@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -77,12 +79,37 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
 	                LayoutParams.WRAP_CONTENT);
 	        TableRow titleRow = new TableRow (this);
+	        //titleRow.setScrollbarFadingEnabled(false);
+	        TableRow.LayoutParams rowStyle = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT);
 	        for (int j = 0; j < title.size(); j ++){
 	            TextView tv = new TextView (this);
 	            tv.setText(title.get(j));
+	            tv.setPadding(10, 10, 10, 10);
+	            tv.setBackgroundResource(R.drawable.cell_shape);
+	            tv.setTextColor(Color.WHITE);
+	            tv.setGravity(Gravity.RIGHT);
+	            //tv.setScrollbarFadingEnabled(false);
 	            titleRow.addView(tv, params);     
+	            
+	            
 	        }
-	        tbl.addView(titleRow);
+	        tbl.addView(titleRow, rowStyle);
+	        
+	        
+	        TableRow valuesRow = new TableRow (this);
+	        // add data test
+	        for (int j = 0; j < title.size(); j ++){
+	            TextView tv = new TextView (this);
+	            tv.setText(values.get(j));
+	            tv.setPadding(10, 10, 10, 10);
+	            tv.setBackgroundResource(R.drawable.cell_shape);
+	            tv.setTextColor(Color.WHITE);
+	            tv.setGravity(Gravity.RIGHT);
+	            //tv.setScrollbarFadingEnabled(false);
+	            valuesRow.addView(tv, params);     
+	            
+	        }
+	        tbl.addView(valuesRow, rowStyle);
 	        
 	    }
 
