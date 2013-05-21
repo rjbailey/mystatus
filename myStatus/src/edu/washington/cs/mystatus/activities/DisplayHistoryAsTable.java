@@ -7,10 +7,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract.Instances;
 import android.view.Gravity;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -28,6 +27,7 @@ import edu.washington.cs.mystatus.utilities.FileUtils;
 public class DisplayHistoryAsTable extends Activity implements FormLoaderListener{
 	TableLayout tbl;
 	ArrayList<String> instanceList;
+	ArrayList<String> reservedList;
 	ArrayList<ArrayList<HierarchyElement>> instanceData;
 	ProgressDialog progressDialog;
 	@Override
@@ -39,6 +39,7 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		instanceData = new ArrayList<ArrayList<HierarchyElement>>();
 		instanceList = new ArrayList<String>();
+		reservedList = new ArrayList<String>();
 		tbl = (TableLayout)findViewById(R.id.dataTableLayout);
 		//FileUtils.parseXML(xmlFile);
 		String myinstancePath = getIntent().getStringExtra("instancePath");
@@ -73,6 +74,7 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 	if (task == null && instanceList.size() > 0){
 		 		progressDialog.show();
 		 		String instancePath = instanceList.remove(0);
+		 		reservedList.add(instancePath);
 		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
 		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
 				String formPath = getFormPath(instancePath);
@@ -81,8 +83,21 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		// get the next task and put the info into list
 		 		FormController formController = task.getFormController();
 		        MyStatus.getInstance().setFormController(formController);
+//		        // adding status column
+//		        ArrayList<HierarchyElement> data = FileUtils.getHierarchyElements();
+//		        String oldinstancePath = formController.getInstancePath().getAbsolutePath();
+//		        String selection = InstanceColumns.INSTANCE_FILE_PATH + " = "+oldinstancePath;
+//		        Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
+//		        				null, null);
+//		        c.moveToFirst();
+//		        // adding the status to data
+//		        HierarchyElement status = new HierarchyElement("Status", c.getString(c.getColumnIndex
+//		        								(InstanceColumns.DISPLAY_SUBTEXT)), null, 0, 0, null);
+//		        data.add(0, status);
+//		        // add data to instance data
 		        instanceData.add(FileUtils.getHierarchyElements()); 
 		        String instancePath = instanceList.remove(0);
+		        reservedList.add(instancePath);
 		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
 		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
 				String formPath = getFormPath(instancePath);
@@ -93,12 +108,30 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		// lengthy process need to be put on the thread
 		 		FormController formController = task.getFormController();
 		        MyStatus.getInstance().setFormController(formController);
+
+		        //data.add(0, status);
+		        // add data to instance data
 		        instanceData.add(FileUtils.getHierarchyElements()); 
 		 		new Thread(){
 		 			public void run(){
 		 				ArrayList<String> title = new ArrayList<String>();
 				        ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>>();
 				        ArrayList<HierarchyElement> elements = instanceData.get(0);
+				        // adding status columns
+				        for (int m = 0; m < reservedList.size(); m++){
+					        String oldinstancePath = reservedList.get(m);
+					        String selection = InstanceColumns.INSTANCE_FILE_PATH + " = "+"\""+oldinstancePath+"\"";
+					        Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
+					        				null, null);
+					        c.moveToFirst();
+					        // adding the status to data
+					        HierarchyElement status = new HierarchyElement("Status", c.getString(c.getColumnIndex
+					        								(InstanceColumns.DISPLAY_SUBTEXT)), null, 0, 0, null);
+					        // adding status
+					        ArrayList<HierarchyElement> myelement = instanceData.get(m);
+					        myelement.add(0, status);
+				        }
+				        
 				        // get the title for the columns
 				        for(int i = 0; i < elements.size(); i++){
 				        	HierarchyElement el = elements.get(i);
