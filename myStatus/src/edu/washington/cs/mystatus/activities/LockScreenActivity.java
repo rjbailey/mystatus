@@ -29,6 +29,11 @@ import java.security.GeneralSecurityException;
 
 import edu.washington.cs.mystatus.R;
 
+/**
+ * 
+ * activity borrowed from NoteCipher open-source project.
+ *
+ */
 public class LockScreenActivity extends Activity implements ICacheWordSubscriber {
     private static final String TAG = "LockScreenActivity";
 

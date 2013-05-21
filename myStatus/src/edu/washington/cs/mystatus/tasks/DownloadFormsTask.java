@@ -123,15 +123,34 @@ public class DownloadFormsTask extends
 	                    ContentValues v = new ContentValues();
 	                    v.put(FormsColumns.FORM_FILE_PATH, dl.getAbsolutePath());
 	
-	                    //HashMap<String, String> formInfo = FileUtils.parseXML(dl);
-	                    // added parsing using input stream for more secured
+	                    // to avoid collision on media files need to create a same folder names inside the 
+	                    // temp folder
 	                    // @CD
+	                    String xmlFilePath = dl.getAbsolutePath();
+	                    String tempDir = xmlFilePath.substring(0, xmlFilePath.lastIndexOf("/"));
+	                    tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+	                    
+	                    // create the temporary folder for cotaining the mediafile
+	                    // @CD
+	                    FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+	                    
+	                    // need to decrypt the audio file first as it's now encrypted after downloaded
+	                    // @CD
+	                    String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+	                    		+ File.separator + xmlFilePath.substring(xmlFilePath.lastIndexOf("/"))+"temp"
+	        					+xmlFilePath.substring(xmlFilePath.lastIndexOf("."));
+	                    // following the same process as media files
+	                    // @CD
+	                    File tempXmlFile = new File(tempPathFile);
 	                    FileInputStream fis = new FileInputStream(dl);
 	                    DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
 	                    dataDecryption.InitCiphers();
-	                    ByteArrayInputStream bis = new ByteArrayInputStream(dataDecryption.CBCDecryptAsByteArray
-	                    		 						(fis, dl.length()));
-	                    HashMap<String, String> formInfo = FileUtils.parseXML(bis);
+	                    FileOutputStream fos = new FileOutputStream(tempXmlFile);
+         				dataDecryption.CBCDecrypt(fis, fos);
+         				// now we can use the normal decryption function
+         				// with the path of the temp XMlfile
+         				// @CD 
+	                    HashMap<String, String> formInfo = FileUtils.parseXML(tempXmlFile);
 	                    v.put(FormsColumns.DISPLAY_NAME, formInfo.get(FileUtils.TITLE));
 	                    v.put(FormsColumns.JR_VERSION, formInfo.get(FileUtils.VERSION));
 	                    v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));
@@ -220,26 +239,30 @@ public class DownloadFormsTask extends
      */
     private File downloadXform(String formName, String url) throws Exception {
         File f = null;
-
+        Base64Wrapper base64Wrapper = new Base64Wrapper();
         // clean up friendly form name...
         String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
         rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
         rootName = rootName.trim();
+        
         // adding filename encryption to avoid exposed data
         // for now use base 64 encoding
         // @CD
-        rootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
+        String encryptedRootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
                
         // proposed name of xml file...
-        String path = MyStatus.FORMS_PATH + File.separator + rootName + ".xml";
+        String path = MyStatus.FORMS_PATH + File.separator + encryptedRootName +".xml";
         int i = 2;
         f = new File(path);
         while (f.exists()) {
-            path = MyStatus.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
+        	// used encrypted name to avoid expose the extension
+        	// @CD
+        	encryptedRootName = encryptedRootName + "_" + i + ".xml";
+            path = MyStatus.FORMS_PATH + File.separator + encryptedRootName;
             f = new File(path);
             i++;
         }
-
+        
         downloadFile(f, url);
 
         // we've downloaded the file, and we may have renamed it
@@ -251,7 +274,7 @@ public class DownloadFormsTask extends
             FileUtils.getMd5Hash(f)
         };
         String selection = FormsColumns.MD5_HASH + "=?";
-
+     
         Cursor c = null;
         try {
         	c = MyStatus.getInstance().getContentResolver()

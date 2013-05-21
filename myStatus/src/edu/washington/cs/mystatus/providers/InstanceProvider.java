@@ -24,6 +24,7 @@ import edu.washington.cs.mystatus.utilities.MediaUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -32,6 +33,9 @@ import net.sqlcipher.database.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -49,21 +53,24 @@ public class InstanceProvider extends ContentProvider {
     private static final String DATABASE_NAME = "instances.db";
     private static final int DATABASE_VERSION = 3;
     private static final String INSTANCES_TABLE_NAME = "instances";
-
+    // used for reset dB if neccessary
+    // @CD
+    private static final String RESET_DATABASE = "resetDb";
     private static HashMap<String, String> sInstancesProjectionMap;
 
     private static final int INSTANCES = 1;
     private static final int INSTANCE_ID = 2;
 
     private static final UriMatcher sUriMatcher;
+    
 
     /**
      * This class helps open, create, and upgrade the database file.
      */
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 
-        DatabaseHelper(String databaseName) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+        DatabaseHelper(String databaseName, Context cw) {
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, cw);
         }
 
 
@@ -111,8 +118,7 @@ public class InstanceProvider extends ContentProvider {
     public boolean onCreate() {
         // must be at the beginning of any activity that can be called from an external intent
         MyStatus.createODKDirs();
-
-        mDbHelper = new DatabaseHelper(DATABASE_NAME);
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
         return true;
     }
 
@@ -314,6 +320,13 @@ public class InstanceProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+    	// adding some trick to reset database at first login as well as 
+    	// keep supporting for older api
+    	// @CD
+    	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
+    		resetDatabase();
+    		return 0;
+    	}
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int count;
         String status = null;
@@ -375,5 +388,11 @@ public class InstanceProvider extends ContentProvider {
         sInstancesProjectionMap.put(InstanceColumns.LAST_STATUS_CHANGE_DATE, InstanceColumns.LAST_STATUS_CHANGE_DATE);
         sInstancesProjectionMap.put(InstanceColumns.DISPLAY_SUBTEXT, InstanceColumns.DISPLAY_SUBTEXT);
     }
-
+    
+    // reset database used for first initiaized
+    // @CD
+    public void resetDatabase() {
+        mDbHelper.close();
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
+    }
 }
