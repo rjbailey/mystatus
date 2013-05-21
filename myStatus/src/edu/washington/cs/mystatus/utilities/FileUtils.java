@@ -463,7 +463,8 @@ public class FileUtils {
                 if ( !fp.isReadOnly() || (label != null && label.length() > 0) ) {
                     // show the question if it is an editable field.
                     // or if it is read-only and the label is not blank.
-                    formList.add(new HierarchyElement(fp.getLongText(), fp.getAnswerText(), null,
+                	// discriminate question and prompt
+                    formList.add(new HierarchyElement(fp.getLongText(), (fp.getAnswerText() == null) ? "" : fp.getAnswerText(), null,
                             Color.WHITE,4 , fp.getIndex()));
                 }
                 break;

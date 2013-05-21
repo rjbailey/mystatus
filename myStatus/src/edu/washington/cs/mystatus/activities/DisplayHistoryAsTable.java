@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -24,93 +26,141 @@ import edu.washington.cs.mystatus.tasks.FormLoaderTask;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
 public class DisplayHistoryAsTable extends Activity implements FormLoaderListener{
-	 TableLayout tbl;
+	TableLayout tbl;
+	ArrayList<String> instanceList;
+	ArrayList<ArrayList<HierarchyElement>> instanceData;
+	ProgressDialog progressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.table_layout_list);
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		instanceData = new ArrayList<ArrayList<HierarchyElement>>();
+		instanceList = new ArrayList<String>();
 		tbl = (TableLayout)findViewById(R.id.dataTableLayout);
 		//FileUtils.parseXML(xmlFile);
-		File f = new File (MyStatus.INSTANCES_PATH);
+		String myinstancePath = getIntent().getStringExtra("instancePath");
+		String instancePathPrefix = myinstancePath.substring(myinstancePath.lastIndexOf("/")+1,
+														myinstancePath.indexOf("_"));
+		String rootInstancePath = MyStatus.INSTANCES_PATH;
+		File f = new File (rootInstancePath);
+		// get all the instances
 		if (f.isDirectory()){
 			String [] folderList = f.list();
-			//for (String fn : folderList){
-				File tempFolder = new File (f.getAbsolutePath()+"/"+folderList[0]);
-				// safety check make sure it's a folder
-				if (tempFolder.isDirectory()){
-					String [] instanceList = tempFolder.list();
-					//for (String instance: instanceList){
-//						HashMap<String,String> elements = FileUtils.parseXML
-//						                                    (new File(tempFolder.getAbsolutePath()+
-//						                                                    "/"+instance));
-						String instancePath = tempFolder.getAbsolutePath()+"/"+instanceList[0];
-						FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
-						loaderTask.setFormLoaderListener(this);
-						String formPath = getFormPath(instancePath);
-						loaderTask.execute(formPath);	
-						//String test = elements.toString();
-					//}
-				//}
-				
+			for (String fn : folderList){
+				String comparePrefix = fn.substring(0, fn.indexOf("_"));
+				if (comparePrefix.equals(instancePathPrefix)){
+					File tempFile = new File(f.getAbsolutePath()+"/"+fn);
+					String [] tempFolder = tempFile.list();
+					for (String instance: tempFolder){
+						instanceList.add(tempFile.getAbsolutePath()+"/"+instance);
+					}
+				}
+							
 			}
+			if (instanceList.size() > 0)
+				this.loadingComplete(null);
+			// start getting
 		}
 		
 	}
 	
 	 @Override
 	    public void loadingComplete(FormLoaderTask task) {
-	        FormController formController = task.getFormController();
-	        MyStatus.getInstance().setFormController(formController);
-	        ArrayList<HierarchyElement> elements = FileUtils.getHierarchyElements();     
-	        ArrayList<String> title = new ArrayList<String>();
-	        ArrayList<String> values = new ArrayList<String>();
-	        // clean up some data
-	        for(int i = 0; i < elements.size(); i++){
-	            HierarchyElement el = elements.get(i);
-	            if (el.getSecondaryText() != null){
-	              //elements.remove(i);   
-	                // create table view for it
-	                title.add(el.getPrimaryText());
-	                values.add(el.getSecondaryText());
-	                
-	            }
-	        }
-	        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
-	                LayoutParams.WRAP_CONTENT);
-	        TableRow titleRow = new TableRow (this);
-	        //titleRow.setScrollbarFadingEnabled(false);
-	        TableRow.LayoutParams rowStyle = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT);
-	        for (int j = 0; j < title.size(); j ++){
-	            TextView tv = new TextView (this);
-	            tv.setText(title.get(j));
-	            tv.setPadding(10, 10, 10, 10);
-	            tv.setBackgroundResource(R.drawable.cell_shape);
-	            tv.setTextColor(Color.WHITE);
-	            tv.setGravity(Gravity.RIGHT);
-	            //tv.setScrollbarFadingEnabled(false);
-	            titleRow.addView(tv, params);     
-	            
-	            
-	        }
-	        tbl.addView(titleRow, rowStyle);
-	        
-	        
-	        TableRow valuesRow = new TableRow (this);
-	        // add data test
-	        for (int j = 0; j < title.size(); j ++){
-	            TextView tv = new TextView (this);
-	            tv.setText(values.get(j));
-	            tv.setPadding(10, 10, 10, 10);
-	            tv.setBackgroundResource(R.drawable.cell_shape);
-	            tv.setTextColor(Color.WHITE);
-	            tv.setGravity(Gravity.RIGHT);
-	            //tv.setScrollbarFadingEnabled(false);
-	            valuesRow.addView(tv, params);     
-	            
-	        }
-	        tbl.addView(valuesRow, rowStyle);
-	        
+		 	// first call to complete
+		 	if (task == null && instanceList.size() > 0){
+		 		progressDialog.show();
+		 		String instancePath = instanceList.remove(0);
+		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
+		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
+				String formPath = getFormPath(instancePath);
+				loaderTask.execute(formPath);	
+		 	}else if (task != null && instanceList.size() > 0){
+		 		// get the next task and put the info into list
+		 		FormController formController = task.getFormController();
+		        MyStatus.getInstance().setFormController(formController);
+		        instanceData.add(FileUtils.getHierarchyElements()); 
+		        String instancePath = instanceList.remove(0);
+		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
+		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
+				String formPath = getFormPath(instancePath);
+				loaderTask.execute(formPath);
+		 	} else if (task != null && instanceList.size() == 0){
+		 		// loading complete ... now display data as tabular form
+//		 	   // get the title
+		 		// lengthy process need to be put on the thread
+		 		FormController formController = task.getFormController();
+		        MyStatus.getInstance().setFormController(formController);
+		        instanceData.add(FileUtils.getHierarchyElements()); 
+		 		new Thread(){
+		 			public void run(){
+		 				ArrayList<String> title = new ArrayList<String>();
+				        ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>>();
+				        ArrayList<HierarchyElement> elements = instanceData.get(0);
+				        // get the title for the columns
+				        for(int i = 0; i < elements.size(); i++){
+				        	HierarchyElement el = elements.get(i);
+				        	if (el.getSecondaryText() != null){
+				        		title.add(el.getPrimaryText());
+				        	}
+				        }
+				        // now extract all the information
+				        for (int r = 0; r < instanceData.size(); r++){
+				        	ArrayList<HierarchyElement> el = instanceData.get(r);
+				        	// add new row
+				        	values.add(r,new ArrayList<String>());
+				        	for (int c = 0; c < el.size(); c++){
+				        		HierarchyElement he = el.get(c);
+				        		if (he.getSecondaryText() != null){
+				        			values.get(r).add(he.getSecondaryText());
+				        		}
+				        	}
+				        }
+				        // finally inflate the table views
+				        // for rows
+				        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
+				                LayoutParams.WRAP_CONTENT);
+				        TableRow titleRow = new TableRow (DisplayHistoryAsTable.this);
+				        //titleRow.setScrollbarFadingEnabled(false);
+				        TableRow.LayoutParams rowStyle = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT);
+				        for (int j = 0; j < title.size(); j ++){
+				            TextView tv = new TextView (DisplayHistoryAsTable.this);
+				            tv.setText(title.get(j));
+				            tv.setPadding(10, 10, 10, 10);
+				            tv.setBackgroundResource(R.drawable.cell_shape);
+				            tv.setTextColor(Color.WHITE);
+				            tv.setGravity(Gravity.RIGHT);
+				            //tv.setScrollbarFadingEnabled(false);
+				            titleRow.addView(tv, params);     
+				                        
+				        }
+				        tbl.addView(titleRow, rowStyle);
+				        // display data
+				        
+				        // add data test
+				        for (int k = 0; k < values.size(); k++){
+				        	TableRow valuesRow = new TableRow (DisplayHistoryAsTable.this);
+				        	ArrayList<String> newEl = values.get(k);
+				        	for (int j = 0; j < newEl.size(); j ++){
+					            TextView tv = new TextView (DisplayHistoryAsTable.this);
+					            tv.setText(newEl.get(j));
+					            tv.setPadding(10, 10, 10, 10);
+					            tv.setBackgroundResource(R.drawable.cell_shape);
+					            tv.setTextColor(Color.WHITE);
+					            tv.setGravity(Gravity.RIGHT);
+					            //tv.setScrollbarFadingEnabled(false);
+					            valuesRow.addView(tv, params);     
+					            
+					        }
+				        	tbl.addView(valuesRow, rowStyle);
+				        }
+				        // turn off dialog.
+				        progressDialog.cancel();
+		 			}
+		 		}.run();	
+		 	}  
 	    }
 
 	    @Override
@@ -141,4 +191,8 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	        
 	    }
 	
+
+	  
+
+
 }

@@ -26,12 +26,12 @@ public class HistoryActivity extends ListActivity {
 	private HashMap<String, Integer> formTypes;
 	private List<String> formNameList;
 	private final String NOT_YET_RECORDED = "Not Yet Recorded";
-	private Button btnViewTable;
+	//private Button btnViewTable;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.mystatus_surveys);
-		setContentView(R.layout.mysurveys_with_view_btn);
+		setContentView(R.layout.mystatus_surveys);
 		TextView view = (TextView) findViewById(android.R.id.empty);
 		view.setText(NOT_YET_RECORDED);
 		//LinearLayout layout = (LinearLayout) findViewById(R.id.)
@@ -74,18 +74,18 @@ public class HistoryActivity extends ListActivity {
 								android.R.layout.simple_list_item_1, formNameList);
 		setListAdapter(adapter);
 		
-		// add button for display table
-//		// @CD
-		btnViewTable = (Button) findViewById(R.id.viewAsTable);
-		btnViewTable.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-              // TODO: launch the table view
-              startActivity(new Intent(HistoryActivity.this, 
-                                              DisplayHistoryAsTable.class));
-            }
-        });
+//		// add button for display table
+////		// @CD
+//		btnViewTable = (Button) findViewById(R.id.viewAsTable);
+//		btnViewTable.setOnClickListener(new OnClickListener() {
+//            
+//            @Override
+//            public void onClick(View v) {
+//              // TODO: launch the table view
+//              startActivity(new Intent(HistoryActivity.this, 
+//                                              DisplayHistoryAsTable.class));
+//            }
+//        });
 		
 	}
 

@@ -18,7 +18,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,7 +31,7 @@ public class FormTypeListActivity extends ListActivity {
 	private static final boolean EXIT = true;
 	private static final boolean DO_NOT_EXIT = false;
 	private AlertDialog mAlertDialog;
-
+	private Button btnViewTable;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -38,31 +40,46 @@ public class FormTypeListActivity extends ListActivity {
 		Intent intent = this.getIntent();
 		// String content the key of the form
 		String formName = intent.getExtras().getString("formName");
-		setContentView(R.layout.chooser_list_layout);
+		setContentView(R.layout.mysurveys_with_view_btn);
 		setTitle(getString(R.string.app_name) + " > "
 				+ getString(R.string.review_data));
-		TextView tv = (TextView) findViewById(R.id.status_text);
-		tv.setVisibility(View.GONE);
 		// edit selection to get only the form needed
 		String selection = InstanceColumns.DISPLAY_NAME + " = " + "\"" +formName+"\"";
 		//String[] selectionArgs = { InstanceProviderAPI.STATUS_SUBMITTED };
 		//String[] selectionArgs = { InstanceProviderAPI.STATUS_COMPLETE, InstanceProviderAPI.STATUS_SUBMITTED};
 		String sortOrder = InstanceColumns.STATUS + " DESC, "
 				+ InstanceColumns.DISPLAY_NAME + " ASC";
-		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
+		final Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
 				null, sortOrder);
-
-		String[] data = new String[] { InstanceColumns.DISPLAY_NAME,
-				InstanceColumns.DISPLAY_SUBTEXT };
-		int[] view = new int[] { R.id.text1, R.id.text2 };
-
-		// render total instance view
-//		SimpleCursorAdapter instances = new SimpleCursorAdapter(this,
-//				R.layout.two_item, c, data, view);
+		
+		// add button for display table
+		// @CD
+		btnViewTable = (Button) findViewById(R.id.viewAsTable);
+		btnViewTable.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+              // need to give the display history table path to the instance
+              if (c.moveToFirst()){
+            	  String instancePath = c.getString(c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+            	  instancePath = instancePath.substring(0,instancePath.lastIndexOf("/"));	
+            	  Intent displayIntent = new Intent(FormTypeListActivity.this, DisplayHistoryAsTable.class);
+            	  displayIntent.putExtra("instancePath", instancePath);
+                  startActivity(displayIntent);
+              }else {
+            	  // TODO: display some TOAST about not having any history
+              }
+             
+            }
+        });
+		
+		
 		// render total instance view
 		MySimpleCursorAdapter instances = new MySimpleCursorAdapter(this,
 					c);
 		setListAdapter(instances);
+		
+		
 	}
 
 	/**
