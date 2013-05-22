@@ -51,7 +51,7 @@ public class ManagePrescriptionActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "add new prescription button clicked");
-				startActivity(new Intent(ManagePrescriptionActivity.this, EditPrescription.class));
+				startActivity(new Intent(ManagePrescriptionActivity.this, AddPrescription.class));
 			}
 		});
 	}

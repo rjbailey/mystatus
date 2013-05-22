@@ -226,15 +226,15 @@
 
         <activity
             android:name="edu.washington.cs.mystatus.activities.ManagePrescriptionActivity"
-            android:label="@string/title_activity_manage_prescription"
+            android:label="@string/app_name"
             android:parentActivityName="edu.washington.cs.mystatus.activities.GoalsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.washington.cs.mystatus.activities.GoalsActivity" />
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.activities.EditPrescription"
-            android:label="@string/title_activity_edit_prescription"
+            android:name="edu.washington.cs.mystatus.activities.AddPrescription"
+            android:label="@string/app_name"
             android:parentActivityName="edu.washington.cs.mystatus.activities.ManagePrescriptionActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

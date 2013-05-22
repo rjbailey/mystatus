@@ -40,6 +40,7 @@ public class PrescriptionNotificationService extends Service {
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 			.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 			.setContentTitle(getResources().getText(R.string.pres_notification_title))
+			// TODO make text have time
 			.setContentText(getResources().getText(R.string.pres_notification_title));
 		// TODO: create an intent that sends user to myStatus and a picture of the prescription
 		return nb.build();

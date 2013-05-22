@@ -2,7 +2,7 @@
 <resources>
 
     <string name="action_odk_menu">ODK Collect menu</string>
-
+	<string name="action_settings">ODK Settings</string>
     <!-- Main menu -->
     <string name="button_survey">Self-Assessment</string>
     <string name="button_history">History</string>
@@ -74,7 +74,8 @@
 	
 	<!-- Edit Prescription -->
 	<string name="edit_prescription">Edit Prescription</string>
-	<string name="pres_name">Name</string>
+	<string name="pres_brandname">Brand Name</string>
+	<string name="pres_chemname">Chemical Name</string>
 	<string name="pres_quantity">Quantity</string>
 	<string name="pres_mg">mg</string>
 	<string name="pres_time">Take it at</string>
@@ -83,7 +84,8 @@
 	<string name="add_pres_pic">Take Picture</string>
 	<string name="edit_pres_cancel">Cancel</string>
 	<string name="edit_pres_save">Save</string>
-	<string name="dialog_name_warning">Please fill out the "Name" field.</string>
+	<string name="dialog_bname_warning">Please fill out the "Brand Name" field.</string>
+	<string name="dialog_cname_warning">Please fill out the "Chemical Name" field.</string>
 	<string name="fire">OK</string>
 	<string name="dialog_quantity_warning">Please fill out the "Quantity" field.</string>
 	
