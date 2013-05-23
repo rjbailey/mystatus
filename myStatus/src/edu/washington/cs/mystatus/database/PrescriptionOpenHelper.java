@@ -1,17 +1,21 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.database;
 
-import net.sqlcipher.database.SQLiteDatabase;
-import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.database.ODKSQLiteOpenHelper;
+import java.io.File;
+
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
-public class PrescriptionOpenHelper extends ODKSQLiteOpenHelper {
+public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
+	private static final String DIR = Environment.getExternalStorageDirectory() + "myStatus/metadata";
 	
 	private static final String PRESCRIPTION_TABLE_NAME = "prescriptions";
-	public static final String _ID = "_id";
+	//public static final String _ID = "_id";
 	public static final String BRAND_NAME = "brandName";
     public static final String CHEMICAL_NAME = "chemicalName";
     public static final String PICTURE_FILENAME = "pictureFilename";
@@ -20,20 +24,29 @@ public class PrescriptionOpenHelper extends ODKSQLiteOpenHelper {
     public static final String QUANTITY = "quantity";
 	
 	
-	public PrescriptionOpenHelper(String databaseName) {
-		super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+	public PrescriptionOpenHelper(Context context) {
+		//super(context, "prescriptions.db", null, DATABASE_VERSION);
+		super(new ContextWrapper(context) {
+			@Override
+			public SQLiteDatabase openOrCreateDatabase(String name, int mode,
+					SQLiteDatabase.CursorFactory factory) {
+				return SQLiteDatabase.openDatabase(DIR + "/" + PRESCRIPTION_TABLE_NAME, null,
+						SQLiteDatabase.CREATE_IF_NECESSARY);
+			}
+		}, PRESCRIPTION_TABLE_NAME, null, DATABASE_VERSION);
+		//this.context = context;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + PRESCRIPTION_TABLE_NAME + " ("
-				+ _ID + " integer not null, " // TODO: decide if need this
+				+ "_id integer primary key, " // TODO: decide if need this
 				+ BRAND_NAME + " text not null, "
 				+ CHEMICAL_NAME + " text not null, "
 				+ PICTURE_FILENAME + " text not null, "
 				+ QUANTITY + " double not null, "
 				+ HOUR + " integer not null, "
-				+ MINUTE + " integer not null; )");
+				+ MINUTE + " integer not null );");
 	}
 
 	@Override

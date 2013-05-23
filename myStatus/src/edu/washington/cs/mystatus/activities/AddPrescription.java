@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import edu.washington.cs.mystatus.PrescriptionOpenHelper;
 import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.database.PrescriptionOpenHelper;
 import edu.washington.cs.mystatus.services.PrescriptionNotificationService;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import net.sqlcipher.database.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -81,7 +81,6 @@ public class AddPrescription extends Activity {
 			new TimePickerDialog.OnTimeSetListener() {
 				@Override
 				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-					// TODO get proper ID
 					view.setId(currCount - 1);
 					if (view.getId() > hours.length) {
 						hours = resizeArrayI(hours);
@@ -119,7 +118,7 @@ public class AddPrescription extends Activity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		//TODO
+		//TODO check correct
 		super.onSaveInstanceState(outState);
 		outState.putString("mFile", mFile.getAbsolutePath());
 	}
@@ -192,11 +191,12 @@ public class AddPrescription extends Activity {
 					Toast.makeText(AddPrescription.this,
 							"Please fill out the previous Quantity and Time fields",
 							Toast.LENGTH_LONG).show();
+				// can only add times if picture taken so that mFile doesn't go away
+				// TODO find alternative
 				} else if (mFile == null) {
 					Toast.makeText(AddPrescription.this, "Please take a picture first.",
 							Toast.LENGTH_LONG).show();
 				} else {
-				
 					if (currCount == 0) {
 						createDeleteButton();
 					}
@@ -207,6 +207,7 @@ public class AddPrescription extends Activity {
 					quantLayout.setLayoutParams(lp);
 					quantLayout.setOrientation(LinearLayout.HORIZONTAL);
 					
+					// create quant layout
 					TextView quantTextView = new TextView(AddPrescription.this, null,
 							android.R.attr.textAppearanceMedium);
 					quantTextView.setLayoutParams(lp);
@@ -266,12 +267,13 @@ public class AddPrescription extends Activity {
 		mAddPic.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// only allowed to take picture if brand name is filled out
+				// because image name needs brand name
 				if (mBrandName.getText().toString().equals("")) {
 					Toast.makeText(AddPrescription.this,
 							"Please fill out the Brand Name field",
 							Toast.LENGTH_LONG).show();
 				} else {
-				
 					String filename = mBrandName.getText().toString() + "_pic.jpg";
 					File f = new File(mDir, filename);
 				
@@ -280,9 +282,6 @@ public class AddPrescription extends Activity {
 					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 					mFile = f;
 					startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-					// take pic
-					// save to database
-					// TODO: fix fact that quants/times go away
 				}
 			}
 		});
@@ -426,7 +425,7 @@ public class AddPrescription extends Activity {
 		String filename = mFile.getAbsolutePath();
 		values.put(PrescriptionOpenHelper.PICTURE_FILENAME, filename);
 		// TODO: insert _ID
-		PrescriptionOpenHelper helper = new PrescriptionOpenHelper("prescriptions.db");
+		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.insert("prescriptions.db", null, values);
 		//presUri = db.insert(PrescriptionColumns.CONTENT_URI, values);

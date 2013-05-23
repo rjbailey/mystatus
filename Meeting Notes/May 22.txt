@@ -1,0 +1,50 @@
+Flow for Demo:
+	application startup or get notification
+	go to app -> tells which survey to fill out
+	select-> fill out -> complete all or not
+	filled out survey will appear in server somewhere (have this open to see it show up)
+	notifications!! make easy to demonstrate <-- may need to change times when appear
+		new surveys
+		medications
+		activities
+		more than once
+	choose order
+	history table
+		possible question:
+		how long is this kept around?
+		server probs keeps everything
+		but what will we see, can we select how many, weekly vs monthly view?
+
+Jake to talk to redcap guy
+
+Next week:
+	diff room
+	last meeting
+	see Demo!!!!!!!!!!!!!!!!!!!!!!!!
+		stuff running on device
+		adding new thing
+		showing notification come up
+		need a full path
+	
+Presentation
+	10 min
+	1 slide for remember us (Problem statement)
+	Here's what we'll show you in 10 days: screenshots, flow
+		system diagram
+	Challenges
+		what chnaged plans
+		what did we have to resolve
+		interesting parts
+		(what would other student find interesting)
+	What are we still working on
+	Feedback
+		from evaluation
+		from amy, all along way
+
+Paper
+	formal version of pres
+
+Video done on Demo day
+	which is why we need script
+	packaged so can be put on device returned to dept
+	
