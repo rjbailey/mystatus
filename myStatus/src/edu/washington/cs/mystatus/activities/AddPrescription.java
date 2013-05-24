@@ -279,7 +279,7 @@ public class AddPrescription extends Activity {
 				
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 					mFile = f;
 					startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 				}
@@ -416,7 +416,7 @@ public class AddPrescription extends Activity {
 	// save the information to the database
 	private void saveToDatabase(double quant, int hour, int min) {
 		//Uri presUri;
-		ContentValues values = new ContentValues();
+		/*ContentValues values = new ContentValues();
 		values.put(PrescriptionOpenHelper.BRAND_NAME, mBrandName.getText().toString());
 		values.put(PrescriptionOpenHelper.CHEMICAL_NAME, mChemName.getText().toString());
 		values.put(PrescriptionOpenHelper.QUANTITY, quant);
@@ -428,7 +428,13 @@ public class AddPrescription extends Activity {
 		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.insert("prescriptions.db", null, values);
-		//presUri = db.insert(PrescriptionColumns.CONTENT_URI, values);
+		//presUri = db.insert(PrescriptionColumns.CONTENT_URI, values);*/
+		String brandName = mBrandName.getText().toString();
+		String chemName = mChemName.getText().toString();
+		String filename = mFile.getAbsolutePath();
+		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
+		helper.addNewPrescriptionNotification(brandName, chemName, filename, quant, hour, min);
+		int count = helper.getTotalCount();
 	}
 
 	private int[] resizeArrayI(int[] arr) {
