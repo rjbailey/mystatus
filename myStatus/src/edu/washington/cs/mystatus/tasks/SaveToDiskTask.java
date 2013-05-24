@@ -133,7 +133,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
             ContentValues formValues = new ContentValues();
             formValues.put(FormsColumns.LAST_RESPONSE, Long.valueOf(System.currentTimeMillis()));
             formValues.put(FormsColumns.NEEDS_RESPONSE, 0);
-
+            
             int updated = MyStatus.getInstance().getContentResolver()
                     .update(mFormUri, formValues, null, null);
             if (updated > 1) {

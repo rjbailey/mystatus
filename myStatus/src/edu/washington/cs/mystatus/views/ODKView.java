@@ -124,7 +124,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 	        }
         }
     }
-    
+
     /**
      * http://code.google.com/p/android/issues/detail?id=8488
      */

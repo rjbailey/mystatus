@@ -14,16 +14,6 @@
 
 package edu.washington.cs.mystatus.utilities;
 
-import org.javarosa.xform.parse.XFormParser;
-import org.kxml2.kdom.Document;
-import org.kxml2.kdom.Element;
-import org.kxml2.kdom.Node;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.text.TextUtils;
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +26,26 @@ import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.javarosa.core.model.FormIndex;
+import org.javarosa.form.api.FormEntryCaption;
+import org.javarosa.form.api.FormEntryController;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.xform.parse.XFormParser;
+import org.kxml2.kdom.Document;
+import org.kxml2.kdom.Element;
+import org.kxml2.kdom.Node;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.util.Log;
+import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.logic.FormController;
+import edu.washington.cs.mystatus.logic.HierarchyElement;
 
 /**
  * Static methods used for common file operations.
@@ -336,92 +345,6 @@ public class FileUtils {
         }
         return fields;
     }
-    /**
-     * Adding reading from input stream to protect information
-     * @param is
-     * @return
-     */
-    public static HashMap<String, String> parseXML(InputStream is) {
-        HashMap<String, String> fields = new HashMap<String, String>();
-
-        InputStreamReader isr;
-        try {
-            isr = new InputStreamReader(is, "UTF-8");
-        } catch (UnsupportedEncodingException uee) {
-            Log.w(t, "UTF 8 encoding unavailable, trying default encoding");
-            isr = new InputStreamReader(is);
-        }
-
-        if (isr != null) {
-
-            Document doc;
-            try {
-                doc = XFormParser.getXMLDocument(isr);
-            } finally {
-                try {
-                    isr.close();
-                } catch (IOException e) {
-                    Log.w(t, " Error closing form reader");
-                    e.printStackTrace();
-                }
-            }
-
-            String xforms = "http://www.w3.org/2002/xforms";
-            String html = doc.getRootElement().getNamespace();
-            
-            Element head = doc.getRootElement().getElement(html, "head");
-            Element title = head.getElement(html, "title");
-            if (title != null) {
-                fields.put(TITLE, XFormParser.getXMLText(title, true));
-            } 
-            
-            Element model = getChildElement(head, "model");
-            Element cur = getChildElement(model,"instance");
-            
-            int idx = cur.getChildCount();
-            int i;
-            for (i = 0; i < idx; ++i) {
-                if (cur.isText(i))
-                    continue;
-                if (cur.getType(i) == Node.ELEMENT) {
-                    break;
-                }
-            }
-
-            if (i < idx) {
-                cur = cur.getElement(i); // this is the first data element
-                String id = cur.getAttributeValue(null, "id");
-                String xmlns = cur.getNamespace();
-                
-                String version = cur.getAttributeValue(null, "version");
-                String uiVersion = cur.getAttributeValue(null, "uiVersion");
-                if ( uiVersion != null ) {
-                	// pre-OpenRosa 1.0 variant of spec
-                	Log.e(t, "Obsolete use of uiVersion -- IGNORED -- only using version: " + version);
-                }
-
-                fields.put(FORMID, (id == null) ? xmlns : id);
-                fields.put(VERSION, (version == null) ? null : version);
-            } else {
-                throw new IllegalStateException(" could not be parsed");
-            }
-            try {
-                Element submission = model.getElement(xforms, "submission");
-                String submissionUri = submission.getAttributeValue(null, "action");
-                fields.put(SUBMISSIONURI, (submissionUri == null) ? null : submissionUri);
-                String base64RsaPublicKey = submission.getAttributeValue(null, "base64RsaPublicKey");
-                fields.put(BASE64_RSA_PUBLIC_KEY,
-                  (base64RsaPublicKey == null || base64RsaPublicKey.trim().length() == 0) 
-                  ? null : base64RsaPublicKey.trim());
-            } catch (Exception e) {
-                Log.i(t, " does not have a submission element");
-                // and that's totally fine.
-            }
-
-        }
-        return fields;
-    }
-
     // needed because element.getelement fails when there are attributes
     private static Element getChildElement(Element parent, String childName) {
         Element e = null;
@@ -435,5 +358,179 @@ public class FileUtils {
             }
         }
         return e;
+    }
+    
+    
+    /**
+     * Used for clean up all files in temp path directory
+     * @param directory
+     * @CD: borrowed from ODK file utils
+     */
+    public static void deleteAllFilesInDirectoryRecursively(File directory) {
+        if (directory.exists()) {
+            if (directory.isDirectory()) {
+                // delete all the files in the directory
+                File[] files = directory.listFiles();
+                for (File f : files) {
+                	// adding recursive calls
+                    if (f.isDirectory()){
+                    	deleteAllFilesInDirectoryRecursively(f);
+                    }
+                    f.delete();
+                }
+            }
+            directory.delete();
+        }
+    }
+    
+    
+    // get the List of Hierarchy Elements
+    public static ArrayList<HierarchyElement> getHierarchyElements(){
+        FormController formController = MyStatus.getInstance().getFormController();
+        // Record the current index so we can return to the same place if the user hits 'back'.
+        FormIndex currentIndex = formController.getFormIndex();
+
+        // If we're not at the first level, we're inside a repeated group so we want to only display
+        // everything enclosed within that group.
+        String enclosingGroupRef = "";
+        ArrayList<HierarchyElement>formList = new ArrayList<HierarchyElement>();
+
+        // If we're currently at a repeat node, record the name of the node and step to the next
+        // node to display.
+        if (formController.getEvent() == FormEntryController.EVENT_REPEAT) {
+            enclosingGroupRef =
+                    formController.getFormIndex().getReference().toString(false);
+            formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+        } else {
+            FormIndex startTest = formController.stepIndexOut(currentIndex);
+            // If we have a 'group' tag, we want to step back until we hit a repeat or the
+            // beginning.
+            while (startTest != null
+                    && formController.getEvent(startTest) == FormEntryController.EVENT_GROUP) {
+                startTest = formController.stepIndexOut(startTest);
+            }
+            if (startTest == null) {
+                // check to see if the question is at the first level of the hierarchy. If it is,
+                // display the root level from the beginning.
+                formController.jumpToIndex(FormIndex
+                        .createBeginningOfFormIndex());
+            } else {
+                // otherwise we're at a repeated group
+                formController.jumpToIndex(startTest);
+            }
+
+            // now test again for repeat. This should be true at this point or we're at the
+            // beginning
+            if (formController.getEvent() == FormEntryController.EVENT_REPEAT) {
+                enclosingGroupRef =
+                        formController.getFormIndex().getReference().toString(false);
+                formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+            }
+        }
+
+        int event = formController.getEvent();
+        if (event == FormEntryController.EVENT_BEGINNING_OF_FORM) {
+            // The beginning of form has no valid prompt to display.
+            // formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+            //mPath.setVisibility(View.GONE);
+            //jumpPreviousButton.setEnabled(false);
+        } else {
+            //mPath.setVisibility(View.VISIBLE);
+            //mPath.setText(getCurrentPath());
+            //jumpPreviousButton.setEnabled(true);
+        }
+
+        // Refresh the current event in case we did step forward.
+        event = formController.getEvent();
+
+        // There may be repeating Groups at this level of the hierarchy, we use this variable to
+        // keep track of them.
+        String repeatedGroupRef = "";
+
+        event_search: while (event != FormEntryController.EVENT_END_OF_FORM) {
+            switch (event) {
+            case FormEntryController.EVENT_QUESTION:
+                if (!repeatedGroupRef.equalsIgnoreCase("")) {
+                    // We're in a repeating group, so skip this question and move to the next
+                    // index.
+                    event =
+                            formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+                    continue;
+                }
+
+                FormEntryPrompt fp = formController.getQuestionPrompt();
+                String label = fp.getLongText();
+                if ( !fp.isReadOnly() || (label != null && label.length() > 0) ) {
+                    // show the question if it is an editable field.
+                    // or if it is read-only and the label is not blank.
+                	// discriminate question and prompt
+                    formList.add(new HierarchyElement(fp.getLongText(), (fp.getAnswerText() == null) ? "" : fp.getAnswerText(), null,
+                            Color.WHITE,4 , fp.getIndex()));
+                }
+                break;
+            case FormEntryController.EVENT_GROUP:
+                // ignore group events
+                break;
+            case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
+                if (enclosingGroupRef.compareTo(formController
+                        .getFormIndex().getReference().toString(false)) == 0) {
+                    // We were displaying a set of questions inside of a repeated group. This is
+                    // the end of that group.
+                    break event_search;
+                }
+
+                if (repeatedGroupRef.compareTo(formController.getFormIndex()
+                        .getReference().toString(false)) != 0) {
+                    // We're in a repeating group, so skip this repeat prompt and move to the
+                    // next event.
+                    event =
+                            formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+                    continue;
+                }
+
+                if (repeatedGroupRef.compareTo(formController.getFormIndex()
+                        .getReference().toString(false)) == 0) {
+                    // This is the end of the current repeating group, so we reset the
+                    // repeatedGroupName variable
+                    repeatedGroupRef = "";
+                }
+                break;
+            case FormEntryController.EVENT_REPEAT:
+                FormEntryCaption fc = formController.getCaptionPrompt();
+                if (enclosingGroupRef.compareTo(formController
+                        .getFormIndex().getReference().toString(false)) == 0) {
+                    // We were displaying a set of questions inside a repeated group. This is
+                    // the end of that group.
+                    break event_search;
+                }
+                if (repeatedGroupRef.equalsIgnoreCase("") && fc.getMultiplicity() == 0) {
+                    // This is the start of a repeating group. We only want to display
+                    // "Group #", so we mark this as the beginning and skip all of its children
+                    HierarchyElement group =
+                            new HierarchyElement(fc.getLongText(), null, null, Color.WHITE,
+                                    3, fc.getIndex());
+                    repeatedGroupRef =
+                            formController.getFormIndex().getReference()
+                            .toString(false);
+                    formList.add(group);
+                }
+
+                if (repeatedGroupRef.compareTo(formController.getFormIndex()
+                        .getReference().toString(false)) == 0) {
+                    // Add this group name to the drop down list for this repeating group.
+                    HierarchyElement h = formList.get(formList.size() - 1);
+                    h.addChild(new HierarchyElement("     " + fc.getLongText() + " "
+                            + (fc.getMultiplicity() + 1), null, null, Color.WHITE, 1, fc
+                            .getIndex()));
+                }
+                break;
+            }
+            event =
+                    formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+        }
+
+
+        formController.jumpToIndex(currentIndex);
+        return formList;
     }
 }

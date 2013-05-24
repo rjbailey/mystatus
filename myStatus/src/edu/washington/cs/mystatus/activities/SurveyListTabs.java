@@ -17,6 +17,9 @@ public class SurveyListTabs extends TabActivity {
 
 	private static final String DUE_TAB = "due_tab";
 	private static final String ALL_TAB = "all_tab";
+	// Added tab for history ... just put it there for now....
+	// @CD
+	private static final String HISTORY_TAB = "history_tab";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +36,10 @@ public class SurveyListTabs extends TabActivity {
 		Intent allList = new Intent(this, AllSurveysList.class);
 		tabHost.addTab(tabHost.newTabSpec(ALL_TAB).setIndicator(getString(R.string.all_surveys))
 				.setContent(allList));
+		// Added tab for history ... just put it there for now....
+		// @CD
+		Intent historyList = new Intent (this, HistoryActivity.class);
+		tabHost.addTab(tabHost.newTabSpec(HISTORY_TAB).setIndicator(getString(R.string.history))
+				.setContent(historyList));
 	}
 }

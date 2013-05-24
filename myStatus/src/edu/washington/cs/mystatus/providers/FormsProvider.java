@@ -14,6 +14,8 @@
 
 package edu.washington.cs.mystatus.providers;
 
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +34,7 @@ import edu.washington.cs.mystatus.utilities.MediaUtils;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -51,14 +54,18 @@ public class FormsProvider extends ContentProvider {
     private static final String DATABASE_NAME = "forms.db";
     private static final int DATABASE_VERSION = 5;
     private static final String FORMS_TABLE_NAME = "forms";
-
+    // used for reset dB if neccessary
+    // @CD
+    private static final String RESET_DATABASE = "resetDb";
+    
     private static HashMap<String, String> sFormsProjectionMap;
 
     private static final int FORMS = 1;
     private static final int FORM_ID = 2;
-
+    
     private static final UriMatcher sUriMatcher;
-
+    
+    
     /**
      * This class helps open, create, and upgrade the database file.
      */
@@ -67,8 +74,8 @@ public class FormsProvider extends ContentProvider {
         private static final String TEMP_FORMS_TABLE_NAME = "forms_v5";
         private static final String MODEL_VERSION = "modelVersion";
 
-        DatabaseHelper(String databaseName) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+        DatabaseHelper(String databaseName, Context ctx) {
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, ctx);
         }
 
 
@@ -212,7 +219,8 @@ public class FormsProvider extends ContentProvider {
         // must be at the beginning of any activity that can be called from an external intent
         MyStatus.createODKDirs();
 
-        mDbHelper = new DatabaseHelper(DATABASE_NAME);
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
+        
         return true;
     }
 
@@ -465,6 +473,13 @@ public class FormsProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+    	// adding some trick to reset database at first login as well as 
+    	// keep supporting for older api
+    	// @CD
+    	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
+    		resetDatabase();
+    		return 0;
+    	}
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int count = 0;
         switch (sUriMatcher.match(uri)) {
@@ -602,7 +617,7 @@ public class FormsProvider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(FormsProviderAPI.AUTHORITY, "forms", FORMS);
         sUriMatcher.addURI(FormsProviderAPI.AUTHORITY, "forms/#", FORM_ID);
-
+        
         sFormsProjectionMap = new HashMap<String, String>();
         sFormsProjectionMap.put(FormsColumns._ID, FormsColumns._ID);
         sFormsProjectionMap.put(FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_NAME);
@@ -622,6 +637,12 @@ public class FormsProvider extends ContentProvider {
         sFormsProjectionMap.put(FormsColumns.FORM_TYPE, FormsColumns.FORM_TYPE);
         sFormsProjectionMap.put(FormsColumns.PREDICATE, FormsColumns.PREDICATE);
         sFormsProjectionMap.put(FormsColumns.NEEDS_RESPONSE, FormsColumns.NEEDS_RESPONSE);
+    }
+    // reset database used for first initiaized
+    // @CD
+    public void resetDatabase() {
+        mDbHelper.close();
+        mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());
     }
 
 }
