@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+	<LinearLayout
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal" >
+        	
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/sun_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_sun" />
+        			
+        		<CheckBox
+        			android:id="@+id/sunday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/sun_txt" />
+        	</RelativeLayout>
+        	
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/mon_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_mon" />
+        	
+        		<CheckBox
+        			android:id="@+id/monday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/mon_txt" />
+        	</RelativeLayout>
+        	
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/tue_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_tue" />
+        			
+				<CheckBox
+        			android:id="@+id/tuesday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/tue_txt" />
+        	</RelativeLayout>
+        	
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/wed_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_wed" />
+        			
+        		<CheckBox
+        			android:id="@+id/wednesday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/wed_txt" />
+        	</RelativeLayout>
+ 
+         	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/thu_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_thu" />    
+        			   		
+        		<CheckBox
+        			android:id="@+id/thursday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/thu_txt" />
+        	</RelativeLayout>
+        	
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/fri_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_fri" />
+        			       	
+        		<CheckBox
+        			android:id="@+id/friday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/fri_txt" />
+        	</RelativeLayout>
+
+        	<RelativeLayout
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:orientation="vertical" >
+        		
+        		<TextView
+        			android:id="@+id/sat_txt"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/chk_sat" />        		
+        		<CheckBox
+        			android:id="@+id/saturday"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_below="@id/sat_txt" />
+        	</RelativeLayout>
+        </LinearLayout>
+        
+        <TimePicker
+        	android:id="@+id/settings_time_picker"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content" />
+        
+        <LinearLayout
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal" >
+        	
+        	<Button
+        		android:id="@+id/dialog_cancel"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="@string/settings_neg_button" />
+        	
+        	<Button
+        		android:id="@+id/dialog_set"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="@string/settings_pos_button" />
+        </LinearLayout>
+        
+</LinearLayout>

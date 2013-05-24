@@ -46,7 +46,8 @@ public class GoalsActivity extends Activity {
 		mPrescriptions.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				Log.d(TAG, "Manage Prescriptions button clicked");
+				startActivity(new Intent(GoalsActivity.this, ManagePrescriptionActivity.class));
 			}
 		});
 		

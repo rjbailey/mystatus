@@ -1,0 +1,145 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".AddPrescription" >
+
+	<LinearLayout
+		android:id="@+id/pres_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical" >
+    	<TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/edit_prescription"
+        	android:textAppearance="?android:attr/textAppearanceLarge" />
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal" >
+		
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/pres_brandname"
+				android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+			<EditText
+				android:id="@+id/pres_brandname"
+				android:layout_width="200dip"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+	
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal" >
+			
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/pres_chemname"
+				android:textAppearance="?android:attr/textAppearanceMedium" />
+				
+			<EditText
+				android:id="@+id/pres_chemname"
+				android:layout_width="200dip"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+	
+		<LinearLayout
+			android:id="@+id/pres_quant_times"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical" >
+		<!--
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+		
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pres_quantity"
+					android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+				<EditText
+					android:id="@+id/pres_quantity"
+					android:layout_width="100dip"
+					android:layout_height="wrap_content"
+					android:inputType="numberDecimal" />
+		
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pres_mg"
+					android:textAppearance="?android:attr/textAppearanceMedium" />
+			</LinearLayout>
+	
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+		
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pres_time"
+					android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+				<Button
+					android:id="@+id/pres_time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+			-->
+		</LinearLayout>
+		
+		<Button
+			android:id="@+id/delete_pres_time"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/delete_pres_time" />
+			
+		<Button
+			android:id="@+id/add_pres_time"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/add_pres_time" />
+	
+		<Button
+			android:id="@+id/add_pres_pic"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/add_pres_pic" />
+		
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal" >
+		
+			<Button
+				android:id="@+id/edit_pres_cancel"
+				android:layout_width="0px"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="@string/edit_pres_cancel" />
+		
+			<Button
+				android:id="@+id/edit_pres_save"
+				android:layout_width="0px"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="@string/edit_pres_save" />
+		</LinearLayout>
+
+	</LinearLayout>
+</ScrollView>

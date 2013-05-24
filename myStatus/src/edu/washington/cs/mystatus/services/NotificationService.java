@@ -55,6 +55,7 @@ public class NotificationService extends Service {
 		if (c.getCount() > 0) {
 			Log.i(TAG, "Generating notification");
 			Notification surveyNotification = createSurveyNotification();
+			surveyNotification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.notify(NOTIFICATION_ID, surveyNotification);
 		} else {
