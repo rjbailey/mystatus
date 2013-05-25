@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
-
+		//mCacheWord.connectToService();
 		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -126,7 +126,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		// @CD
 		// clean up temp folder
 		cleanUpTemporaryFiles();
-		showLockScreen();
 	}
 	
 	//TODO: might need to figure out how to support api8
@@ -163,6 +162,13 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
         mCacheWord.onResume();
     }
     
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (mCacheWord.isLocked() && hasFocus){
+            showLockScreen();
+        } 
+    }
+
     /**
      * show lock screen if not yet initialized
      */

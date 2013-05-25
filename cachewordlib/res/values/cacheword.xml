@@ -16,6 +16,6 @@
                    This is the default setting, and can be changed at runtime via a preference
     -->
     <!-- set to 1 min for testing now -->
-    <integer name="cacheword_timeout_minutes_default">5</integer>
+    <integer name="cacheword_timeout_minutes_default">1</integer>
 </resources>
 
