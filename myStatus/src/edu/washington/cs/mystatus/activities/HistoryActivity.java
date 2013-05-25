@@ -41,54 +41,45 @@ public class HistoryActivity extends ListActivity {
 		ArrayAdapter<String> adapter ;
 		formTypes = new HashMap<String, Integer>();
 		formNameList = new ArrayList<String>();
-		//String selection = InstanceColumns.STATUS + " != ?";
-		//String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
-		//String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
-		String sortOrder = InstanceColumns.STATUS + " DESC, "
-				+ InstanceColumns.DISPLAY_NAME + " ASC";
-		Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, null,
-				null, sortOrder);
-		
-		// iterate through cursor to get all form types......
-		// @CD
-		if (c.getCount() > 0){
-			c.moveToFirst();
-			do {
-				String key = c.getString(c
-						.getColumnIndex(InstanceColumns.DISPLAY_NAME));
-				if (!formTypes.containsKey(key)) {
-					// add new name to the list
-					formTypes.put(key, 0);
-					formNameList.add(key);
-				} else {
-					// keep counting for reference
-					int oldCount = formTypes.get(key);
-					formTypes.put(key, ++oldCount);
-				}
-
-			} while (c.moveToNext());
-			// return cursor to the beginning
-			c.moveToFirst();
-		}
+		refreshFormNameList();
 		adapter = new ArrayAdapter<String>(this,
 								android.R.layout.simple_list_item_1, formNameList);
 		setListAdapter(adapter);
 		
-//		// add button for display table
-////		// @CD
-//		btnViewTable = (Button) findViewById(R.id.viewAsTable);
-//		btnViewTable.setOnClickListener(new OnClickListener() {
-//            
-//            @Override
-//            public void onClick(View v) {
-//              // TODO: launch the table view
-//              startActivity(new Intent(HistoryActivity.this, 
-//                                              DisplayHistoryAsTable.class));
-//            }
-//        });
-		
 	}
+	
+	/**
+	 * 
+	 */
+	
+	private void refreshFormNameList(){
+	    String sortOrder = InstanceColumns.STATUS + " DESC, "
+                + InstanceColumns.DISPLAY_NAME + " ASC";
+        Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, null,
+                null, sortOrder);
+        
+        // iterate through cursor to get all form types......
+        // @CD
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            do {
+                String key = c.getString(c
+                        .getColumnIndex(InstanceColumns.DISPLAY_NAME));
+                if (!formTypes.containsKey(key)) {
+                    // add new name to the list
+                    formTypes.put(key, 0);
+                    formNameList.add(key);
+                } else {
+                    // keep counting for reference
+                    int oldCount = formTypes.get(key);
+                    formTypes.put(key, ++oldCount);
+                }
 
+            } while (c.moveToNext());
+            // return cursor to the beginning
+            c.moveToFirst();
+        }
+	}
 	/**
 	 * Stores the path of selected instance in the parent class and finishes.
 	 */
@@ -105,6 +96,15 @@ public class HistoryActivity extends ListActivity {
 	}
 
 	@Override
+    protected void onResume() {
+        super.onResume();
+       refreshFormNameList();
+       // update the formname list
+       setListAdapter(new ArrayAdapter<String>(this,
+                                android.R.layout.simple_list_item_1, formNameList));
+    }
+
+    @Override
 	protected void onStart() {
 		super.onStart();
 		MyStatus.getInstance().getActivityLogger().logOnStart(this);
