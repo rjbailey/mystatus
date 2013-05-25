@@ -1,11 +1,26 @@
 package edu.washington.cs.mystatus.activities;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
+
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProvider;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
+import edu.washington.cs.mystatus.utilities.FileUtils;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -118,6 +133,70 @@ public class FormTypeListActivity extends ListActivity {
 						getString(R.string.cannot_edit_completed_form),
 						DO_NOT_EXIT);
 				return;
+			}
+			// decrypt data here....
+			Cursor instanceCursor = getContentResolver().query(instanceUri,
+					null, null, null, null);
+			if (instanceCursor.moveToFirst()){
+				String instanceRealPath = instanceCursor
+						.getString(instanceCursor
+								.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+				// check temp instance folder
+				File instanceTempDir = new File (MyStatus.TEMP_INSTANCE_PATH);
+				
+				// create the temporary instance folder if it's not yet exist
+				if (!instanceTempDir.exists()){
+					FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH);
+				}
+				
+				// create instance folder inside temp if it's not yet exist
+				String instanceFolderName = instanceRealPath.substring
+						(instanceRealPath.lastIndexOf("/"),
+						 instanceRealPath.indexOf(".xml"));
+				String instanceXMLPath = MyStatus.TEMP_INSTANCE_PATH + File.separator + 
+											instanceFolderName+File.separator+instanceFolderName + ".xml";
+				File tempInsFolder = new File(instanceFolderName);
+				if (!tempInsFolder.exists()){
+					FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH+File.separator+instanceFolderName);
+				}
+					
+				// decrypt data here ---need to catch some execption for security reason
+				DataEncryptionUtils ec = new DataEncryptionUtils();
+				ec.InitCiphers();
+				FileInputStream in;
+				try {
+					in = new FileInputStream(instanceRealPath);
+					FileOutputStream out = new FileOutputStream(instanceXMLPath);
+					ec.CBCDecrypt(in, out);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DataLengthException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ShortBufferException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidCipherTextException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+				
 			}
 			// caller wants to view/edit a form, so launch formentryactivity
 			Intent intent = new Intent (this, FormEntryActivity.class);

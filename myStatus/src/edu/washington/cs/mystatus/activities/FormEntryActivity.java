@@ -44,6 +44,7 @@ import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.tasks.FormLoaderTask;
 import edu.washington.cs.mystatus.tasks.SaveToDiskTask;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 import edu.washington.cs.mystatus.views.ODKView;
@@ -342,9 +343,25 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 								return;
 							} else {
 								instanceCursor.moveToFirst();
-								instancePath = instanceCursor
+								// need to change the instance path here to load the newly decrypted forms
+								// @CD
+								String instanceRealPath = instanceCursor
 										.getString(instanceCursor
 												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+								// construct the foler path
+								// @CD
+								String instanceFolderName = instanceRealPath.substring
+															(instanceRealPath.lastIndexOf("/"),
+															 instanceRealPath.indexOf(".xml"));
+								// the newly constructed instance path
+								// @CD
+								instancePath = MyStatus.TEMP_INSTANCE_PATH + File.separator 
+														+ instanceFolderName + File.separator
+														+ instanceFolderName+".xml";
+								
+//								instancePath = instanceCursor
+//										.getString(instanceCursor
+//												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
 								MyStatus.getInstance()
 										.getActivityLogger()
 										.logAction(this, "instanceLoaded",
@@ -2481,6 +2498,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		return false;
 	}
 
+	private void prepareInstanceLoader(){
+		
+	}
+	
 	@Override
 	public void onLongPress(MotionEvent e) {
 	}
