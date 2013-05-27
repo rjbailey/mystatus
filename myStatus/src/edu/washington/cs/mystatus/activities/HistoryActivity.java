@@ -98,6 +98,7 @@ public class HistoryActivity extends ListActivity {
 	@Override
     protected void onResume() {
         super.onResume();
+        ((MyStatus)getApplicationContext()).connectCacheWord();
        refreshFormNameList();
        // update the formname list
        setListAdapter(new ArrayAdapter<String>(this,
@@ -116,6 +117,32 @@ public class HistoryActivity extends ListActivity {
 		super.onStop();
 	}
 	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		 // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
 
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
+	            showLockScreen();
+	        } 
+	}
+	
+	/**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
 
 }

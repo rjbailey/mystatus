@@ -216,17 +216,17 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
         SQLiteDatabase.loadLibs(this);
     }
     
-	public CacheWordActivityHandler getCacheWordHandler(){
+	public synchronized CacheWordActivityHandler getCacheWordHandler(){
     	return mCacheWordHandler;
     }
     
     // supports method for encrypting database
     // @CD
-    public void connectCacheWord(){
+    public synchronized void connectCacheWord(){
     	mCacheWordHandler.connectToService();
     }
     
-    public void disconnectCacheWord(){
+    public synchronized void disconnectCacheWord(){
     	mCacheWordHandler.disconnect();
     }
 
