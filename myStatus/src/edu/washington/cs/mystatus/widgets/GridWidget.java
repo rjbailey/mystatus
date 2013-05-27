@@ -15,7 +15,15 @@
 package edu.washington.cs.mystatus.widgets;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Vector;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
 
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
@@ -25,10 +33,14 @@ import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
+
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.AdvanceToNextListener;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.views.ExpandedHeightGridView;
 import edu.washington.cs.mystatus.views.AudioButton.AudioHandler;
@@ -138,7 +150,13 @@ public class GridWidget extends QuestionWidget {
         if ( numColumns > 0 ) {
         	resizeWidth = ((screenWidth - 2*HORIZONTAL_PADDING - SCROLL_WIDTH - (IMAGE_PADDING+SPACING)*numColumns) / numColumns );
         }
-
+        // tools for decrypting.....
+        // @CD 
+        DataEncryptionUtils ec = new DataEncryptionUtils();
+        ec.InitCiphers();
+        FileInputStream in;
+        FileOutputStream out;
+        
         // Build view
         for (int i = 0; i < mItems.size(); i++) {
             SelectChoice sc = mItems.get(i);
@@ -161,11 +179,36 @@ public class GridWidget extends QuestionWidget {
             String errorMsg = null;
             if (imageURI != null) {
                 choices[i] = imageURI;
-
+                
                 String imageFilename;
                 try {
                 	imageFilename = ReferenceManager._().DeriveReference(imageURI).getLocalURI();
-                    final File imageFile = new File(imageFilename);
+                
+                	 // to avoid collision on media files need to create a same folder names inside the 
+                    // temp folder
+                    // @CD
+                    String tempDir = imageFilename.substring(0, imageFilename.lastIndexOf("/"));
+                    tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+                    
+                    // create the temporary folder for cotaining the mediafile
+                    // @CD
+                    FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+                    
+                    // need to decrypt the audio file first 
+                    // @CD
+                    String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+                    		+ File.separator + imageFilename.substring(imageFilename.lastIndexOf("/"))+"temp"
+        					+imageFilename.substring(imageFilename.lastIndexOf("."));
+                	
+                    in = new FileInputStream(new File(imageFilename));
+                	// construct the temp file
+        
+                	out = new FileOutputStream(new File(tempPathFile));
+                	ec.CBCDecrypt(in, out);
+                	
+                	
+                	// fixed this path file
+                    final File imageFile = new File(tempPathFile);
                     if (imageFile.exists()) {
                         Bitmap b =
                             FileUtils
@@ -203,7 +246,31 @@ public class GridWidget extends QuestionWidget {
                 } catch (InvalidReferenceException e) {
                     Log.e("GridWidget", "image invalid reference exception");
                     e.printStackTrace();
-                }
+                } catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DataLengthException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ShortBufferException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidCipherTextException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             } else {
             	errorMsg = "";
             }

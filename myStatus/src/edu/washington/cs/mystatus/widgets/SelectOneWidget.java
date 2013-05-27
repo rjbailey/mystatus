@@ -27,6 +27,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.views.MediaLayout;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
@@ -63,6 +64,9 @@ public class SelectOneWidget extends QuestionWidget implements
 		}
 
 		if (mItems != null) {
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage("Please Wait...");
+			progressDialog.show();
 			for (int i = 0; i < mItems.size(); i++) {
 				RadioButton r = new RadioButton(getContext());
 				r.setText(prompt.getSelectChoiceText(mItems.get(i)));
@@ -108,6 +112,7 @@ public class SelectOneWidget extends QuestionWidget implements
 				}
 				buttonLayout.addView(mediaLayout);
 			}
+			progressDialog.cancel();
 		}
 		buttonLayout.setOrientation(LinearLayout.VERTICAL);
 

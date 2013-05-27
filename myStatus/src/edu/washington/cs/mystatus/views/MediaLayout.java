@@ -18,10 +18,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
 
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
+
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
@@ -30,6 +38,7 @@ import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.widgets.QuestionWidget;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -118,7 +127,7 @@ public class MediaLayout extends RelativeLayout {
             // @CD
             String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
             		+ File.separator + videoFilename.substring(videoFilename.lastIndexOf("/"))+"temp"
-					+videoFilename.substring(videoFilename.lastIndexOf("."));
+					+videoFilename.substring(videoFilename.lastIndexOf(".")+1);
             // check if the file is already exist or not
             // add some number to make the file unique
             // @CD
@@ -126,6 +135,10 @@ public class MediaLayout extends RelativeLayout {
             // this needed to be use in a thread
             // @CD
             final String videoThreadFileName = videoFilename;
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+			progressDialog.show();
+			progressDialog.setTitle("Loading Video files");
+			progressDialog.setMessage("Please Wait ...");
             // adding thread to avoid UI not responding for long decryption which will cause the error message pop out
             // @CD
             new Thread(){
@@ -133,12 +146,14 @@ public class MediaLayout extends RelativeLayout {
           		  // if file exist NOT need to decrypt again
           		 if (!tf.exists()){
           			 try {
+          				 
           				 // first time decryption
           				 FileOutputStream fos = new FileOutputStream(tf);
           				 FileInputStream fis = new FileInputStream(videoThreadFileName);
           				 DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
           				 dataDecryption.InitCiphers();
           				 dataDecryption.CBCDecrypt(fis, fos);
+          				 progressDialog.cancel();
           			 } catch (FileNotFoundException e1) {
           				 // TODO Auto-generated catch block
           				 e1.printStackTrace();
@@ -155,6 +170,7 @@ public class MediaLayout extends RelativeLayout {
           		  // @CD
           		  i.setDataAndType(Uri.fromFile(tf), "video/*");
           		  try {
+          			  progressDialog.cancel();
           			  ((Activity) getContext()).startActivity(i);
           		  } catch (ActivityNotFoundException e) {
           			  Toast.makeText(getContext(),
@@ -223,7 +239,33 @@ public class MediaLayout extends RelativeLayout {
         if (imageURI != null) {
             try {
                 String imageFilename = ReferenceManager._().DeriveReference(imageURI).getLocalURI();
-                final File imageFile = new File(imageFilename);
+                
+                // construct the temp file
+                DataEncryptionUtils ec = new DataEncryptionUtils();
+                ec.InitCiphers();
+                String tempDir1 = imageFilename.substring(0, imageFilename.lastIndexOf("/"));
+                tempDir1 = tempDir1.substring(tempDir1.lastIndexOf("/")+1);
+                
+                // create the temporary folder for cotaining the mediafile
+                // @CD
+                FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir1);
+                
+                // need to decrypt the audio file first 
+                // @CD
+                String tempPathFile1 = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir1 
+                		+ File.separator +  imageFilename.substring( imageFilename.lastIndexOf("/"))+"temp"
+    					+ imageFilename.substring( imageFilename.lastIndexOf("."));
+            	
+                
+            	
+                final File imageFile = new File(tempPathFile1);
+                if (!imageFile.exists()){
+                	FileInputStream in = new FileInputStream(new File( imageFilename));
+                	FileOutputStream out = new FileOutputStream(new File(tempPathFile1));
+                	ec.CBCDecrypt(in, out);
+                }
+            	          	
+            	
                 if (imageFile.exists()) {
                     Display display =
                         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
@@ -239,11 +281,44 @@ public class MediaLayout extends RelativeLayout {
                         mImageView.setId(imageId);
 
                         if (bigImageURI != null) {
+                        	// decrypt image here....
+                        	// @CD...
+//                        	
+//                        	
+//                        	// to avoid collision on media files need to create a same folder names inside the 
+//                            // temp folder
+//                            // @CD
+//                        	//
+                        	String imageRealPath = ReferenceManager._()
+                                    .DeriveReference(bigImageURI).getLocalURI();
+                           
+                        	// to avoid collision on media files need to create a same folder names inside the 
+                            // temp folder
+                            // @CD
+                            String tempDir = imageRealPath.substring(0, imageRealPath.lastIndexOf("/"));
+                            tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
+                            
+                            // create the temporary folder for cotaining the mediafile
+                            // @CD
+                            FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
+                            
+                            // need to decrypt the audio file first 
+                            // @CD
+                            String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
+                            		+ File.separator + imageRealPath.substring(imageRealPath.lastIndexOf("/"))+"temp"
+                					+imageRealPath.substring(imageRealPath.lastIndexOf("."));
+                        	
+                            FileInputStream in1 = new FileInputStream(new File(imageRealPath));
+                        	// construct the temp file
+                
+                        	FileOutputStream out1 = new FileOutputStream(new File(tempPathFile));
+                        	ec.CBCDecrypt(in1, out1);
+                        	
+                        	
+//                        	String bigImageFilename = ReferenceManager._()
+//                                    .DeriveReference(bigImageURI).getLocalURI();
+                            final File bigImage = new File(tempPathFile);
                             mImageView.setOnClickListener(new OnClickListener() {
-                            	String bigImageFilename = ReferenceManager._()
-                                        .DeriveReference(bigImageURI).getLocalURI();
-                                File bigImage = new File(bigImageFilename);
-
 
                                 @Override
                                 public void onClick(View v) {
@@ -282,7 +357,28 @@ public class MediaLayout extends RelativeLayout {
             } catch (InvalidReferenceException e) {
                 Log.e(t, "image invalid reference exception");
                 e.printStackTrace();
-            }
+            } catch (DataLengthException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidCipherTextException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         } else {
             // There's no imageURI listed, so just ignore it.
         }
