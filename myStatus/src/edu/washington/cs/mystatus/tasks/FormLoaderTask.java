@@ -24,6 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.condition.EvaluationContext;
@@ -40,6 +44,7 @@ import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.xform.parse.XFormParseException;
 import org.javarosa.xform.parse.XFormParser;
 import org.javarosa.xform.util.XFormUtils;
+import org.spongycastle.crypto.InvalidCipherTextException;
 
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormLoaderListener;
@@ -216,6 +221,15 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             		// use it.
             		usedSavepoint = true;
             		instance = shadowInstance;
+            		// need to do some decryption here also
+            		// @CD
+            		DataEncryptionUtils ec = new DataEncryptionUtils();
+            		ec.InitCiphers();
+            		FileInputStream in = new FileInputStream(shadowInstance);
+            		File decryptedShadow = new File(shadowInstance.getAbsolutePath()+".xml.save");
+            		FileOutputStream out = new FileOutputStream( decryptedShadow);
+            		ec.CBCDecrypt(in, out);
+            		instance = decryptedShadow;
            			Log.w(t,"Loading instance from shadow file: " + shadowInstance.getAbsolutePath());
             	}
             	if ( instance.exists() ) {
@@ -231,7 +245,25 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         } catch (RuntimeException e) {
             mErrorMsg = e.getMessage();
             return null;
-        }
+        } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidCipherTextException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // set paths to /sdcard/odk/forms/formfilename-media/
         String formFileName = formXml.getName().substring(0, formXml.getName().lastIndexOf("."));
