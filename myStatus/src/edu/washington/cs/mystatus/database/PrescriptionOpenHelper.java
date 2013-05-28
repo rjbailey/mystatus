@@ -27,6 +27,7 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
     public static final String HOUR = "hour";
     public static final String MINUTE = "minute";
     public static final String QUANTITY = "quantity";
+    public static final String NOTIFICATION_ID = "notifId";
 	
 	
 	public PrescriptionOpenHelper(Context context) {
@@ -52,7 +53,8 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 				+ PICTURE_FILENAME + " text not null, "
 				+ QUANTITY + " double not null, "
 				+ HOUR + " integer not null, "
-				+ MINUTE + " integer not null);");
+				+ MINUTE + " integer not null,"
+				+ NOTIFICATION_ID + " integer not null);");
 	}
 
 	@Override
@@ -65,15 +67,16 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 	}
 	
 	public void addNewPrescriptionNotification(String brandName, String chemName, String filename,
-			double quantity, int hour, int min) {
+			double quantity, int hour, int min, int id) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(PrescriptionOpenHelper.BRAND_NAME, brandName);
-		values.put(PrescriptionOpenHelper.CHEMICAL_NAME, chemName);
-		values.put(PrescriptionOpenHelper.QUANTITY, quantity);
-		values.put(PrescriptionOpenHelper.HOUR, hour);
-		values.put(PrescriptionOpenHelper.MINUTE, min);
-		values.put(PrescriptionOpenHelper.PICTURE_FILENAME, filename);
+		values.put(BRAND_NAME, brandName);
+		values.put(CHEMICAL_NAME, chemName);
+		values.put(QUANTITY, quantity);
+		values.put(HOUR, hour);
+		values.put(MINUTE, min);
+		values.put(PICTURE_FILENAME, filename);
+		values.put(NOTIFICATION_ID, id);
 		
 		if (db.insert(PRESCRIPTION_TABLE_NAME, null, values) == -1)
 			Log.e(TAG, "Did not insert.");

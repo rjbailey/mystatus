@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.database.PrescriptionOpenHelper;
+import edu.washington.cs.mystatus.services.NotificationService;
 import edu.washington.cs.mystatus.services.PrescriptionNotificationService;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,6 +76,7 @@ public class AddPrescription extends Activity {
 	private int[] hours;
 	private int[] mins;
 	private double[] quants;
+	private int[] ids;
 	private int currCount;
 	
 	private File mFile;
@@ -109,7 +112,6 @@ public class AddPrescription extends Activity {
 		setGlobalVars();
 		if (savedInstanceState != null) {
 			String filename = savedInstanceState.getString("mFile");
-			//String filename = savedInstanceState.getString("mFile", "");
 			if (!filename.equals("")) {
 				mFile = new File(filename);
 				insertImage();
@@ -132,17 +134,17 @@ public class AddPrescription extends Activity {
 		}
 		addTimeListener();
 		if (currCount > 0) {
-			createDeleteButton(); // TODO: check correct time to do this
+			createDeleteButton();
 		}
 	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		//TODO check correct
 		super.onSaveInstanceState(outState);
 		outState.putString("mFile", mFile.getAbsolutePath());
 		outState.putIntArray("hours", hours);
 		outState.putIntArray("mins", mins);
+		outState.putIntArray("ids", ids);
 		int i = 0;
 		for (EditText et : mQuantTextList) {
 			String doub = et.getText().toString();
@@ -180,15 +182,18 @@ public class AddPrescription extends Activity {
 			hours = new int[10];
 			mins = new int[10];
 			quants = new double[10];
+			ids = new int[10];
 			for (int i = 0; i < 10; i++) {
 				hours[i] = -1;
 				mins[i] = -1;
 				quants[i] = -1.0;
+				ids[i] = -1;
 			}
 		} else {
 			hours = b.getIntArray("hours");
 			mins = b.getIntArray("mins");
 			quants = b.getDoubleArray("quants");
+			ids = b.getIntArray("ids");
 		}
 	}
 	
@@ -200,9 +205,13 @@ public class AddPrescription extends Activity {
 			public void onClick(View v) {
 				currCount--;
 				
+				// delete alarm
+				disableNotification(ids[currCount]);
+				
 				hours[currCount] = -1;
 				mins[currCount] = -1;
 				quants[currCount] = -1.0;
+				ids[currCount] = -1; // TODO: checksize?
 				
 				mQuantTextList.remove(currCount);
 				mTimeButtonList.remove(currCount);
@@ -284,10 +293,11 @@ public class AddPrescription extends Activity {
 						Bundle b = new Bundle();
 						b.putString("BRAND_NAME", brandName);
 						b.putString("CHEM_NAME", chemName);
+						b.putString("FILENAME", mFile.getAbsolutePath());
 						b.putInt("HOUR", hours[i]);
 						b.putInt("MINUTE", mins[i]);
-						enableNotifications(today.getTime(), NOTIFICATION_ID, b);
-						saveToDatabase(quants[i], hours[i], mins[i]);
+						enableNotifications(today.getTime(), ids[i], b);
+						saveToDatabase(quants[i], hours[i], mins[i], ids[i]);
 					}
 					finish();
 				}
@@ -396,9 +406,16 @@ public class AddPrescription extends Activity {
 	
 	private void addTimeAndQuants(boolean isForOnClick) {
 		int end;
-		if (isForOnClick)
+		if (isForOnClick) {
 			end = 1;
-		else
+			if (currCount > ids.length)
+				resizeArrayI(ids);
+			Random randy = new Random();
+			int randI = randy.nextInt(10000000);
+			while (randI < 7)
+				randI = randy.nextInt(10000000);
+			ids[currCount] = randI;
+		} else
 			end = hours.length;
 		for (int i = 0; i < end; i++) {
 			int hour = hours[i];
@@ -481,7 +498,6 @@ public class AddPrescription extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			// TODO: decide if this can be used
 			if (resultCode == RESULT_OK) {
 				super.onActivityResult(requestCode, resultCode, data);
 			} else if (resultCode == RESULT_CANCELED) {
@@ -542,6 +558,14 @@ public class AddPrescription extends Activity {
 		Log.i(TAG, "Enabled notifications");
 	}
 	
+	private void disableNotification(int id) {
+		Log.w(TAG, "Disabling notification " + id);
+		PendingIntent notificationIntent = PendingIntent.getService(this, id,
+				new Intent(this, NotificationService.class), 0);
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		am.cancel(notificationIntent);
+	}
+	
 	// to appear when a new layout is added to the page
 	private void createDeleteButton() {
 		mDeleteTime.setVisibility(Button.VISIBLE);
@@ -558,18 +582,17 @@ public class AddPrescription extends Activity {
 	}
 	
 	// save the information to the database
-	private void saveToDatabase(double quant, int hour, int min) {
+	private void saveToDatabase(double quant, int hour, int min, int id) {
 		String brandName = mBrandName.getText().toString();
 		String chemName = mChemName.getText().toString();
 		String filename = mFile.getAbsolutePath();
 		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
-		helper.addNewPrescriptionNotification(brandName, chemName, filename, quant, hour, min);
+		helper.addNewPrescriptionNotification(brandName, chemName, filename, quant, hour, min, id);
 		// debugging help
 		int count = helper.getTotalCount();
 	}
 	
 	private void insertImage() {
-		//TODO
 		ImageView img = new ImageView(this);
 		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		img.setLayoutParams(lp);
