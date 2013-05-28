@@ -423,5 +423,43 @@ public class InstanceUploaderList extends ListActivity implements
 		alertDialog.show();
 		return true;
 	}
+	
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		 // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		 // connect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).connectCacheWord();
+	}
+	
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
+	            showLockScreen();
+	        } 
+	}
+	
+	/**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
 
 }

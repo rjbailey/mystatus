@@ -1,7 +1,18 @@
 package edu.washington.cs.mystatus.activities;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -22,6 +33,7 @@ import edu.washington.cs.mystatus.logic.HierarchyElement;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.tasks.FormLoaderTask;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
 public class DisplayHistoryAsTable extends Activity implements FormLoaderListener{
@@ -75,7 +87,22 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		progressDialog.show();
 		 		String instancePath = instanceList.remove(0);
 		 		reservedList.add(instancePath);
-		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
+		 		// change the path and decryption here
+		 		// @CD
+		 		String instanceRealPath = instancePath;
+				// decrypt form needs to be submit here
+				 decryptFormNeedtoBeUploaded(instanceRealPath);
+				// construct the foler path
+				// @CD
+				String instanceFolderName = instanceRealPath.substring
+											(instanceRealPath.lastIndexOf("/"),
+											 instanceRealPath.indexOf(".xml"));
+				// the newly constructed instance path
+				// @CD
+				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
+										+ instanceFolderName + File.separator
+										+ instanceFolderName+".xml";
+		 		FormLoaderTask loaderTask = new FormLoaderTask(instance, null, null);
 		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
 				String formPath = getFormPath(instancePath);
 				loaderTask.execute(formPath);	
@@ -83,22 +110,27 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		// get the next task and put the info into list
 		 		FormController formController = task.getFormController();
 		        MyStatus.getInstance().setFormController(formController);
-//		        // adding status column
-//		        ArrayList<HierarchyElement> data = FileUtils.getHierarchyElements();
-//		        String oldinstancePath = formController.getInstancePath().getAbsolutePath();
-//		        String selection = InstanceColumns.INSTANCE_FILE_PATH + " = "+oldinstancePath;
-//		        Cursor c = managedQuery(InstanceColumns.CONTENT_URI, null, selection,
-//		        				null, null);
-//		        c.moveToFirst();
-//		        // adding the status to data
-//		        HierarchyElement status = new HierarchyElement("Status", c.getString(c.getColumnIndex
-//		        								(InstanceColumns.DISPLAY_SUBTEXT)), null, 0, 0, null);
-//		        data.add(0, status);
 //		        // add data to instance data
 		        instanceData.add(FileUtils.getHierarchyElements()); 
 		        String instancePath = instanceList.remove(0);
 		        reservedList.add(instancePath);
-		 		FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
+		     // change the path and decryption here
+		 		// @CD
+		 		String instanceRealPath = instancePath;
+				// decrypt form needs to be submit here
+				 decryptFormNeedtoBeUploaded(instanceRealPath);
+				// construct the foler path
+				// @CD
+				String instanceFolderName = instanceRealPath.substring
+											(instanceRealPath.lastIndexOf("/"),
+											 instanceRealPath.indexOf(".xml"));
+				// the newly constructed instance path
+				// @CD
+				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
+										+ instanceFolderName + File.separator
+										+ instanceFolderName+".xml";
+		 		FormLoaderTask loaderTask = new FormLoaderTask(instance, null, null);
+		 		//FormLoaderTask loaderTask = new FormLoaderTask(instancePath, null, null);
 		 		loaderTask.setFormLoaderListener(DisplayHistoryAsTable.this);
 				String formPath = getFormPath(instancePath);
 				loaderTask.execute(formPath);
@@ -196,7 +228,64 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 	}  
 	    }
 
-	    @Override
+	    private void decryptFormNeedtoBeUploaded(String instanceRealPath) {
+	    	// TODO Auto-generated method stub
+	    	// check temp instance folder
+			File instanceTempDir = new File (MyStatus.TEMP_INSTANCE_PATH);
+			
+			// create the temporary instance folder if it's not yet exist
+			if (!instanceTempDir.exists()){
+				FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH);
+			}
+			
+			// create instance folder inside temp if it's not yet exist
+			String instanceFolderName = instanceRealPath.substring
+					(instanceRealPath.lastIndexOf("/"),
+					 instanceRealPath.indexOf(".xml"));
+			String instanceXMLPath = MyStatus.TEMP_INSTANCE_PATH + File.separator + 
+										instanceFolderName+File.separator+instanceFolderName + ".xml";
+			File tempInsFolder = new File(instanceFolderName);
+			if (!tempInsFolder.exists()){
+				FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH+File.separator+instanceFolderName);
+			}
+				
+			// decrypt data here ---need to catch some execption for security reason
+			DataEncryptionUtils ec = new DataEncryptionUtils();
+			ec.InitCiphers();
+			FileInputStream in;
+			try {
+				in = new FileInputStream(instanceRealPath);
+				FileOutputStream out = new FileOutputStream(instanceXMLPath);
+				ec.CBCDecrypt(in, out);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DataLengthException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidCipherTextException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	    }
+
+		@Override
 	    public void loadingError(String errorMsg) {
 	        // TODO Auto-generated method stub
 	        

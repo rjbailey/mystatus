@@ -698,4 +698,22 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
         createAlertDialog(getString(R.string.download_forms_result), b.toString().trim(), EXIT);
     }
     
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
+	            showLockScreen();
+	        } 
+	}
+	
+	/**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
+    
 }

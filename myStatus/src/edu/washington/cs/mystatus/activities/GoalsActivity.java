@@ -1,6 +1,7 @@
 package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.application.MyStatus;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -64,4 +65,41 @@ public class GoalsActivity extends Activity {
 		mPrescriptions = (Button) findViewById(R.id.new_prescription_button);
 		mSideEffects = (Button) findViewById(R.id.side_effects_button);
 	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		 // disconnect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		 // connect to cache word to get 
+        // @CD
+        ((MyStatus)getApplicationContext()).connectCacheWord();
+	}
+	
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
+	            showLockScreen();
+	        } 
+	}
+	
+	/**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
 }

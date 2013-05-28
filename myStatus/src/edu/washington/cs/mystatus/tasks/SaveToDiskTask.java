@@ -15,13 +15,20 @@
 package edu.washington.cs.mystatus.tasks;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.services.transport.payload.ByteArrayPayload;
 import org.javarosa.form.api.FormEntryController;
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
 
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormSavedListener;
@@ -29,6 +36,7 @@ import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.EncryptionUtils;
 import edu.washington.cs.mystatus.utilities.EncryptionUtils.EncryptedFormInformation;
 
@@ -270,6 +278,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
         	payload = formController.getFilledInFormXml();
             // write out xml
         	String instancePath = formController.getInstancePath().getAbsolutePath();
+        	// instance get saved here
             exportXmlFile(payload, instancePath);
 
         } catch (IOException e) {
@@ -388,32 +397,63 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
         InputStream is = payload.getPayloadStream();
         int len = (int) payload.getLength();
 
+        
         // read from data stream
         byte[] data = new byte[len];
+        // data should be encrypted here
         try {
-            int read = is.read(data, 0, len);
-            if (read > 0) {
-                // write xml file
-                try {
-                    // String filename = path + File.separator +
-                    // path.substring(path.lastIndexOf(File.separator) + 1) + ".xml";
-                	FileWriter fw = new FileWriter(path);
-                	fw.write(new String(data, "UTF-8"));
-                	fw.flush();
-                	fw.close();
-                    return true;
-
-                } catch (IOException e) {
-                    Log.e(t, "Error writing XML file");
-                    e.printStackTrace();
-                    return false;
-                }
-            }
+        	// encrypted saved instance here
+        	// @CD
+        	File file = new File (path);
+        	// remove old files
+        	if (file.exists())
+        		file.delete();
+        	// get the output stream
+        	FileOutputStream os = new FileOutputStream(new File(path));
+        	DataEncryptionUtils ec = new DataEncryptionUtils();
+        	ec.InitCiphers();
+        	ec.CBCEncrypt(is, os);
+//            int read = is.read(data, 0, len);
+//            if (read > 0) {
+//                // write xml file
+//                try {
+//                    // String filename = path + File.separator +
+//                    // path.substring(path.lastIndexOf(File.separator) + 1) + ".xml";
+//                	FileWriter fw = new FileWriter(path);
+//                	fw.write(new String(data, "UTF-8"));
+//                	fw.flush();
+//                	fw.close();
+//                    return true;
+//
+//                } catch (IOException e) {
+//                    Log.e(t, "Error writing XML file");
+//                    e.printStackTrace();
+//                    return false;
+//                }
+//            }
         } catch (IOException e) {
             Log.e(t, "Error reading from payload data stream");
             e.printStackTrace();
             return false;
-        }
+        } catch (DataLengthException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidCipherTextException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return false;
     }

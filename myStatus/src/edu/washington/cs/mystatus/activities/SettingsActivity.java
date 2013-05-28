@@ -274,6 +274,7 @@ public class SettingsActivity extends Activity {
 		today.setMinutes(MINUTE);
 		today.setSeconds(0);
 		int[] dates = getDates(today);
+		// TODO: fix this to avoid repeating notification......
 		for (int i = 0; i < 7; i++) {
 			if (dates[i] != Integer.MAX_VALUE) {
 				today.setDate(dates[i]);

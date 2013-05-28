@@ -14,6 +14,8 @@
 
 package edu.washington.cs.mystatus.activities;
 
+import info.guardianproject.cacheword.CacheWordHandler;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,7 @@ import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.tasks.FormLoaderTask;
 import edu.washington.cs.mystatus.tasks.SaveToDiskTask;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 import edu.washington.cs.mystatus.views.ODKView;
@@ -342,9 +345,25 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 								return;
 							} else {
 								instanceCursor.moveToFirst();
-								instancePath = instanceCursor
+								// need to change the instance path here to load the newly decrypted forms
+								// @CD
+								String instanceRealPath = instanceCursor
 										.getString(instanceCursor
 												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+								// construct the foler path
+								// @CD
+								String instanceFolderName = instanceRealPath.substring
+															(instanceRealPath.lastIndexOf("/"),
+															 instanceRealPath.indexOf(".xml"));
+								// the newly constructed instance path
+								// @CD
+								instancePath = MyStatus.TEMP_INSTANCE_PATH + File.separator 
+														+ instanceFolderName + File.separator
+														+ instanceFolderName+".xml";
+								
+//								instancePath = instanceCursor
+//										.getString(instanceCursor
+//												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
 								MyStatus.getInstance()
 										.getActivityLogger()
 										.logAction(this, "instanceLoaded",
@@ -1951,6 +1970,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		dismissDialogs();
+		// connect cacheword
+		// @CD
+		((MyStatus)getApplicationContext()).disconnectCacheWord();
 		// make sure we're not already saving to disk. if we are, currentPrompt
 		// is getting constantly updated
 		if (mSaveToDiskTask == null
@@ -1960,13 +1982,19 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
 			}
 		}
-
+		
+		//((MyStatus)getApplicationContext()).disconnectCacheWord(); detach
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+//		CacheWordHandler cw = ((MyStatus)getApplicationContext()).getCacheWordHandler();
+//		if (cw.isLocked()){
+//			showLockScreen();
+//		}
+		 ((MyStatus)getApplicationContext()).connectCacheWord();
 		FormController formController = MyStatus.getInstance()
 				.getFormController();
 		MyStatus.getInstance().getActivityLogger().open(getApplicationContext());
@@ -2018,7 +2046,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			mNextButton.setVisibility(View.GONE);
 		}
 	}
+	
+	
 
+    
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
@@ -2481,6 +2512,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		return false;
 	}
 
+	private void prepareInstanceLoader(){
+		
+	}
+	
 	@Override
 	public void onLongPress(MotionEvent e) {
 	}
@@ -2520,6 +2555,27 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		MyStatus.getInstance().getActivityLogger().logOnStop(this);
 		super.onStop();
 	}
+	
+
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {		
+		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
+	            showLockScreen();
+	        } 
+	}
+	
+	/**
+     * show lock screen if not yet initialized
+     */
+    void showLockScreen() {
+        Intent intent = new Intent(this, LockScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("originalIntent", getIntent());
+        startActivity(intent);
+        finish();
+    }
+	
 
 	private void sendSavedBroadcast() {
 		Intent i = new Intent();

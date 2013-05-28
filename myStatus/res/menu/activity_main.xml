@@ -5,11 +5,22 @@
         android:orderInCategory="1"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-    <item
+  <!--   <item
         android:id="@+id/action_odk_menu"
         android:orderInCategory="2"
         android:showAsAction="never"
         android:title="@string/action_odk_menu">
-    </item>
-
+    </item> -->
+    
+    <item
+        android:id="@+id/send_form_settings"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/send_form_action"/>
+    
+	<item
+        android:id="@+id/admin_settings"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/admin_settings"/>
 </menu>

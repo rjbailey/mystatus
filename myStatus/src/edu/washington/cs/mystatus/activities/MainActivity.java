@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.utilities.FileUtils;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
-
+		//mCacheWord.connectToService();
 		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -88,15 +89,40 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
+	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
+			((MyStatus)getApplicationContext()).connectCacheWord();
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
-		case R.id.action_odk_menu:
+//		case R.id.action_odk_menu:
+//			((MyStatus)getApplicationContext()).connectCacheWord();
+//			startActivity(new Intent(this, MainMenuActivity.class));
+//			return true;
+		// bring odk admin to mystatus...
+		// @CD
+		case R.id.admin_settings:
+			MyStatus.getInstance()
+			.getActivityLogger()
+			.logAction(this, "onOptionsItemSelected",
+					"MENU_PREFERENCES");
+			// unlock database
 			((MyStatus)getApplicationContext()).connectCacheWord();
-			startActivity(new Intent(this, MainMenuActivity.class));
+			Intent ig = new Intent(this, PreferencesActivity.class);
+			startActivity(ig);
+			return true;
+		// adding sending function...no need to use ODK menu anymore
+		// @CD
+		case R.id.send_form_settings:
+			MyStatus.getInstance().getActivityLogger().logAction(this, "uploadForms", "click");
+			Intent i = new Intent(this,
+			InstanceUploaderList.class);
+			// unlock database
+			// @CD
+			((MyStatus)getApplicationContext()).connectCacheWord();
+			startActivity(i);
 			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);
@@ -126,7 +152,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		// @CD
 		// clean up temp folder
 		cleanUpTemporaryFiles();
-		showLockScreen();
 	}
 	
 	//TODO: might need to figure out how to support api8
@@ -163,6 +188,13 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
         mCacheWord.onResume();
     }
     
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (mCacheWord.isLocked() && hasFocus){
+            showLockScreen();
+        } 
+    }
+
     /**
      * show lock screen if not yet initialized
      */

@@ -15,6 +15,10 @@
 package edu.washington.cs.mystatus.tasks;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URLDecoder;
@@ -25,6 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
 
 import edu.washington.cs.mystatus.R;
 import org.opendatakit.httpclientandroidlib.Header;
@@ -40,6 +48,8 @@ import org.opendatakit.httpclientandroidlib.entity.mime.MultipartEntity;
 import org.opendatakit.httpclientandroidlib.entity.mime.content.FileBody;
 import org.opendatakit.httpclientandroidlib.entity.mime.content.StringBody;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
 
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.InstanceUploaderListener;
@@ -47,6 +57,8 @@ import edu.washington.cs.mystatus.logic.PropertyManager;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
+import edu.washington.cs.mystatus.utilities.FileUtils;
 import edu.washington.cs.mystatus.utilities.WebUtils;
 
 import android.content.ContentValues;
@@ -503,7 +515,33 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
 	                    return outcome;
 	                }
 	                publishProgress(c.getPosition() + 1, c.getCount());
-	                String instance = c.getString(c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+//	                String instance = c.getString(c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+	                // Decrypt the file first
+	               
+	                
+	                
+	                // change the file path here .....
+	                // @CD
+	                
+	             // need to change the instance path here to load the newly decrypted forms
+					// @CD
+					String instanceRealPath = c
+							.getString(c
+									.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
+					// decrypt form needs to be submit here
+					 decryptFormNeedtoBeUploaded(instanceRealPath);
+					// construct the foler path
+					// @CD
+					String instanceFolderName = instanceRealPath.substring
+												(instanceRealPath.lastIndexOf("/"),
+												 instanceRealPath.indexOf(".xml"));
+					// the newly constructed instance path
+					// @CD
+					String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
+											+ instanceFolderName + File.separator
+											+ instanceFolderName+".xml";
+	                
+	                
 	                String id = c.getString(c.getColumnIndex(InstanceColumns._ID));
 	                Uri toUpdate = Uri.withAppendedPath(InstanceColumns.CONTENT_URI, id);
 
@@ -550,7 +588,62 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
     }
 
 
-    @Override
+    private void decryptFormNeedtoBeUploaded(String instanceRealPath) {
+		// check temp instance folder
+		File instanceTempDir = new File (MyStatus.TEMP_INSTANCE_PATH);
+		
+		// create the temporary instance folder if it's not yet exist
+		if (!instanceTempDir.exists()){
+			FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH);
+		}
+		
+		// create instance folder inside temp if it's not yet exist
+		String instanceFolderName = instanceRealPath.substring
+				(instanceRealPath.lastIndexOf("/"),
+				 instanceRealPath.indexOf(".xml"));
+		String instanceXMLPath = MyStatus.TEMP_INSTANCE_PATH + File.separator + 
+									instanceFolderName+File.separator+instanceFolderName + ".xml";
+		File tempInsFolder = new File(instanceFolderName);
+		if (!tempInsFolder.exists()){
+			FileUtils.createFolder(MyStatus.TEMP_INSTANCE_PATH+File.separator+instanceFolderName);
+		}
+			
+		// decrypt data here ---need to catch some execption for security reason
+		DataEncryptionUtils ec = new DataEncryptionUtils();
+		ec.InitCiphers();
+		FileInputStream in;
+		try {
+			in = new FileInputStream(instanceRealPath);
+			FileOutputStream out = new FileOutputStream(instanceXMLPath);
+			ec.CBCDecrypt(in, out);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DataLengthException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidCipherTextException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
     protected void onPostExecute(Outcome outcome) {
         synchronized (this) {
             if (mStateListener != null) {

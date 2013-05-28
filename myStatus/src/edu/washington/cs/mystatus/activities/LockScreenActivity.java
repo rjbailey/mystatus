@@ -97,6 +97,7 @@ public class LockScreenActivity extends Activity implements ICacheWordSubscriber
     @Override
     public void onCacheWordOpened() {
         Intent intent = (Intent) getIntent().getParcelableExtra("originalIntent");
+        //Intent intent = new Intent (this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         startActivity(intent);

@@ -105,6 +105,11 @@
 	<string name="fire">OK</string>
 	<string name="dialog_quantity_warning">Please fill out all the "Time" and "Quantity" fields.</string>
 	
+	<!--  Send form to Aggregate -->
+	<string name="send_form_action">Send Finalized Form</string>
+	<string name="admin_settings">Admin Settings</string>
+	
+	
 	<!-- Prescription Notification -->
 	<string name="pres_notification_title">myStatus</string>
 	<string name="pres_notificaiton_text">This is your ___ reminder.</string>
