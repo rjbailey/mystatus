@@ -32,13 +32,14 @@ public class PrescriptionNotificationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i(TAG, "Generating notification");
+		Log.w(TAG, "Starting notification service.");
 		Bundle b = intent.getExtras();
 		Notification notification = createNotification(b);
 		notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.notify(NOTIFICATION, notification);
-
+		// TODO startID or NOTIFICATION
+		nm.notify(startId, notification);
+		Log.i(TAG, "Notification generated.");
 		return super.onStartCommand(intent, flags, startId);
 	}
 	

@@ -129,6 +129,11 @@
             android:enabled="true" >
         </service>
 
+        <service
+            android:name="edu.washington.cs.mystatus.services.PrescriptionNotificationService"
+            android:enabled="true" >
+        </service>
+        
         <provider
             android:name="edu.washington.cs.mystatus.providers.FormsProvider"
             android:authorities="edu.washington.cs.mystatus.provider.odk.forms"

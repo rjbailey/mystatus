@@ -24,6 +24,7 @@ import android.util.Log;
  * 
  * @author Jake Bailey (rjacob@cs.washington.edu)
  * @author Chuong Dao (chuongd@cs.washington.edu)
+ * @author Emily Chien (eechien@cs.washington.edu)
  */
 public class NotificationService extends Service {
 
@@ -57,7 +58,8 @@ public class NotificationService extends Service {
 			Notification surveyNotification = createSurveyNotification();
 			surveyNotification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			nm.notify(NOTIFICATION_ID, surveyNotification);
+			// TODO startId or NOTIFICATION_ID
+			nm.notify(startId, surveyNotification);
 		} else {
 			Log.i(TAG, "No surveys need a response, so no notification was generated.");
 		}
