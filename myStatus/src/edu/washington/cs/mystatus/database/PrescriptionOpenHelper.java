@@ -1,32 +1,22 @@
 package edu.washington.cs.mystatus.database;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.washington.cs.mystatus.activities.EditPrescription;
-import edu.washington.cs.mystatus.activities.ManagePrescriptionActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 
 public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
 	private static final String DIR = Environment.getExternalStorageDirectory() + "myStatus/metadata";
+	private static final String TAG = "myStatus.PrescriptionOpenHelper";
 	
 	private static final String DATABASE_NAME = "prescriptions.db";
 	private static final String PRESCRIPTION_TABLE_NAME = "prescriptions";
@@ -62,7 +52,7 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 				+ PICTURE_FILENAME + " text not null, "
 				+ QUANTITY + " double not null, "
 				+ HOUR + " integer not null, "
-				+ MINUTE + " integer not null );");
+				+ MINUTE + " integer not null);");
 	}
 
 	@Override
@@ -85,7 +75,8 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 		values.put(PrescriptionOpenHelper.MINUTE, min);
 		values.put(PrescriptionOpenHelper.PICTURE_FILENAME, filename);
 		
-		db.insert(PRESCRIPTION_TABLE_NAME, null, values);
+		if (db.insert(PRESCRIPTION_TABLE_NAME, null, values) == -1)
+			Log.e(TAG, "Did not insert.");
 		db.close();
 	}
 	
@@ -117,5 +108,28 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 		int count = c.getCount();
 		c.close();
 		return count;
+	}
+	
+	public List<Double> getQuantTime(String brandName, String chemName) {
+		List<Double> list= new ArrayList<Double>();
+		SQLiteDatabase db = this.getReadableDatabase();
+		String[] columns = {PrescriptionOpenHelper.HOUR,
+				PrescriptionOpenHelper.MINUTE,
+				PrescriptionOpenHelper.QUANTITY};
+		String selection = PrescriptionOpenHelper.BRAND_NAME + "=?" + " AND " +
+				PrescriptionOpenHelper.CHEMICAL_NAME + "=?";
+		String[] selectionArgs = {brandName, chemName};
+		Cursor c = db.query(PRESCRIPTION_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+		if (c != null)
+			c.moveToPosition(-1);
+		while (c.moveToNext()) {
+			double hour = c.getInt(0);
+			double min = c.getInt(1);
+			double quant = c.getDouble(2);
+			list.add(hour);
+			list.add(min);
+			list.add(quant);
+		}
+		return list;
 	}
 }

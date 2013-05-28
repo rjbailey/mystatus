@@ -24,12 +24,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -49,11 +54,9 @@ public class AddPrescription extends Activity {
 	private final int TIME_PICKER_DIALOG_ID = 0;
 	private final int BNAME_ENTRY_ERROR_DIALOG_ID = 1;
 	private final int CNAME_ENTRY_ERROR_DIALOG_ID = 2;
-	private final int QUANTITY_ENTRY_ERROR_DIALOG_ID = 3;
-	private final int NOTIFICATION_ID = 0;
-	private final int DEFAULT_HOUR = 11;
-	private final int DEFAULT_MINUTE = 30;
-	private final String TAG = "mystatus.EditPrescriptionActivity";
+	private final int QUANTITY_OR_TIME_ENTRY_ERROR_DIALOG_ID = 3;
+	private final int NOTIFICATION_ID = 7;
+	private final String TAG = "mystatus.AddPrescriptionActivity";
 	
 	private EditText mBrandName;
 	private EditText mChemName;
@@ -101,19 +104,36 @@ public class AddPrescription extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_prescription);
+		
+		createDirForPics();
+		setGlobalVars();
 		if (savedInstanceState != null) {
 			String filename = savedInstanceState.getString("mFile");
 			//String filename = savedInstanceState.getString("mFile", "");
 			if (!filename.equals("")) {
 				mFile = new File(filename);
+				insertImage();
 			}
 		}
-		createDirForPics();
 		
-		setGlobalVars();
+		setArrays(savedInstanceState);
 		addListeners();
-		
-		
+		Bundle b = this.getIntent().getExtras();
+		if (b != null) {
+			String filename = b.getString("FILENAME");
+			mFile = new File(filename);
+			insertImage();
+			addTimeAndQuants(b);
+			mBrandName.setText(b.getString("BRAND_NAME"));
+			mChemName.setText(b.getString("CHEM_NAME"));
+			
+		} else if (savedInstanceState != null){
+			addTimeAndQuants(false);
+		}
+		addTimeListener();
+		if (currCount > 0) {
+			createDeleteButton(); // TODO: check correct time to do this
+		}
 	}
 	
 	@Override
@@ -121,12 +141,18 @@ public class AddPrescription extends Activity {
 		//TODO check correct
 		super.onSaveInstanceState(outState);
 		outState.putString("mFile", mFile.getAbsolutePath());
-	}
-	
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		mFile = new File(savedInstanceState.getString("mFile"));
+		outState.putIntArray("hours", hours);
+		outState.putIntArray("mins", mins);
+		int i = 0;
+		for (EditText et : mQuantTextList) {
+			String doub = et.getText().toString();
+			if (!doub.equals(""))
+				quants[i] = Double.parseDouble(et.getText().toString());
+			else
+				break;
+			i++;
+		}
+		outState.putDoubleArray("quants", quants);
 	}
 	
 	// set the views and lists
@@ -145,13 +171,24 @@ public class AddPrescription extends Activity {
 		mTimeLayoutList = new ArrayList<LinearLayout>();
 		mQuantTextList = new ArrayList<EditText>();
 		mTimeButtonList = new ArrayList<Button>();
-		hours = new int[10];
-		mins = new int[10];
-		quants = new double[10];
-		for (int i = 0; i < 10; i++) {
-			hours[i] = -1;
-			mins[i] = -1;
-			quants[i] = -1.0;
+		currCount = 0;
+		
+	}
+	
+	private void setArrays(Bundle b) {
+		if (b == null) {
+			hours = new int[10];
+			mins = new int[10];
+			quants = new double[10];
+			for (int i = 0; i < 10; i++) {
+				hours[i] = -1;
+				mins[i] = -1;
+				quants[i] = -1.0;
+			}
+		} else {
+			hours = b.getIntArray("hours");
+			mins = b.getIntArray("mins");
+			quants = b.getDoubleArray("quants");
 		}
 	}
 	
@@ -162,6 +199,10 @@ public class AddPrescription extends Activity {
 			@Override
 			public void onClick(View v) {
 				currCount--;
+				
+				hours[currCount] = -1;
+				mins[currCount] = -1;
+				quants[currCount] = -1.0;
 				
 				mQuantTextList.remove(currCount);
 				mTimeButtonList.remove(currCount);
@@ -177,91 +218,7 @@ public class AddPrescription extends Activity {
 					mDeleteTime.setClickable(false);
 				}
 			}
-		});
-		
-		// listener for button to make new notification slots
-		mAddTime.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// make user fill out previous quant and time before they can
-				// add another
-				if (currCount != 0 &&
-						(mQuantTextList.get(currCount - 1).getText().toString().equals("") ||
-						hours[currCount - 1] == -1)) {
-					Toast.makeText(AddPrescription.this,
-							"Please fill out the previous Quantity and Time fields",
-							Toast.LENGTH_LONG).show();
-				// can only add times if picture taken so that mFile doesn't go away
-				// TODO find alternative
-				} else if (mFile == null) {
-					Toast.makeText(AddPrescription.this, "Please take a picture first.",
-							Toast.LENGTH_LONG).show();
-				} else {
-					if (currCount == 0) {
-						createDeleteButton();
-					}
-					
-					// create name layout
-					LinearLayout quantLayout = new LinearLayout(AddPrescription.this);
-					LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					quantLayout.setLayoutParams(lp);
-					quantLayout.setOrientation(LinearLayout.HORIZONTAL);
-					
-					// create quant layout
-					TextView quantTextView = new TextView(AddPrescription.this, null,
-							android.R.attr.textAppearanceMedium);
-					quantTextView.setLayoutParams(lp);
-					quantTextView.setText(R.string.pres_quantity);
-					quantLayout.addView(quantTextView);
-					
-					EditText quantEditText = new EditText(AddPrescription.this);
-					LayoutParams quantEditTextLP = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
-					quantEditText.setLayoutParams(quantEditTextLP);
-					quantEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-					quantEditText.setId(currCount);
-					quantLayout.addView(quantEditText);
-					
-					TextView mgTextView = new TextView(AddPrescription.this, null,
-							android.R.attr.textAppearanceMedium);
-					mgTextView.setLayoutParams(lp);
-					mgTextView.setText(R.string.pres_mg);
-					quantLayout.addView(mgTextView);
-					
-					//create time layout
-					LinearLayout timeLayout = new LinearLayout(AddPrescription.this);
-					timeLayout.setLayoutParams(lp);
-					timeLayout.setOrientation(LinearLayout.HORIZONTAL);
-					
-					TextView timeTextView = new TextView(AddPrescription.this, null,
-							android.R.attr.textAppearanceMedium);
-					timeTextView.setLayoutParams(lp);
-					timeTextView.setText(R.string.pres_time);
-					timeLayout.addView(timeTextView);
-					
-					Button timeButton = new Button(AddPrescription.this);
-					timeButton.setLayoutParams(lp);
-					timeButton.setText(DEFAULT_HOUR + ":" + DEFAULT_MINUTE);
-					timeButton.setId(currCount);
-					timeButton.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							//view.setId(mQuantLayoutList.size());
-							showDialog(TIME_PICKER_DIALOG_ID);
-						}
-					});
-					timeLayout.addView(timeButton);
-					
-					//add name and time to mPresTimeQuant
-					mQuantTextList.add(quantEditText);
-					mTimeButtonList.add(timeButton);
-					mQuantLayoutList.add(quantLayout);
-					mTimeLayoutList.add(timeLayout);
-					mPresTimeQuant.addView(quantLayout);
-					mPresTimeQuant.addView(timeLayout);
-					currCount++;
-				}
-			}
-		});
+		});	
 		
 		// listener to start camera activity
 		mAddPic.setOnClickListener(new OnClickListener() {
@@ -307,12 +264,16 @@ public class AddPrescription extends Activity {
 				} else if (chemName.equals("")) {
 					showDialog(CNAME_ENTRY_ERROR_DIALOG_ID);
 				} else {
-					
+					for (int i = 0; i < currCount; i++) {
+						if (hours[i] == -1 || mins[i] == -1 || quants[i] == -1.0) {
+							showDialog(QUANTITY_OR_TIME_ENTRY_ERROR_DIALOG_ID);
+							// exit
+						}
+					}
 					// TODO: add a check that all times and quantities are filled
 					
 					Date today = new Date();
 					today.setSeconds(0);
-					enableNotifications(today.getTime(), NOTIFICATION_ID);
 					for (int i = 0; i < currCount; i++) {
 						if (currCount > quants.length) {
 							resizeArrayD(quants);
@@ -320,7 +281,12 @@ public class AddPrescription extends Activity {
 						quants[i] = Double.parseDouble(mQuantTextList.get(i).getText().toString());
 						today.setHours(hours[i]);
 						today.setMinutes(mins[i]);
-						enableNotifications(today.getTime(), NOTIFICATION_ID);
+						Bundle b = new Bundle();
+						b.putString("BRAND_NAME", brandName);
+						b.putString("CHEM_NAME", chemName);
+						b.putInt("HOUR", hours[i]);
+						b.putInt("MINUTE", mins[i]);
+						enableNotifications(today.getTime(), NOTIFICATION_ID, b);
 						saveToDatabase(quants[i], hours[i], mins[i]);
 					}
 					finish();
@@ -329,22 +295,199 @@ public class AddPrescription extends Activity {
 		});
 	}
 	
+	private void addTimeListener() {
+		// listener for button to make new notification slots
+		mAddTime.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// make user fill out previous quant and time before they can
+				// add another
+				if (currCount != 0 &&
+						(mQuantTextList.get(currCount - 1).getText().toString().equals("") ||
+						hours[currCount - 1] == -1)) {
+					Toast.makeText(AddPrescription.this,
+							"Please fill out the previous Quantity and Time fields",
+							Toast.LENGTH_LONG).show();
+				} else {
+					mDeleteTime.setVisibility(Button.VISIBLE);
+					mDeleteTime.setClickable(true);
+					addTimeAndQuants(true);
+				}
+			}
+		});
+	}
+	
+	private void addTimeAndQuants(Bundle b) {
+		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
+		List<Double> list = helper.getQuantTime(b.getString("BRAND_NAME"), b.getString("CHEM_NAME"));
+		
+		for (int i = 0; i < list.size(); i = i + 3) {
+			Double h = list.get(i);
+			int hour = (int) h.doubleValue();
+			Double m = list.get(i + 1);
+			int min = (int) m.doubleValue();
+			double quant = list.get(i + 2);
+			
+			// create name layout
+			LinearLayout quantLayout = new LinearLayout(AddPrescription.this);
+			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			quantLayout.setLayoutParams(lp);
+			quantLayout.setOrientation(LinearLayout.HORIZONTAL);
+			
+			// create quant layout
+			TextView quantTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			quantTextView.setLayoutParams(lp);
+			quantTextView.setText(R.string.pres_quantity);
+			quantLayout.addView(quantTextView);
+			
+			EditText quantEditText = new EditText(AddPrescription.this);
+			LayoutParams quantEditTextLP = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
+			quantEditText.setLayoutParams(quantEditTextLP);
+			quantEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+			quantEditText.setId(currCount);
+			quantEditText.setText(String.valueOf(quant));
+			quantLayout.addView(quantEditText);
+			
+			TextView mgTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			mgTextView.setLayoutParams(lp);
+			mgTextView.setText(R.string.pres_mg);
+			quantLayout.addView(mgTextView);
+			
+			//create time layout
+			LinearLayout timeLayout = new LinearLayout(AddPrescription.this);
+			timeLayout.setLayoutParams(lp);
+			timeLayout.setOrientation(LinearLayout.HORIZONTAL);
+			
+			TextView timeTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			timeTextView.setLayoutParams(lp);
+			timeTextView.setText(R.string.pres_time);
+			timeLayout.addView(timeTextView);
+			
+			Button timeButton = new Button(AddPrescription.this);
+			timeButton.setLayoutParams(lp);
+			if (min < 10) {
+				timeButton.setText(hour + ":0" + min);
+			} else {
+				timeButton.setText(hour + ":" + min);
+			}
+			timeButton.setId(currCount);
+			timeButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					//view.setId(mQuantLayoutList.size());
+					showDialog(TIME_PICKER_DIALOG_ID);
+				}
+			});
+			timeLayout.addView(timeButton);
+			
+			//add name and time to mPresTimeQuant
+			mQuantTextList.add(quantEditText);
+			mTimeButtonList.add(timeButton);
+			mQuantLayoutList.add(quantLayout);
+			mTimeLayoutList.add(timeLayout);
+			mPresTimeQuant.addView(quantLayout);
+			mPresTimeQuant.addView(timeLayout);
+			currCount++;
+		}
+	}
+	
+	private void addTimeAndQuants(boolean isForOnClick) {
+		int end;
+		if (isForOnClick)
+			end = 1;
+		else
+			end = hours.length;
+		for (int i = 0; i < end; i++) {
+			int hour = hours[i];
+			int min = mins[i];
+			double quant = quants[i];
+			
+			if (!isForOnClick && hour == -1 && min == -1 && quant == -1.0)
+				break;
+			
+			// create name layout
+			LinearLayout quantLayout = new LinearLayout(AddPrescription.this);
+			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			quantLayout.setLayoutParams(lp);
+			quantLayout.setOrientation(LinearLayout.HORIZONTAL);
+			
+			// create quant layout
+			TextView quantTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			quantTextView.setLayoutParams(lp);
+			quantTextView.setText(R.string.pres_quantity);
+			quantLayout.addView(quantTextView);
+			
+			EditText quantEditText = new EditText(AddPrescription.this);
+			LayoutParams quantEditTextLP = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
+			quantEditText.setLayoutParams(quantEditTextLP);
+			quantEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+			quantEditText.setId(currCount);
+			if (!isForOnClick && quant != -1.0)
+				quantEditText.setText(String.valueOf(quant));
+			quantLayout.addView(quantEditText);
+			
+			TextView mgTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			mgTextView.setLayoutParams(lp);
+			mgTextView.setText(R.string.pres_mg);
+			quantLayout.addView(mgTextView);
+			
+			//create time layout
+			LinearLayout timeLayout = new LinearLayout(AddPrescription.this);
+			timeLayout.setLayoutParams(lp);
+			timeLayout.setOrientation(LinearLayout.HORIZONTAL);
+			
+			TextView timeTextView = new TextView(AddPrescription.this, null,
+					android.R.attr.textAppearanceMedium);
+			timeTextView.setLayoutParams(lp);
+			timeTextView.setText(R.string.pres_time);
+			timeLayout.addView(timeTextView);
+			
+			Button timeButton = new Button(AddPrescription.this);
+			timeButton.setLayoutParams(lp);
+			if (!isForOnClick && hour != -1) {
+				if (min < 10) {
+					timeButton.setText(hour + ":0" + min);
+				} else {
+					timeButton.setText(hour + ":" + min);
+				}
+			}
+			timeButton.setId(currCount);
+			timeButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					//view.setId(mQuantLayoutList.size());
+					showDialog(TIME_PICKER_DIALOG_ID);
+				}
+			});
+			timeLayout.addView(timeButton);
+			
+			//add name and time to mPresTimeQuant
+			mQuantTextList.add(quantEditText);
+			mTimeButtonList.add(timeButton);
+			mQuantLayoutList.add(quantLayout);
+			mTimeLayoutList.add(timeLayout);
+			mPresTimeQuant.addView(quantLayout);
+			mPresTimeQuant.addView(timeLayout);
+			currCount++;
+		}
+	}
+	
 	// notify user of whether the camera successfully or unsuccessfully took a picture
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			// TODO: decide if this can be used
 			if (resultCode == RESULT_OK) {
-				/*Toast.makeText(AddPrescription.this, "Image saved to:\n" +
-	                     data.getData(), Toast.LENGTH_LONG).show();*/
 				super.onActivityResult(requestCode, resultCode, data);
 			} else if (resultCode == RESULT_CANCELED) {
 				// user canceled image capture
 			} else {
 				// Image capture failed
-				/*Toast.makeText(AddPrescription.this,
-						"Somthing went wrong while taking a picture. Please try again.",
-						Toast.LENGTH_LONG).show();*/
 			}
 		}
 	}
@@ -371,7 +514,7 @@ public class AddPrescription extends Activity {
 				});
 			return builderCN.create();
 		// notifies user that the quantity was not filled out
-		case QUANTITY_ENTRY_ERROR_DIALOG_ID:
+		case QUANTITY_OR_TIME_ENTRY_ERROR_DIALOG_ID:
 			AlertDialog.Builder builderQ = new AlertDialog.Builder(this);
 			builderQ.setMessage(R.string.dialog_quantity_warning)
 				.setPositiveButton(R.string.fire, new DialogInterface.OnClickListener() {
@@ -390,9 +533,10 @@ public class AddPrescription extends Activity {
 	}
 	
 	// Enables an AlarmManager to create an alarm when its time for the calendar event
-	private void enableNotifications(long startTime, int id) {
-		PendingIntent notifyIntent = PendingIntent.getService(this, id,
-				new Intent(this, PrescriptionNotificationService.class), 0);
+	private void enableNotifications(long startTime, int id, Bundle b) {
+		Intent i = new Intent(this, PrescriptionNotificationService.class);
+		i.putExtras(b);
+		PendingIntent notifyIntent = PendingIntent.getService(this, id, i, 0);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, startTime, 86400000, notifyIntent);
 		Log.i(TAG, "Enabled notifications");
@@ -415,28 +559,62 @@ public class AddPrescription extends Activity {
 	
 	// save the information to the database
 	private void saveToDatabase(double quant, int hour, int min) {
-		//Uri presUri;
-		/*ContentValues values = new ContentValues();
-		values.put(PrescriptionOpenHelper.BRAND_NAME, mBrandName.getText().toString());
-		values.put(PrescriptionOpenHelper.CHEMICAL_NAME, mChemName.getText().toString());
-		values.put(PrescriptionOpenHelper.QUANTITY, quant);
-		values.put(PrescriptionOpenHelper.HOUR, hour);
-		values.put(PrescriptionOpenHelper.MINUTE, min);
-		String filename = mFile.getAbsolutePath();
-		values.put(PrescriptionOpenHelper.PICTURE_FILENAME, filename);
-		// TODO: insert _ID
-		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
-		SQLiteDatabase db = helper.getWritableDatabase();
-		db.insert("prescriptions.db", null, values);
-		//presUri = db.insert(PrescriptionColumns.CONTENT_URI, values);*/
 		String brandName = mBrandName.getText().toString();
 		String chemName = mChemName.getText().toString();
 		String filename = mFile.getAbsolutePath();
 		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
 		helper.addNewPrescriptionNotification(brandName, chemName, filename, quant, hour, min);
+		// debugging help
 		int count = helper.getTotalCount();
 	}
+	
+	private void insertImage() {
+		//TODO
+		ImageView img = new ImageView(this);
+		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		img.setLayoutParams(lp);
+		Bitmap bm = decodeSampledBitmapFromResource(mFile.getAbsolutePath(), 200, 200);
+		Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bm, 200, 200, true));
+		img.setImageDrawable(d);
+		mPresTimeQuant.addView(img);
+		
+	}
 
+	private Bitmap decodeSampledBitmapFromResource(String pathName,
+	        int reqWidth, int reqHeight) {
+	    // First decode with inJustDecodeBounds=true to check dimensions
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(pathName, options);
+	    // Calculate inSampleSize
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+	    // Decode bitmap with inSampleSize set
+	    options.inJustDecodeBounds = false;
+	    return BitmapFactory.decodeFile(pathName, options);
+	}
+	
+	private int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+	
+	    if (height > reqHeight || width > reqWidth) {
+	
+	        // Calculate ratios of height and width to requested height and width
+	        final int heightRatio = Math.round((float) height / (float) reqHeight);
+	        final int widthRatio = Math.round((float) width / (float) reqWidth);
+	
+	        // Choose the smallest ratio as inSampleSize value, this will guarantee
+	        // a final image with both dimensions larger than or equal to the
+	        // requested height and width.
+	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+	    }
+	    return inSampleSize;
+	}
+	
 	private int[] resizeArrayI(int[] arr) {
 		int[] newArr = new int[arr.length * 2];
 		for (int i = 0; i < arr.length; i++) {

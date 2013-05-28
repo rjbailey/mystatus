@@ -103,7 +103,7 @@
 	<string name="dialog_bname_warning">Please fill out the "Brand Name" field.</string>
 	<string name="dialog_cname_warning">Please fill out the "Chemical Name" field.</string>
 	<string name="fire">OK</string>
-	<string name="dialog_quantity_warning">Please fill out the "Quantity" field.</string>
+	<string name="dialog_quantity_warning">Please fill out all the "Time" and "Quantity" fields.</string>
 	
 	<!-- Prescription Notification -->
 	<string name="pres_notification_title">myStatus</string>

@@ -48,16 +48,6 @@ public class ManagePrescriptionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_prescription);
-		// Show the Up button in the action bar.
-		
-		//mManagePres = (Button) findViewById(R.id.a_pres);
-		
-		/*mManagePres.setOnClickListener(new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			Log.d(TAG, "manage prescription button clicked");
-		}
-		});*/
 		
 		mCurrPres = (LinearLayout) findViewById(R.id.current_prescriptions);
 		
@@ -100,12 +90,12 @@ public class ManagePrescriptionActivity extends Activity {
 		for (int i = 0; i < names.size(); i = i + 3) {
 			Button presButton = new Button(ManagePrescriptionActivity.this);
 			presButton.setLayoutParams(lp);
-			String filename = names.get(i + 2);
+			final String filename = names.get(i + 2);
 			Bitmap bitmap = decodeSampledBitmapFromResource(filename, 200, 200);
 			Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 200, 200, true));
 			presButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
-			String brandName = names.get(i);
-			String chemName = names.get(i + 1);
+			final String brandName = names.get(i);
+			final String chemName = names.get(i + 1);
 			//presButton.setCompoundDrawables(img, null, null, null);
 			presButton.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
 			presButton.setText(brandName + " (" + chemName + ")");
@@ -113,7 +103,15 @@ public class ManagePrescriptionActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					Log.d(TAG, "Adding prescription button.");
-					startActivity(new Intent(ManagePrescriptionActivity.this, EditPrescription.class));
+					Intent intent = new Intent(ManagePrescriptionActivity.this, AddPrescription.class);
+					// add brand name and chemical name to the intent so when the activity
+					// is generated the correct prescription will display
+					Bundle bundle = new Bundle();
+					bundle.putString("BRAND_NAME", brandName);
+					bundle.putString("CHEM_NAME", chemName);
+					bundle.putString("FILENAME", filename);
+					intent.putExtras(bundle);
+					startActivity(intent);
 				}
 			});
 			mCurrPres.addView(presButton);
