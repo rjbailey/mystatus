@@ -24,8 +24,11 @@ import edu.washington.cs.mystatus.adapters.HierarchyListAdapter;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.logic.HierarchyElement;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 
 import android.app.ListActivity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +60,8 @@ public class FormHierarchyActivity extends ListActivity {
 
     FormIndex mStartIndex;
 
+	private ScreenOnOffReceiver screenReceiver;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,13 @@ public class FormHierarchyActivity extends ListActivity {
         setContentView(R.layout.hierarchy_layout);
 
         FormController formController = MyStatus.getInstance().getFormController();
+        
+        // adding screen on off receiver for turning off the screen correctly
+        // @CD
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        screenReceiver = new ScreenOnOffReceiver();
+        registerReceiver(screenReceiver, intentFilter);
         
         // We use a static FormEntryController to make jumping faster.
         mStartIndex = formController.getFormIndex();
@@ -126,6 +138,18 @@ public class FormHierarchyActivity extends ListActivity {
     }
 	
     @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
+	}
+
+	@Override
     protected void onStart() {
     	super.onStart();
 		MyStatus.getInstance().getActivityLogger().logOnStart(this); 

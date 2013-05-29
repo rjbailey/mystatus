@@ -2,9 +2,11 @@ package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,8 @@ public class GoalsActivity extends Activity {
 	private static final String TAG = "mystatus.CreateEventActivity";
 	
 	private Button mCreateActivity, mPrescriptions, mSideEffects;
+
+	private ScreenOnOffReceiver screenReceiver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,13 @@ public class GoalsActivity extends Activity {
 		setGlobalVariables();
 		
 		addListenersOnButtons();
+		
+		// adding screen on off receiver for turning off the screen correctly
+		// @CD
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 	}
 
 	private void addListenersOnButtons() {
@@ -82,6 +93,12 @@ public class GoalsActivity extends Activity {
 		 // connect to cache word to get 
         // @CD
         ((MyStatus)getApplicationContext()).connectCacheWord();
+        //screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
 	}
 	
 	

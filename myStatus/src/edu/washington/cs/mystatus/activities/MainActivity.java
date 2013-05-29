@@ -7,7 +7,10 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +23,7 @@ import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
 
@@ -34,6 +38,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 	private CacheWordActivityHandler mCacheWord;
 	private boolean firstTimeInitialize = false;
+	private ScreenOnOffReceiver screenReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,12 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 
 		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
+		// adding screen on off receiver for turning off the screen correctly
+		// @CD
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 		//mCacheWord.connectToService();
 		trackBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -186,6 +197,12 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     protected void onResume() {
         super.onResume();
         mCacheWord.onResume();
+        //screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	cleanUpTemporaryFiles();
+        	mCacheWord.manuallyLock();
+        	showLockScreen();
+        }
     }
     
     @Override
