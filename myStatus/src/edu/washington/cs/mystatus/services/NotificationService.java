@@ -1,5 +1,6 @@
 package edu.washington.cs.mystatus.services;
 
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.activities.SurveyListTabs;
 import edu.washington.cs.mystatus.application.MyStatus;
@@ -26,7 +27,7 @@ import android.util.Log;
  * @author Chuong Dao (chuongd@cs.washington.edu)
  * @author Emily Chien (eechien@cs.washington.edu)
  */
-public class NotificationService extends Service {
+public class NotificationService extends Service{
 
 	private static final String TAG = "NotificationService";
 
@@ -124,4 +125,5 @@ public class NotificationService extends Service {
 				
 		return nb.build();
 	}
+
 }
