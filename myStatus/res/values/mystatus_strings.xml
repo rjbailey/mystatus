@@ -108,8 +108,11 @@
 	<!--  Send form to Aggregate -->
 	<string name="send_form_action">Send Finalized Form</string>
 	<string name="admin_settings">Admin Settings</string>
-	
-	
+
+    <!-- Notifications -->
+    <string name="notification_dismiss">Dismiss</string>
+    <string name="notification_snooze">Snooze</string>
+
 	<!-- Prescription Notification -->
 	<string name="pres_notification_title">myStatus</string>
 	<string name="pres_notificaiton_text">This is your ___ reminder.</string>
