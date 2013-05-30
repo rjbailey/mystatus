@@ -44,6 +44,7 @@ import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import edu.washington.cs.mystatus.tasks.FormLoaderTask;
 import edu.washington.cs.mystatus.tasks.SaveToDiskTask;
 import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
@@ -60,6 +61,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -205,11 +207,17 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	private SharedPreferences mAdminPreferences;
 
+	private ScreenOnOffReceiver screenReceiver;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		// adding screen on off receiver for turning off the screen correctly
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 		// must be at the beginning of any activity that can be called from an
 		// external intent
 		try {
@@ -346,17 +354,14 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							} else {
 								instanceCursor.moveToFirst();
 								// need to change the instance path here to load the newly decrypted forms
-								// @CD
 								String instanceRealPath = instanceCursor
 										.getString(instanceCursor
 												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
 								// construct the foler path
-								// @CD
 								String instanceFolderName = instanceRealPath.substring
 															(instanceRealPath.lastIndexOf("/"),
 															 instanceRealPath.indexOf(".xml"));
 								// the newly constructed instance path
-								// @CD
 								instancePath = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 														+ instanceFolderName + File.separator
 														+ instanceFolderName+".xml";
@@ -1971,7 +1976,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				.getFormController();
 		dismissDialogs();
 		// connect cacheword
-		// @CD
 		((MyStatus)getApplicationContext()).disconnectCacheWord();
 		// make sure we're not already saving to disk. if we are, currentPrompt
 		// is getting constantly updated
@@ -2045,6 +2049,13 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			mBackButton.setVisibility(View.GONE);
 			mNextButton.setVisibility(View.GONE);
 		}
+		
+		//screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
 	}
 	
 	
@@ -2562,7 +2573,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	public void onWindowFocusChanged(boolean hasFocus) {		
 		 if (((MyStatus)getApplicationContext()).getCacheWordHandler().isLocked() && hasFocus){
 	            showLockScreen();
-	        } 
+	       } 
 	}
 	
 	/**

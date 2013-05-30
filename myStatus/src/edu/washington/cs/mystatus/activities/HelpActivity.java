@@ -2,8 +2,10 @@ package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,11 +33,19 @@ public class HelpActivity extends Activity {
 	private static final String EMERGENCY_NUM = "tel:911";
 	private static final String LIFELINE_NUM = "tel:1-800-273-8255"; // National Suicide Prevention Lifeline
 
+	private ScreenOnOffReceiver screenReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mystatus_help);
 		Log.d(TAG, "Help activity created.");
+		
+		// adding screen on off receiver for turning off the screen correctly
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 
 		Button callDoctor = (Button) findViewById(R.id.call_doctor);
 		Button callEmergencyServices = (Button) findViewById(R.id.call_emergency_services);
@@ -113,7 +123,6 @@ public class HelpActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onPause();
 		 // disconnect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
@@ -122,8 +131,13 @@ public class HelpActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		 // connect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).connectCacheWord();
+        //screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
 	}
 	
 	

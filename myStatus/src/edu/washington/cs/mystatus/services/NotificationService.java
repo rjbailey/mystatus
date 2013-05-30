@@ -113,9 +113,9 @@ public class NotificationService extends Service {
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))
 				.setContentText(getResources().getText(R.string.notification_message))
-				.setContentIntent(surveyIntent)
-				
+				.setContentIntent(surveyIntent)				
 				.setAutoCancel(true)
+
 				.setStyle(new NotificationCompat.BigTextStyle()
 						.bigText(getResources().getText(R.string.notification_message)))
 				.addAction(android.R.drawable.ic_menu_close_clear_cancel,

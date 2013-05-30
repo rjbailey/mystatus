@@ -25,6 +25,7 @@ import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
 import edu.washington.cs.mystatus.listeners.FormListDownloaderListener;
 import edu.washington.cs.mystatus.logic.FormDetails;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import edu.washington.cs.mystatus.tasks.DownloadFormListTask;
 import edu.washington.cs.mystatus.tasks.DownloadFormsTask;
 import edu.washington.cs.mystatus.utilities.WebUtils;
@@ -36,6 +37,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -116,6 +118,8 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
     private static final boolean EXIT = true;
     private static final boolean DO_NOT_EXIT = false;
     private boolean mShouldExit;
+
+	private ScreenOnOffReceiver screenReceiver;
     private static final String SHOULD_EXIT = "shouldexit";
 
 
@@ -129,6 +133,12 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
 
         // need white background before load
         getListView().setBackgroundColor(Color.WHITE);
+        
+        // adding screen on off receiver for turning off the screen correctly
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        screenReceiver = new ScreenOnOffReceiver();
+        registerReceiver(screenReceiver, intentFilter);
 
         mDownloadButton = (Button) findViewById(R.id.add_button);
         mDownloadButton.setEnabled(selectedItemCount() > 0);
@@ -541,8 +551,14 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
         }
         super.onResume();
         // connect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).connectCacheWord();
+        
+        //screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
     }
 
 
@@ -553,7 +569,6 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
         }
         super.onPause();
         // disconnect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).disconnectCacheWord();
     }
 

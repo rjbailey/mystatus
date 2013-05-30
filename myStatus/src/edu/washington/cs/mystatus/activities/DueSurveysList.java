@@ -63,7 +63,6 @@ public class DueSurveysList extends ListActivity {
 		// TODO Auto-generated method stub
 		super.onPause();
 		 // disconnect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
@@ -72,7 +71,6 @@ public class DueSurveysList extends ListActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		 // connect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).connectCacheWord();
 	}
 	

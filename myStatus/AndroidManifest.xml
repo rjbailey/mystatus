@@ -100,7 +100,8 @@
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" >
         </activity>
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormTypeListActivity">
+            android:name="edu.washington.cs.mystatus.activities.FormTypeListActivity"
+            android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity">
         </activity>
         <!--  TEST ACTIVITY PLOT -->
         <activity
@@ -230,6 +231,7 @@
                 <action android:name="edu.washington.cs.mystatus.FormSaved" />
             </intent-filter>
         </receiver>
+      
 		<!-- Cache word service needed for controlling password -->
         <service android:name="info.guardianproject.cacheword.CacheWordService" android:enabled="true" android:exported="false" />
         

@@ -16,6 +16,8 @@ import org.spongycastle.crypto.InvalidCipherTextException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.logic.HierarchyElement;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import edu.washington.cs.mystatus.tasks.FormLoaderTask;
 import edu.washington.cs.mystatus.utilities.DataEncryptionUtils;
 import edu.washington.cs.mystatus.utilities.FileUtils;
@@ -42,11 +45,19 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	ArrayList<String> reservedList;
 	ArrayList<ArrayList<HierarchyElement>> instanceData;
 	ProgressDialog progressDialog;
+	private ScreenOnOffReceiver screenReceiver;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.table_layout_list);
+		
+		// adding screen on off receiver for turning off the screen correctly
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
+		
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		instanceData = new ArrayList<ArrayList<HierarchyElement>>();
@@ -88,17 +99,14 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		String instancePath = instanceList.remove(0);
 		 		reservedList.add(instancePath);
 		 		// change the path and decryption here
-		 		// @CD
 		 		String instanceRealPath = instancePath;
 				// decrypt form needs to be submit here
 				 decryptFormNeedtoBeUploaded(instanceRealPath);
 				// construct the foler path
-				// @CD
 				String instanceFolderName = instanceRealPath.substring
 											(instanceRealPath.lastIndexOf("/"),
 											 instanceRealPath.indexOf(".xml"));
 				// the newly constructed instance path
-				// @CD
 				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 										+ instanceFolderName + File.separator
 										+ instanceFolderName+".xml";
@@ -115,17 +123,14 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		        String instancePath = instanceList.remove(0);
 		        reservedList.add(instancePath);
 		     // change the path and decryption here
-		 		// @CD
 		 		String instanceRealPath = instancePath;
 				// decrypt form needs to be submit here
 				 decryptFormNeedtoBeUploaded(instanceRealPath);
 				// construct the foler path
-				// @CD
 				String instanceFolderName = instanceRealPath.substring
 											(instanceRealPath.lastIndexOf("/"),
 											 instanceRealPath.indexOf(".xml"));
 				// the newly constructed instance path
-				// @CD
 				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 										+ instanceFolderName + File.separator
 										+ instanceFolderName+".xml";
@@ -311,6 +316,30 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	        c.moveToFirst();
 	        return c.getString(c.getColumnIndex(FormsColumns.FORM_FILE_PATH));
 	        
+	    }
+
+		@Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			super.onResume();
+			//screen is off and should be lock
+	        if (screenReceiver.wasOffBefore){
+	        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+	        	MyStatus.cleanUpTemporaryFiles();
+	        	finish();
+	        }
+		}
+		
+		
+		/**
+	     * show lock screen if not yet initialized
+	     */
+	    void showLockScreen() {
+	        Intent intent = new Intent(this, LockScreenActivity.class);
+	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	        intent.putExtra("originalIntent", getIntent());
+	        startActivity(intent);
+	        finish();
 	    }
 	
 

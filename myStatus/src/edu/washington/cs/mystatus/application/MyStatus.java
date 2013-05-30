@@ -37,6 +37,7 @@ import edu.washington.cs.mystatus.logic.FormController;
 import edu.washington.cs.mystatus.logic.PropertyManager;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.utilities.AgingCredentialsProvider;
+import edu.washington.cs.mystatus.utilities.FileUtils;
 
 import info.guardianproject.cacheword.CacheWordActivityHandler;
 import info.guardianproject.cacheword.CacheWordHandler;
@@ -64,7 +65,6 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
     public static final String LOG_PATH = ODK_ROOT + File.separator + "log";
     // Adding temp folder for using mediafiles temporarily.....
     // this will get clean up everytime the screen became locked
-    // @CD
     public static final String TEMP_MEDIA_PATH = ODK_ROOT+File.separator+"temp";
     public static final String TEMP_INSTANCE_PATH = ODK_ROOT+File.separator+"temp"+File.separator+"instances";
 
@@ -221,7 +221,6 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
     }
     
     // supports method for encrypting database
-    // @CD
     public synchronized void connectCacheWord(){
     	mCacheWordHandler.connectToService();
     }
@@ -246,6 +245,14 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
 	public void onCacheWordOpened() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * Helper used to clean up all files and folder under the temp folder
+	 */
+	public static void cleanUpTemporaryFiles(){
+		File f = new File (MyStatus.TEMP_MEDIA_PATH);
+		FileUtils.deleteAllFilesInDirectoryRecursively(f);
 	}
 
 }

@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.PrescriptionOpenHelper;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import edu.washington.cs.mystatus.services.NotificationService;
 import edu.washington.cs.mystatus.services.PrescriptionNotificationService;
 import android.net.Uri;
@@ -21,10 +23,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -81,6 +85,7 @@ public class AddPrescription extends Activity {
 	
 	private File mFile;
 	private File mDir;
+	private ScreenOnOffReceiver screenReceiver;
 	
 	// creates a Time Picker Dialog for time buttons that get added by user
 	private TimePickerDialog.OnTimeSetListener mAddedTimeSetListeners =
@@ -103,11 +108,18 @@ public class AddPrescription extends Activity {
 				}
 			};
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_prescription);
 		
+		// adding screen on off receiver for turning off the screen correctly
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
+
 		createDirForPics();
 		setGlobalVars();
 		if (savedInstanceState != null) {
@@ -617,6 +629,20 @@ public class AddPrescription extends Activity {
 	    return BitmapFactory.decodeFile(pathName, options);
 	}
 	
+	
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//screen is off and should be lock
+	    if (screenReceiver.wasOffBefore){
+	    	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+	    	MyStatus.cleanUpTemporaryFiles();
+	    	finish();
+	    }
+	}
+
 	private int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
 	    // Raw height and width of image

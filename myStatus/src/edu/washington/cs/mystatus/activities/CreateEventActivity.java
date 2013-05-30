@@ -1,7 +1,11 @@
 package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.R;
+import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +18,7 @@ public class CreateEventActivity extends Activity {
 
 	private Button mStartTime, mEndTime, mDate, mCreateEvent;
 	private EditText mActivityTitle;
+	private ScreenOnOffReceiver screenReceiver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,12 @@ public class CreateEventActivity extends Activity {
 		setGlobalVariables();
 		
 		addListenersOnButtons();
+		
+		// adding screen on off receiver for turning off the screen correctly
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 	}
 	
 	private void addListenersOnButtons() {
@@ -63,6 +74,20 @@ public class CreateEventActivity extends Activity {
 		mEndTime = (Button) findViewById(R.id.activity_time_end);
 		mCreateEvent = (Button) findViewById(R.id.finalize_event);
 	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
+	}
+	
+	
 	
 	// Will be switched with the showDialog() deprecated method
 	/*@SuppressLint("NewApi")

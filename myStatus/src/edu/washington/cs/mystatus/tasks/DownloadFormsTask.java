@@ -125,22 +125,18 @@ public class DownloadFormsTask extends
 	
 	                    // to avoid collision on media files need to create a same folder names inside the 
 	                    // temp folder
-	                    // @CD
 	                    String xmlFilePath = dl.getAbsolutePath();
 	                    String tempDir = xmlFilePath.substring(0, xmlFilePath.lastIndexOf("/"));
 	                    tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
 	                    
 	                    // create the temporary folder for cotaining the mediafile
-	                    // @CD
 	                    FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
 	                    
 	                    // need to decrypt the audio file first as it's now encrypted after downloaded
-	                    // @CD
 	                    String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
 	                    		+ File.separator + xmlFilePath.substring(xmlFilePath.lastIndexOf("/"))+"temp"
 	        					+xmlFilePath.substring(xmlFilePath.lastIndexOf("."));
 	                    // following the same process as media files
-	                    // @CD
 	                    File tempXmlFile = new File(tempPathFile);
 	                    FileInputStream fis = new FileInputStream(dl);
 	                    DataEncryptionUtils dataDecryption = new DataEncryptionUtils();
@@ -247,7 +243,6 @@ public class DownloadFormsTask extends
         
         // adding filename encryption to avoid exposed data
         // for now use base 64 encoding
-        // @CD
         String encryptedRootName = android.util.Base64.encodeToString(rootName.getBytes(), Base64.NO_WRAP);
                
         // proposed name of xml file...
@@ -256,7 +251,6 @@ public class DownloadFormsTask extends
         f = new File(path);
         while (f.exists()) {
         	// used encrypted name to avoid expose the extension
-        	// @CD
         	encryptedRootName = encryptedRootName + "_" + i + ".xml";
             path = MyStatus.FORMS_PATH + File.separator + encryptedRootName;
             f = new File(path);
@@ -361,7 +355,6 @@ public class DownloadFormsTask extends
 	                is = response.getEntity().getContent();
 	                os = new FileOutputStream(f);
 	                // adding encryption for file downloaded
-	                // @CD
 	                DataEncryptionUtils dataEncryption = new DataEncryptionUtils();
 	                dataEncryption.InitCiphers();
 //	                byte buf[] = new byte[1024];
