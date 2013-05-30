@@ -32,6 +32,9 @@ public class NotificationService extends Service {
 
 	private static final int NOTIFICATION_ID = 0;
 
+	private static final String ACTION_DISMISS = "dismiss";
+	private static final String ACTION_SNOOZE = "snooze";
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -41,6 +44,28 @@ public class NotificationService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "NotificationService started.");
 
+		String action = intent.getAction();
+		if (action == null) {
+			Log.d(TAG, "Notifying if needed.");
+			notifyIfNeeded();
+		} else if (action.equals(ACTION_DISMISS)) {
+			Log.d(TAG, "Dismissing notification.");
+			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.cancel(NOTIFICATION_ID);
+		} else if (action.equals(ACTION_SNOOZE)) {
+			// TODO: Support snooze for notifications
+			Log.d(TAG, "Snooze requested--dismissing notification instead.");
+			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.cancel(NOTIFICATION_ID);
+		}
+
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	/**
+	 * Generate a notification if at least one passive survey needs a response.
+	 */
+	public void notifyIfNeeded() {
 		// mark all passive forms that satisfy their predicate as needing a response
 		PredicateSolver.evaluateAllPredicates();
 
@@ -54,17 +79,15 @@ public class NotificationService extends Service {
 
 		// only generate a notification if there's at least one survey to respond to
 		if (c.getCount() > 0) {
-			Log.i(TAG, "Generating notification");
+			Log.i(TAG, c.getCount() + " survey(s) need a response. Generating notification...");
 			Notification surveyNotification = createSurveyNotification();
 			surveyNotification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			// TODO startId or NOTIFICATION_ID
-			nm.notify(startId, surveyNotification);
+			nm.notify(NOTIFICATION_ID, surveyNotification);
 		} else {
 			Log.i(TAG, "No surveys need a response, so no notification was generated.");
 		}
-
-		return super.onStartCommand(intent, flags, startId);
+		c.close();
 	}
 
 	/**
@@ -74,14 +97,31 @@ public class NotificationService extends Service {
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
 				new Intent(this, SurveyListTabs.class), Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		NotificationCompat.BigTextStyle bigViewStyle = new NotificationCompat.BigTextStyle();
+		// Sets up the Snooze and Dismiss action buttons that will appear in the
+		// big view of the notification.
+		Intent dismissIntent = new Intent(this, NotificationService.class);
+		dismissIntent.setAction(ACTION_DISMISS);
+		PendingIntent piDismiss = PendingIntent.getService(this, 0, dismissIntent, 0);
+
+		Intent snoozeIntent = new Intent(this, NotificationService.class);
+		snoozeIntent.setAction(ACTION_SNOOZE);
+		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, 0);
 
 		NotificationCompat.Builder nb = new NotificationCompat.Builder(this)
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))
 				.setContentText(getResources().getText(R.string.notification_message))
 				.setContentIntent(surveyIntent)
+				
 				.setAutoCancel(true)
-				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+				.setStyle(new NotificationCompat.BigTextStyle()
+						.bigText(getResources().getText(R.string.notification_message)))
+				.addAction(android.R.drawable.ic_menu_close_clear_cancel,
+						getString(R.string.notification_dismiss), piDismiss)
+				.addAction(android.R.drawable.ic_menu_recent_history,
+						getString(R.string.notification_snooze), piSnooze);
 				
 		return nb.build();
 	}
