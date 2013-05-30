@@ -52,7 +52,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -121,11 +120,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	}
 	
 	// methods need to be added to subscribed to cache word
-	// @CD
 	@Override
 	public void onCacheWordUninitialized() {
 		// clear out all the old history
-		// @CD
 		// clean up temp folder
 		File f1 = new File (MyStatus.FORMS_PATH);
 		File f2 = new File (MyStatus.INSTANCES_PATH);
@@ -140,7 +137,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	@Override
 	public void onCacheWordLocked() {
 		// such as close database and erase all decrypted media files
-		// @CD
 		// clean up temp folder
 		cleanUpTemporaryFiles();
 	}
@@ -148,7 +144,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     @Override
 	public void onCacheWordOpened() {
 		// reset database for first time log in 
-	    // @CD
 	    if (firstTimeInitialize){
 	        MyStatus.createODKDirs();
 	        getContentResolver().update(FormsColumns.CONTENT_URI, null, "resetDb", null);
@@ -161,7 +156,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	// disconnect cacheword service
 	// we have to do this as cacheword wont trigger timeout 
 	// until we dont have any more subscribers.
-	// @CD
 	@Override
     protected void onPause() {
         super.onPause();
@@ -169,7 +163,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     }
 	
 	// reconnect cache word service after disconnect
-	// @CD
     @Override
     protected void onResume() {
         super.onResume();
@@ -202,7 +195,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     
     // make sure all the temporary files got clean up 
  	// right after the app destroy
- 	// @CD
 	@Override
 	protected void onDestroy() {
 		cleanUpTemporaryFiles();
@@ -211,7 +203,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	
 	/**
 	 * Helper used to clean up all files and folder under the temp folder
-	 * @CD
 	 */
 	private void cleanUpTemporaryFiles(){
 		File f = new File (MyStatus.TEMP_MEDIA_PATH);

@@ -60,7 +60,6 @@ public abstract class ODKSQLiteOpenHelper {
     private SQLiteDatabase mDatabase = null;
     private boolean mIsInitializing = false;
     // adding cache word handler for protecting
-    // @CD
     private CacheWordHandler mHandler;
     private Context mContext;
 
@@ -84,7 +83,6 @@ public abstract class ODKSQLiteOpenHelper {
         mFactory = factory;
         mNewVersion = version;
         // initialize handler
-        // @CD
         mHandler = null;
         mContext = ctx;
     }
@@ -104,13 +102,11 @@ public abstract class ODKSQLiteOpenHelper {
      */
     public synchronized SQLiteDatabase getWritableDatabase() {
     	// adding if the database is locked or not
-    	// @CD
         if (mDatabase != null && mDatabase.isOpen() && !mDatabase.isReadOnly() && !mHandler.isLocked() ) {
             return mDatabase; // The database is already open for business
         }
         
         // if the cacheword is locke throw exception
-        // @CD
         if (mHandler == null)
         	mHandler = ((MyStatus)mContext).getCacheWordHandler();
         if( mHandler.isLocked() ) 
@@ -199,7 +195,6 @@ public abstract class ODKSQLiteOpenHelper {
         }
         
         // if the cacheword is locked throw exception
-        // @CD
         if (mHandler == null)
         	mHandler = ((MyStatus)mContext).getCacheWordHandler();
         

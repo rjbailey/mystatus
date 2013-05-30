@@ -54,7 +54,6 @@ public class InstanceProvider extends ContentProvider {
     private static final int DATABASE_VERSION = 3;
     private static final String INSTANCES_TABLE_NAME = "instances";
     // used for reset dB if neccessary
-    // @CD
     private static final String RESET_DATABASE = "resetDb";
     private static HashMap<String, String> sInstancesProjectionMap;
 
@@ -322,7 +321,6 @@ public class InstanceProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
     	// adding some trick to reset database at first login as well as 
     	// keep supporting for older api
-    	// @CD
     	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
     		resetDatabase();
     		return 0;
@@ -390,7 +388,6 @@ public class InstanceProvider extends ContentProvider {
     }
     
     // reset database used for first initiaized
-    // @CD
     public void resetDatabase() {
         mDbHelper.close();
         mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());

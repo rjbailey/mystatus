@@ -186,16 +186,13 @@ public class GridWidget extends QuestionWidget {
                 
                 	 // to avoid collision on media files need to create a same folder names inside the 
                     // temp folder
-                    // @CD
                     String tempDir = imageFilename.substring(0, imageFilename.lastIndexOf("/"));
                     tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
                     
                     // create the temporary folder for cotaining the mediafile
-                    // @CD
                     FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
                     
                     // need to decrypt the audio file first 
-                    // @CD
                     String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
                     		+ File.separator + imageFilename.substring(imageFilename.lastIndexOf("/"))+"temp"
         					+imageFilename.substring(imageFilename.lastIndexOf("."));

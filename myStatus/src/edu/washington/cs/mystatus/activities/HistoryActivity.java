@@ -37,7 +37,6 @@ public class HistoryActivity extends ListActivity {
 		//LinearLayout layout = (LinearLayout) findViewById(R.id.)
 		
 		// initialize hashmap for storing data types
-		// @CD
 		ArrayAdapter<String> adapter ;
 		formTypes = new HashMap<String, Integer>();
 		formNameList = new ArrayList<String>();
@@ -59,7 +58,6 @@ public class HistoryActivity extends ListActivity {
                 null, sortOrder);
         
         // iterate through cursor to get all form types......
-        // @CD
         if (c.getCount() > 0){
             c.moveToFirst();
             do {
@@ -88,7 +86,6 @@ public class HistoryActivity extends ListActivity {
 			long id) {
 		String formName = (String) getListAdapter().getItem(position);
 		// start activity to display the list of forms
-		// @CD
 		Intent intent = new Intent (this, FormTypeListActivity.class);
 		intent.putExtra("formName", formName);
 		startActivity(intent);
@@ -122,7 +119,6 @@ public class HistoryActivity extends ListActivity {
 		// TODO Auto-generated method stub
 		super.onPause();
 		 // disconnect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
