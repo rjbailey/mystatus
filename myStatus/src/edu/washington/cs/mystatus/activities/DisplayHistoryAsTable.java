@@ -325,6 +325,13 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	        
 	    }
 
+	    @Override
+		protected void onPause() {
+			// TODO Auto-generated method stub
+			super.onPause();
+			((MyStatus)getApplicationContext()).disconnectCacheWord();
+		}
+
 		@Override
 		protected void onResume() {
 			// TODO Auto-generated method stub
@@ -335,8 +342,8 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 	        	MyStatus.cleanUpTemporaryFiles();
 	        	finish();
 	        }
+	        ((MyStatus)getApplicationContext()).connectCacheWord();
 		}
-		
 		
 		/**
 	     * show lock screen if not yet initialized

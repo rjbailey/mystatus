@@ -59,8 +59,8 @@ public class NotificationService extends Service{
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.cancel(NOTIFICATION_ID);
 		}
-
-		return super.onStartCommand(intent, flags, startId);
+		// fixed this for preventing services from restart
+		return START_NOT_STICKY;
 	}
 
 	/**

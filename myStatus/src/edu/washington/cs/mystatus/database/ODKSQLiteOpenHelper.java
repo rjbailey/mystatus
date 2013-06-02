@@ -20,12 +20,15 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import org.apache.commons.codec.binary.Hex;
+import org.spongycastle.crypto.signers.ECNRSigner;
 
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.utilities.Base64Wrapper;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabase.CursorFactory;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
@@ -109,7 +112,7 @@ public abstract class ODKSQLiteOpenHelper {
             return mDatabase; // The database is already open for business
         }
         
-        // if the cacheword is locke throw exception
+        // if the cacheword is locked throw exception
         // @CD
         if (mHandler == null)
         	mHandler = ((MyStatus)mContext).getCacheWordHandler();
@@ -203,9 +206,25 @@ public abstract class ODKSQLiteOpenHelper {
         if (mHandler == null)
         	mHandler = ((MyStatus)mContext).getCacheWordHandler();
         
-        if( mHandler.isLocked() ) 
-        	throw new SQLiteException("Database locked. Decryption key unavailable.");
-
+        // work around for now...
+        // @CD
+        Base64Wrapper b64w = null;
+        try {
+			 b64w = new Base64Wrapper();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        byte [] encryption_key = null;
+        if( mHandler.isLocked() ){
+        	SharedPreferences prefs = mContext.getSharedPreferences("mystatus", mContext.MODE_PRIVATE);
+        	String key = prefs.getString("encoded_key", null);
+        	if (key != null)
+        		encryption_key = b64w.decode(key);
+        }
+        	//throw new SQLiteException("Database locked. Decryption key unavailable.");
+        
         try {
             return getWritableDatabase();
         } catch (SQLiteException e) {
@@ -219,7 +238,12 @@ public abstract class ODKSQLiteOpenHelper {
             mIsInitializing = true;
             String path = mPath + File.separator + mName;
             // mContext.getDatabasePath(mName).getPath();
-            db = SQLiteDatabase.openDatabase(path, encodeRawKey(mHandler.getEncryptionKey()), mFactory, SQLiteDatabase.OPEN_READONLY);
+            // allow open readable database
+            if (mHandler.isLocked() && encryption_key != null)
+            	db = SQLiteDatabase.openDatabase(path, encodeRawKey(encryption_key), mFactory, SQLiteDatabase.OPEN_READONLY);
+            else 
+            	db = SQLiteDatabase.openDatabase(path, encodeRawKey(mHandler.getEncryptionKey()), mFactory, SQLiteDatabase.OPEN_READONLY);
+            
             if (db.getVersion() != mNewVersion) {
                 throw new SQLiteException("Can't upgrade read-only database from version "
                         + db.getVersion() + " to " + mNewVersion + ": " + path);

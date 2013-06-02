@@ -11,7 +11,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
+import edu.washington.cs.mystatus.utilities.Base64Wrapper;
 import edu.washington.cs.mystatus.utilities.FileUtils;
 
 
@@ -176,6 +179,19 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	        MyStatus.createODKDirs();
 	        getContentResolver().update(FormsColumns.CONTENT_URI, null, "resetDb", null);
 	        getContentResolver().update(InstanceColumns.CONTENT_URI, null, "resetDb", null);
+	        // work around for notification services....
+	        SharedPreferences prefs = getSharedPreferences("mystatus", MODE_PRIVATE);
+	        Base64Wrapper b64w;
+			try {
+				b64w = new Base64Wrapper();
+				SharedPreferences.Editor editor = prefs.edit();
+		        editor.putString("encoded_key", b64w.encodeToString(mCacheWord.getEncryptionKey()));
+		        editor.commit();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
 	        firstTimeInitialize = false;
 	    }
 		

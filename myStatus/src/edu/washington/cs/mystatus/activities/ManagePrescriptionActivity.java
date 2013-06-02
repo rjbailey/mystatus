@@ -5,7 +5,9 @@ import java.util.List;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.R.layout;
 import edu.washington.cs.mystatus.R.menu;
+import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.PrescriptionOpenHelper;
+import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -19,7 +21,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,11 +47,17 @@ public class ManagePrescriptionActivity extends Activity {
 	//private Button mManagePres; //replaced later by entries from db
 	private Button mAddNewPres;
 	private LinearLayout mCurrPres;
+	private ScreenOnOffReceiver screenReceiver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_prescription);
+		
+		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		screenReceiver = new ScreenOnOffReceiver();
+		registerReceiver(screenReceiver, intentFilter);
 		
 		mCurrPres = (LinearLayout) findViewById(R.id.current_prescriptions);
 		
@@ -154,5 +164,25 @@ public class ManagePrescriptionActivity extends Activity {
 	    }
 	
 	    return inSampleSize;
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
+        ((MyStatus)getApplicationContext()).connectCacheWord();
 	}
 }

@@ -33,22 +33,22 @@ public class DueSurveysList extends ListActivity {
 		setContentView(R.layout.mystatus_surveys);
 		Log.d(TAG, "Surveys activity created.");
 
-//		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
-//		String selection = FormsColumns.NEEDS_RESPONSE + " = 1 AND "
-//				+ FormsColumns.FORM_TYPE + " = ?";
-//		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
-//		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-//
-//		String[] data = new String[] {
-//				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
-//		};
-//		int[] view = new int[] {
-//				R.id.text1, R.id.text2, R.id.text3
-//		};
-//
-//		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
-//				this, R.layout.two_item, c, data, view);
-//		setListAdapter(instances);
+		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
+		String selection = FormsColumns.NEEDS_RESPONSE + " = 1 AND "
+				+ FormsColumns.FORM_TYPE + " = ?";
+		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
+		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+
+		String[] data = new String[] {
+				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
+		};
+		int[] view = new int[] {
+				R.id.text1, R.id.text2, R.id.text3
+		};
+
+		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
+				this, R.layout.two_item, c, data, view);
+		setListAdapter(instances);
 	}
 
 	

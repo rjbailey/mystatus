@@ -631,18 +631,6 @@ public class AddPrescription extends Activity {
 	}
 	
 	
-	
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		//screen is off and should be lock
-	    if (screenReceiver.wasOffBefore){
-	    	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
-	    	MyStatus.cleanUpTemporaryFiles();
-	    	finish();
-	    }
-	}
 
 	private int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -663,6 +651,27 @@ public class AddPrescription extends Activity {
 	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
 	    }
 	    return inSampleSize;
+	}
+	
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		((MyStatus)getApplicationContext()).disconnectCacheWord();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//screen is off and should be lock
+        if (screenReceiver.wasOffBefore){
+        	((MyStatus)getApplicationContext()).getCacheWordHandler().manuallyLock();
+        	MyStatus.cleanUpTemporaryFiles();
+        	finish();
+        }
+        ((MyStatus)getApplicationContext()).connectCacheWord();
 	}
 	
 	private int[] resizeArrayI(int[] arr) {
