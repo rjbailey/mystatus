@@ -521,22 +521,18 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
 	                
 	                
 	                // change the file path here .....
-	                // @CD
 	                
 	             // need to change the instance path here to load the newly decrypted forms
-					// @CD
 					String instanceRealPath = c
 							.getString(c
 									.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
 					// decrypt form needs to be submit here
 					 decryptFormNeedtoBeUploaded(instanceRealPath);
 					// construct the foler path
-					// @CD
 					String instanceFolderName = instanceRealPath.substring
 												(instanceRealPath.lastIndexOf("/"),
 												 instanceRealPath.indexOf(".xml"));
 					// the newly constructed instance path
-					// @CD
 					String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 											+ instanceFolderName + File.separator
 											+ instanceFolderName+".xml";

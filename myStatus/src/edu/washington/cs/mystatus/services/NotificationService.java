@@ -98,7 +98,8 @@ public class NotificationService extends Service{
 		// Create a PendingIntent that will launch an ODK Collect survey
 		PendingIntent surveyIntent = PendingIntent.getActivity(this, 0,
 				new Intent(this, SurveyListTabs.class), Intent.FLAG_ACTIVITY_NEW_TASK);
-
+		
+		NotificationCompat.BigTextStyle bigViewStyle = new NotificationCompat.BigTextStyle();
 		// Sets up the Snooze and Dismiss action buttons that will appear in the
 		// big view of the notification.
 		Intent dismissIntent = new Intent(this, NotificationService.class);
@@ -113,9 +114,9 @@ public class NotificationService extends Service{
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))
 				.setContentText(getResources().getText(R.string.notification_message))
-				.setContentIntent(surveyIntent)
+				.setContentIntent(surveyIntent)				
 				.setAutoCancel(true)
-				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+
 				.setStyle(new NotificationCompat.BigTextStyle()
 						.bigText(getResources().getText(R.string.notification_message)))
 				.addAction(android.R.drawable.ic_menu_close_clear_cancel,

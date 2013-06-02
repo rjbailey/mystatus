@@ -214,7 +214,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -355,17 +354,14 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							} else {
 								instanceCursor.moveToFirst();
 								// need to change the instance path here to load the newly decrypted forms
-								// @CD
 								String instanceRealPath = instanceCursor
 										.getString(instanceCursor
 												.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
 								// construct the foler path
-								// @CD
 								String instanceFolderName = instanceRealPath.substring
 															(instanceRealPath.lastIndexOf("/"),
 															 instanceRealPath.indexOf(".xml"));
 								// the newly constructed instance path
-								// @CD
 								instancePath = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 														+ instanceFolderName + File.separator
 														+ instanceFolderName+".xml";
@@ -1980,7 +1976,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				.getFormController();
 		dismissDialogs();
 		// connect cacheword
-		// @CD
 		((MyStatus)getApplicationContext()).disconnectCacheWord();
 		// make sure we're not already saving to disk. if we are, currentPrompt
 		// is getting constantly updated

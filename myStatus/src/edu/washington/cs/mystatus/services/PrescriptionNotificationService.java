@@ -68,8 +68,7 @@ public class PrescriptionNotificationService extends Service {
 			.setContentTitle(getResources().getText(R.string.pres_notification_title))
 			.setContentText(notifText)
 			.setContentIntent(prescriptionIntent)
-			.setAutoCancel(true)
-			.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+			.setAutoCancel(true);
 
 		return nb.build();
 	}

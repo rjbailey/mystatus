@@ -55,7 +55,6 @@ public class FormsProvider extends ContentProvider {
     private static final int DATABASE_VERSION = 5;
     private static final String FORMS_TABLE_NAME = "forms";
     // used for reset dB if neccessary
-    // @CD
     private static final String RESET_DATABASE = "resetDb";
     
     private static HashMap<String, String> sFormsProjectionMap;
@@ -475,7 +474,6 @@ public class FormsProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
     	// adding some trick to reset database at first login as well as 
     	// keep supporting for older api
-    	// @CD
     	if ((values == null) && (where.equals(RESET_DATABASE)) && (whereArgs == null)){
     		resetDatabase();
     		return 0;
@@ -639,7 +637,6 @@ public class FormsProvider extends ContentProvider {
         sFormsProjectionMap.put(FormsColumns.NEEDS_RESPONSE, FormsColumns.NEEDS_RESPONSE);
     }
     // reset database used for first initiaized
-    // @CD
     public void resetDatabase() {
         mDbHelper.close();
         mDbHelper = new DatabaseHelper(DATABASE_NAME, this.getContext());

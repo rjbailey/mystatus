@@ -53,7 +53,6 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		setContentView(R.layout.table_layout_list);
 		
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -100,17 +99,14 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		 		String instancePath = instanceList.remove(0);
 		 		reservedList.add(instancePath);
 		 		// change the path and decryption here
-		 		// @CD
 		 		String instanceRealPath = instancePath;
 				// decrypt form needs to be submit here
 				 decryptFormNeedtoBeUploaded(instanceRealPath);
 				// construct the foler path
-				// @CD
 				String instanceFolderName = instanceRealPath.substring
 											(instanceRealPath.lastIndexOf("/"),
 											 instanceRealPath.indexOf(".xml"));
 				// the newly constructed instance path
-				// @CD
 				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 										+ instanceFolderName + File.separator
 										+ instanceFolderName+".xml";
@@ -127,17 +123,14 @@ public class DisplayHistoryAsTable extends Activity implements FormLoaderListene
 		        String instancePath = instanceList.remove(0);
 		        reservedList.add(instancePath);
 		     // change the path and decryption here
-		 		// @CD
 		 		String instanceRealPath = instancePath;
 				// decrypt form needs to be submit here
 				 decryptFormNeedtoBeUploaded(instanceRealPath);
 				// construct the foler path
-				// @CD
 				String instanceFolderName = instanceRealPath.substring
 											(instanceRealPath.lastIndexOf("/"),
 											 instanceRealPath.indexOf(".xml"));
 				// the newly constructed instance path
-				// @CD
 				String instance = MyStatus.TEMP_INSTANCE_PATH + File.separator 
 										+ instanceFolderName + File.separator
 										+ instanceFolderName+".xml";

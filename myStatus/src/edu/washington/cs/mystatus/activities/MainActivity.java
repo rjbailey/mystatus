@@ -5,7 +5,6 @@ import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.io.File;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,9 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.Button;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.preferences.AdminPreferencesActivity;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
@@ -56,7 +55,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		// adding activity handler
 		mCacheWord = new CacheWordActivityHandler(this);
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -111,32 +109,13 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			((MyStatus)getApplicationContext()).connectCacheWord();
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
-//		case R.id.action_odk_menu:
-//			((MyStatus)getApplicationContext()).connectCacheWord();
-//			startActivity(new Intent(this, MainMenuActivity.class));
-//			return true;
-		// bring odk admin to mystatus...
-		// @CD
-		case R.id.admin_settings:
-			MyStatus.getInstance()
-			.getActivityLogger()
-			.logAction(this, "onOptionsItemSelected",
-					"MENU_PREFERENCES");
-			// unlock database
+		case R.id.action_odk_settings:
 			((MyStatus)getApplicationContext()).connectCacheWord();
-			Intent ig = new Intent(this, PreferencesActivity.class);
-			startActivity(ig);
+			startActivity(new Intent(this, PreferencesActivity.class));
 			return true;
-		// adding sending function...no need to use ODK menu anymore
-		// @CD
-		case R.id.send_form_settings:
-			MyStatus.getInstance().getActivityLogger().logAction(this, "uploadForms", "click");
-			Intent i = new Intent(this,
-			InstanceUploaderList.class);
-			// unlock database
-			// @CD
+		case R.id.action_odk_admin_settings:
 			((MyStatus)getApplicationContext()).connectCacheWord();
-			startActivity(i);
+			startActivity(new Intent(this, AdminPreferencesActivity.class));
 			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);
@@ -144,11 +123,9 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	}
 	
 	// methods need to be added to subscribed to cache word
-	// @CD
 	@Override
 	public void onCacheWordUninitialized() {
 		// clear out all the old history
-		// @CD
 		// clean up temp folder
 		File f1 = new File (MyStatus.FORMS_PATH);
 		File f2 = new File (MyStatus.INSTANCES_PATH);
@@ -163,18 +140,13 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	@Override
 	public void onCacheWordLocked() {
 		// such as close database and erase all decrypted media files
-		// @CD
 		// clean up temp folder
 		cleanUpTemporaryFiles();
 	}
 	
-	//TODO: might need to figure out how to support api8
-	// but it's hard otherwise we have to modify the content provider
-	// which will be not good as long term it would be hard to modify.
     @Override
 	public void onCacheWordOpened() {
 		// reset database for first time log in 
-	    // @CD
 	    if (firstTimeInitialize){
 	        MyStatus.createODKDirs();
 	        getContentResolver().update(FormsColumns.CONTENT_URI, null, "resetDb", null);
@@ -200,7 +172,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	// disconnect cacheword service
 	// we have to do this as cacheword wont trigger timeout 
 	// until we dont have any more subscribers.
-	// @CD
 	@Override
     protected void onPause() {
         super.onPause();
@@ -208,7 +179,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     }
 	
 	// reconnect cache word service after disconnect
-	// @CD
     @Override
     protected void onResume() {
         super.onResume();
@@ -241,7 +211,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
     
     // make sure all the temporary files got clean up 
  	// right after the app destroy
- 	// @CD
 	@Override
 	protected void onDestroy() {
 		cleanUpTemporaryFiles();
@@ -250,7 +219,6 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 	
 	/**
 	 * Helper used to clean up all files and folder under the temp folder
-	 * @CD
 	 */
 	private void cleanUpTemporaryFiles(){
 		File f = new File (MyStatus.TEMP_MEDIA_PATH);

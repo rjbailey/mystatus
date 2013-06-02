@@ -109,7 +109,6 @@ public final class ActivityLogger {
 	private SQLiteDatabase mDb = null;
 	private boolean mIsOpen = false;
 	//aDding cached word for security
-	// @CD
 	private CacheWordHandler mCacheWord;
 	// We buffer scroll actions to make sure there aren't too many pauses
 	// during scrolling.  This list is flushed every time any other type of
@@ -130,7 +129,6 @@ public final class ActivityLogger {
     	if (!mLoggingEnabled || mIsOpen) return;
         try {
         	// initialize mCacheWord
-        	// @CD
             mDbHelper = new DatabaseHelper(context);
             mDb = mDbHelper.getWritableDatabase();
             mIsOpen = true;

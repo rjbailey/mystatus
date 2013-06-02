@@ -58,7 +58,6 @@ public class FormTypeListActivity extends ListActivity {
 		Intent intent = this.getIntent();
 		
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -79,7 +78,6 @@ public class FormTypeListActivity extends ListActivity {
 				null, sortOrder);
 		
 		// add button for display table
-		// @CD
 		btnViewTable = (Button) findViewById(R.id.viewAsTable);
 		btnViewTable.setOnClickListener(new OnClickListener() {
             

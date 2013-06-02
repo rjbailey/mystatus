@@ -403,7 +403,6 @@ public class SaveToDiskTask extends AsyncTask<Void, String, Integer> {
         // data should be encrypted here
         try {
         	// encrypted saved instance here
-        	// @CD
         	File file = new File (path);
         	// remove old files
         	if (file.exists())

@@ -71,7 +71,6 @@ public class FormHierarchyActivity extends ListActivity {
         FormController formController = MyStatus.getInstance().getFormController();
         
         // adding screen on off receiver for turning off the screen correctly
-        // @CD
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         screenReceiver = new ScreenOnOffReceiver();

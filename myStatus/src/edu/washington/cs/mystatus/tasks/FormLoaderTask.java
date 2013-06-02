@@ -177,7 +177,6 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                 ByteArrayInputStream bis = new ByteArrayInputStream(dataDecryption.CBCDecryptAsByteArray
                 		 						(fis, formXml.length()));
                 // use byte decrypted data
-                // @CD
                 //fd = XFormUtils.getFormFromInputStream(fis);
                 fd = XFormUtils.getFormFromInputStream(bis);
                 if (fd == null) {
@@ -222,7 +221,6 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             		usedSavepoint = true;
             		instance = shadowInstance;
             		// need to do some decryption here also
-            		// @CD
             		DataEncryptionUtils ec = new DataEncryptionUtils();
             		ec.InitCiphers();
             		FileInputStream in = new FileInputStream(shadowInstance);

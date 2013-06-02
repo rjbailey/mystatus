@@ -1,0 +1,25 @@
+Intro:
+	why take a survey
+	WHY!!!
+User sees notification to take surveys
+Taps notification to go to the surveys
+Fills out the given survey and submit
+	We have Aggregate open so we can see it appear
+A patient might want...
+User checks out the history (will have been filled out more than this one time)
+difference between aggregate and what we see on phone.
+
+Then we go to aggregate to show how the physician can get the history
+Then user sees a prescription notification pop up.
+	We describe how it only has the time so that if others are using the phone
+	they won't know specifically what that means
+User doesn't remember what pill looks like so tap the notification
+Realizing they dont want to take the pill because the side effects are too much,
+	they go to the help screen to call their doctor
+	
+Problem->way we handled it
+surveys filled out
+figure out if we want to add in security
+lock or not -> have it come up not at all or only beginning
+	may be distracting
+	

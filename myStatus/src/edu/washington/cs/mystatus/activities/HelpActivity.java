@@ -42,7 +42,6 @@ public class HelpActivity extends Activity {
 		Log.d(TAG, "Help activity created.");
 		
 		// adding screen on off receiver for turning off the screen correctly
-		// @CD
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenOnOffReceiver();
@@ -124,7 +123,6 @@ public class HelpActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onPause();
 		 // disconnect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
@@ -133,7 +131,6 @@ public class HelpActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		 // connect to cache word to get 
-        // @CD
         ((MyStatus)getApplicationContext()).connectCacheWord();
         //screen is off and should be lock
         if (screenReceiver.wasOffBefore){

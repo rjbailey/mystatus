@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_odk_menu">ODK Collect menu</string>
-	<string name="action_settings">ODK Settings</string>
     <!-- Main menu -->
     <string name="button_track">Track</string>
     <string name="button_track_subtext">how I\'m doing</string>
@@ -12,6 +10,11 @@
     <string name="button_plan_subtext">activities and goals</string>
     <string name="button_help">Get help</string>
     <string name="button_help_subtext">contact someone</string>
+
+    <!-- Main menu options menu -->
+    <string name="action_settings">Notification Settings</string>
+    <string name="action_odk_settings">ODK General Settings</string>
+    <string name="action_odk_admin_settings">ODK Admin Settings</string>
 
     <!-- Survey list -->
     <string name="due_surveys">Surveys due</string>
@@ -108,7 +111,7 @@
 	<!--  Send form to Aggregate -->
 	<string name="send_form_action">Send Finalized Form</string>
 	<string name="admin_settings">Admin Settings</string>
-
+	
     <!-- Notifications -->
     <string name="notification_dismiss">Dismiss</string>
     <string name="notification_snooze">Snooze</string>
@@ -116,4 +119,8 @@
 	<!-- Prescription Notification -->
 	<string name="pres_notification_title">myStatus</string>
 	<string name="pres_notificaiton_text">This is your ___ reminder.</string>
+	
+	<!-- Survey Notification -->
+	<string name="dismiss">Dismiss</string>
+	<string name="snooze">Snooze</string>
 </resources>

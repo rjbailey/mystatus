@@ -115,32 +115,26 @@ public class MediaLayout extends RelativeLayout {
             }
             // to avoid collision on media files need to create a same folder names inside the 
             // temp folder
-            // @CD
             String tempDir = videoFilename.substring(0, videoFilename.lastIndexOf("/"));
             tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
             
             // create the temporary folder for cotaining the mediafile
-            // @CD
             FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
             
             // need to decrypt the audio file first 
-            // @CD
             String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
             		+ File.separator + videoFilename.substring(videoFilename.lastIndexOf("/"))+"temp"
 					+videoFilename.substring(videoFilename.lastIndexOf(".")+1);
             // check if the file is already exist or not
             // add some number to make the file unique
-            // @CD
             final File tf = new File (tempPathFile);
             // this needed to be use in a thread
-            // @CD
             final String videoThreadFileName = videoFilename;
             final ProgressDialog progressDialog = new ProgressDialog(getContext());
 			progressDialog.show();
 			progressDialog.setTitle("Loading Video files");
 			progressDialog.setMessage("Please Wait ...");
             // adding thread to avoid UI not responding for long decryption which will cause the error message pop out
-            // @CD
             new Thread(){
           	  public void run(){
           		  // if file exist NOT need to decrypt again
@@ -167,7 +161,6 @@ public class MediaLayout extends RelativeLayout {
           		  // need to set new file path
           		  // TODO: might need to change the way we play video so we can get rid of 
           		  // the temporary file....
-          		  // @CD
           		  i.setDataAndType(Uri.fromFile(tf), "video/*");
           		  try {
           			  progressDialog.cancel();
@@ -247,11 +240,9 @@ public class MediaLayout extends RelativeLayout {
                 tempDir1 = tempDir1.substring(tempDir1.lastIndexOf("/")+1);
                 
                 // create the temporary folder for cotaining the mediafile
-                // @CD
                 FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir1);
                 
                 // need to decrypt the audio file first 
-                // @CD
                 String tempPathFile1 = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir1 
                 		+ File.separator +  imageFilename.substring( imageFilename.lastIndexOf("/"))+"temp"
     					+ imageFilename.substring( imageFilename.lastIndexOf("."));
@@ -287,23 +278,19 @@ public class MediaLayout extends RelativeLayout {
 //                        	
 //                        	// to avoid collision on media files need to create a same folder names inside the 
 //                            // temp folder
-//                            // @CD
 //                        	//
                         	String imageRealPath = ReferenceManager._()
                                     .DeriveReference(bigImageURI).getLocalURI();
                            
                         	// to avoid collision on media files need to create a same folder names inside the 
                             // temp folder
-                            // @CD
                             String tempDir = imageRealPath.substring(0, imageRealPath.lastIndexOf("/"));
                             tempDir = tempDir.substring(tempDir.lastIndexOf("/")+1);
                             
                             // create the temporary folder for cotaining the mediafile
-                            // @CD
                             FileUtils.createFolder(MyStatus.TEMP_MEDIA_PATH +File.separator+tempDir);
                             
                             // need to decrypt the audio file first 
-                            // @CD
                             String tempPathFile = MyStatus.TEMP_MEDIA_PATH +File.separator+ tempDir 
                             		+ File.separator + imageRealPath.substring(imageRealPath.lastIndexOf("/"))+"temp"
                 					+imageRealPath.substring(imageRealPath.lastIndexOf("."));
