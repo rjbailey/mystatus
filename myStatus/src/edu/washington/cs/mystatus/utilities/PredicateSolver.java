@@ -84,6 +84,8 @@ public class PredicateSolver {
      *         predicate or its input values are invalid, returns true.
      */
     private static boolean evaluatePredicate(Cursor c) {
+        // TODO: Each predicate should be extracted into its own method.
+
         int formId = c.getInt(0);
         String formName = c.getString(1);
         Log.d(TAG, "Evaluating predicate for Form #" + formId + ": " + formName);
@@ -98,7 +100,7 @@ public class PredicateSolver {
         if (c.isNull(3)) {
             Log.i(TAG, "The survey has never been filled out.");
 
-            if (predicate.contains("daysDelayed:")) {
+            if (predicate.startsWith("daysDelayed:")) {
                 // Delayed surveys only need a response if it's been at least
                 // N days since the survey was downloaded.
 
@@ -116,7 +118,9 @@ public class PredicateSolver {
                 long millisPerDay = 24 * 60 * 60 * 1000;
                 long daysElapsed = (now - subscriptionDate) / millisPerDay;
 
-                return daysElapsed >= daysToDelay;
+                boolean result = daysElapsed >= daysToDelay;
+                Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
+                return result;
             }
             // All other surveys need a response if they've never had one.
             return true;
@@ -127,8 +131,27 @@ public class PredicateSolver {
             return false;
         }
 
+        Long now = Long.valueOf(System.currentTimeMillis());
         Long lastResponseTime = c.getLong(3);
+        
+        if (predicate.startsWith("daysSinceLastResponse:")) {
+            long daysInPeriod;
+            try {
+                daysInPeriod = Long.valueOf(predicate.split(":")[1]);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
+                return true;
+            }
+            
+            long millisPerDay = 24 * 60 * 60 * 1000;
+            long daysElapsed = (now - lastResponseTime) / millisPerDay;
+            
+            boolean result = daysElapsed >= daysInPeriod;
+            Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
+            return result;
+        }
 
+        // simple number-of-milliseconds predicate
         Long waitTime;
         try {
             waitTime = Long.parseLong(predicate);
@@ -137,7 +160,6 @@ public class PredicateSolver {
             // always display passive forms with an invalid predicate
             return true;
         }
-        Long now = Long.valueOf(System.currentTimeMillis());
 
         boolean result = (lastResponseTime + waitTime) < now;
         Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
