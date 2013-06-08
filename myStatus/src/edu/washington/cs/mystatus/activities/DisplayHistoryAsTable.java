@@ -21,7 +21,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract.Instances;
 import android.view.Gravity;
 import android.widget.TableLayout;
 import android.widget.TableRow;

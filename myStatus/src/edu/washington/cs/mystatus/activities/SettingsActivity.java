@@ -9,31 +9,23 @@ import edu.washington.cs.mystatus.services.NotificationService;
 import edu.washington.cs.mystatus.utilities.CalendarCreator;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TimePicker;
-import android.widget.TimePicker.OnTimeChangedListener;
 
 /**
  * SettingsActivity provides a UI for managing notification settings.
@@ -364,7 +356,6 @@ public class SettingsActivity extends Activity {
 	}
 	
 	private int[] getDates(Date today) {
-		int x = -7; // value that 
 		int[] dates = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE};
 		Calendar cal = Calendar.getInstance();

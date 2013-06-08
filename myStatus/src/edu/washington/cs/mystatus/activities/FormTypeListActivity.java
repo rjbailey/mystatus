@@ -16,7 +16,6 @@ import org.spongycastle.crypto.InvalidCipherTextException;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.odk.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.odk.provider.InstanceProvider;
 import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI;
 import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
@@ -37,16 +36,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class FormTypeListActivity extends ListActivity {
-	private static final boolean EXIT = true;
 	private static final boolean DO_NOT_EXIT = false;
 	private AlertDialog mAlertDialog;
 	private Button btnViewTable;

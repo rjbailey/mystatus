@@ -3,8 +3,6 @@ package edu.washington.cs.mystatus.activities;
 import java.util.List;
 
 import edu.washington.cs.mystatus.R;
-import edu.washington.cs.mystatus.R.layout;
-import edu.washington.cs.mystatus.R.menu;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.database.PrescriptionOpenHelper;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
@@ -12,26 +10,17 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 
 /**
  * 

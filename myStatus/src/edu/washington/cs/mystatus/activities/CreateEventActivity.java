@@ -10,14 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TimePicker;
 
 public class CreateEventActivity extends Activity {
 
 	private Button mStartTime, mEndTime, mDate, mCreateEvent;
-	private EditText mActivityTitle;
 	private ScreenOnOffReceiver screenReceiver;
 	
 	@Override
@@ -68,7 +64,6 @@ public class CreateEventActivity extends Activity {
 	}
 	
 	private void setGlobalVariables() {
-		mActivityTitle = (EditText) findViewById(R.id.set_activity_title);
 		mDate = (Button) findViewById(R.id.activity_date_button);
 		mStartTime = (Button) findViewById(R.id.activity_time_start);
 		mEndTime = (Button) findViewById(R.id.activity_time_end);

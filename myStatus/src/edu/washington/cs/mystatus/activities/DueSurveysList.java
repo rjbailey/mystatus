@@ -52,25 +52,6 @@ public class DueSurveysList extends ListActivity {
 		setListAdapter(instances);
 	}
 
-	
-	private void refreshQueryList (){
-		String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
-		String selection = FormsColumns.NEEDS_RESPONSE + " = 1 AND "
-				+ FormsColumns.FORM_TYPE + " = ?";
-		String[] selectionArgs = { Integer.toString(FormTypes.PASSIVE) };
-		Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-
-		String[] data = new String[] {
-				FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
-		};
-		int[] view = new int[] {
-				R.id.text1, R.id.text2, R.id.text3
-		};
-
-		SimpleCursorAdapter instances = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION,
-				this, R.layout.two_item, c, data, view);
-		setListAdapter(instances);
-	}
 	@Override
 	protected void onListItemClick(ListView listView, View view, int position, long id) {
 		long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);

@@ -7,7 +7,6 @@ import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;

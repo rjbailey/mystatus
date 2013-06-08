@@ -23,13 +23,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -61,7 +58,6 @@ public class AddPrescription extends Activity {
 	private final int BNAME_ENTRY_ERROR_DIALOG_ID = 1;
 	private final int CNAME_ENTRY_ERROR_DIALOG_ID = 2;
 	private final int QUANTITY_OR_TIME_ENTRY_ERROR_DIALOG_ID = 3;
-	private final int NOTIFICATION_ID = 7;
 	private final String TAG = "mystatus.AddPrescriptionActivity";
 	
 	private EditText mBrandName;

@@ -6,7 +6,6 @@ import java.util.List;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI;
 import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
 
 import android.app.ListActivity;
@@ -14,11 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
