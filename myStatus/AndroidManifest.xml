@@ -42,7 +42,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="14"
         android:targetSdkVersion="17" >
     </uses-sdk>
 
@@ -136,21 +136,21 @@
         </service>
         
         <provider
-            android:name="edu.washington.cs.mystatus.providers.FormsProvider"
+            android:name="edu.washington.cs.mystatus.odk.provider.FormsProvider"
             android:authorities="edu.washington.cs.mystatus.provider.odk.forms"
             android:exported="false" />
         <provider
-            android:name="edu.washington.cs.mystatus.providers.InstanceProvider"
+            android:name="edu.washington.cs.mystatus.odk.provider.InstanceProvider"
             android:authorities="edu.washington.cs.mystatus.provider.odk.instances"
             android:exported="false" />
 
         <activity
-            android:name="edu.washington.cs.mystatus.activities.MainMenuActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.MainMenuActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormEntryActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
@@ -189,10 +189,10 @@
             android:name="edu.washington.cs.mystatus.odk.activities.InstanceUploaderActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.preferences.PreferencesActivity"
+            android:name="edu.washington.cs.mystatus.odk.preferences.PreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.preferences.AdminPreferencesActivity"
+            android:name="edu.washington.cs.mystatus.odk.preferences.AdminPreferencesActivity"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.odk.activities.FormHierarchyActivity"
@@ -218,11 +218,11 @@
         
         <!-- Enable Shortcuts for Command Actions -->
         <activity
-            android:name="edu.washington.cs.mystatus.activities.AndroidShortcuts"
+            android:name="edu.washington.cs.mystatus.odk.activities.AndroidShortcuts"
             android:label="ODK Form"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <receiver
-            android:name="edu.washington.cs.mystatus.receivers.NetworkReceiver"
+            android:name="edu.washington.cs.mystatus.odk.receivers.NetworkReceiver"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

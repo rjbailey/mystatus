@@ -20,8 +20,8 @@ import java.util.List;
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.utilities.InfoLogger;
-import edu.washington.cs.mystatus.widgets.GeoPointWidget;
+import edu.washington.cs.mystatus.odk.utilities.InfoLogger;
+import edu.washington.cs.mystatus.odk.widgets.GeoPointWidget;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

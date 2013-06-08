@@ -21,13 +21,13 @@ import android.view.View;
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.odk.activities.FormDownloadList;
-import edu.washington.cs.mystatus.preferences.AdminPreferencesActivity;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.preferences.AdminPreferencesActivity;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.utilities.Base64Wrapper;
+import edu.washington.cs.mystatus.odk.utilities.FileUtils;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
-import edu.washington.cs.mystatus.utilities.Base64Wrapper;
-import edu.washington.cs.mystatus.utilities.FileUtils;
 
 
 /**

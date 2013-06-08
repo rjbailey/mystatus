@@ -45,8 +45,8 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.utilities.InfoLogger;
-import edu.washington.cs.mystatus.widgets.GeoPointWidget;
+import edu.washington.cs.mystatus.odk.utilities.InfoLogger;
+import edu.washington.cs.mystatus.odk.widgets.GeoPointWidget;
 
 public class GeoPointMapActivity extends MapActivity implements LocationListener {
 

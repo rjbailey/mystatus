@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.listeners.DeleteInstancesListener;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
-import edu.washington.cs.mystatus.tasks.DeleteInstancesTask;
+import edu.washington.cs.mystatus.odk.listeners.DeleteInstancesListener;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.tasks.DeleteInstancesTask;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;

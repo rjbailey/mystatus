@@ -32,12 +32,12 @@ import org.opendatakit.httpclientandroidlib.impl.client.BasicCookieStore;
 import org.opendatakit.httpclientandroidlib.protocol.BasicHttpContext;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 
-import edu.washington.cs.mystatus.database.ActivityLogger;
-import edu.washington.cs.mystatus.logic.FormController;
-import edu.washington.cs.mystatus.logic.PropertyManager;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.utilities.AgingCredentialsProvider;
-import edu.washington.cs.mystatus.utilities.FileUtils;
+import edu.washington.cs.mystatus.odk.database.ActivityLogger;
+import edu.washington.cs.mystatus.odk.logic.FormController;
+import edu.washington.cs.mystatus.odk.logic.PropertyManager;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.utilities.AgingCredentialsProvider;
+import edu.washington.cs.mystatus.odk.utilities.FileUtils;
 
 import info.guardianproject.cacheword.CacheWordActivityHandler;
 import info.guardianproject.cacheword.CacheWordHandler;

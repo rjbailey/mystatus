@@ -20,10 +20,10 @@ import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.LockScreenActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
-import edu.washington.cs.mystatus.receivers.NetworkReceiver;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.receivers.NetworkReceiver;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;

@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormTypes;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormsColumns;
 
 /**
  * PredicateSolver should parse and evaluate the predicates of all passive forms

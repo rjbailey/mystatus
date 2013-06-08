@@ -6,8 +6,8 @@ import java.util.List;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
 
 import android.app.ListActivity;
 import android.content.Intent;

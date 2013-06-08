@@ -20,10 +20,10 @@ import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
 import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.adapters.HierarchyListAdapter;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.logic.FormController;
-import edu.washington.cs.mystatus.logic.HierarchyElement;
+import edu.washington.cs.mystatus.odk.adapters.HierarchyListAdapter;
+import edu.washington.cs.mystatus.odk.logic.FormController;
+import edu.washington.cs.mystatus.odk.logic.HierarchyElement;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
 
 import android.app.ListActivity;

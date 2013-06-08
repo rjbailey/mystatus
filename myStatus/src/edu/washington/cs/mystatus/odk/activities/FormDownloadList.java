@@ -22,14 +22,14 @@ import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.activities.LockScreenActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
-import edu.washington.cs.mystatus.listeners.FormListDownloaderListener;
-import edu.washington.cs.mystatus.logic.FormDetails;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.listeners.FormDownloaderListener;
+import edu.washington.cs.mystatus.odk.listeners.FormListDownloaderListener;
+import edu.washington.cs.mystatus.odk.logic.FormDetails;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.tasks.DownloadFormListTask;
+import edu.washington.cs.mystatus.odk.tasks.DownloadFormsTask;
+import edu.washington.cs.mystatus.odk.utilities.WebUtils;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
-import edu.washington.cs.mystatus.tasks.DownloadFormListTask;
-import edu.washington.cs.mystatus.tasks.DownloadFormsTask;
-import edu.washington.cs.mystatus.utilities.WebUtils;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -23,11 +23,11 @@ import java.util.Set;
 import edu.washington.cs.mystatus.R;
 
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.listeners.InstanceUploaderListener;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
-import edu.washington.cs.mystatus.tasks.InstanceUploaderTask;
-import edu.washington.cs.mystatus.utilities.WebUtils;
+import edu.washington.cs.mystatus.odk.listeners.InstanceUploaderListener;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.tasks.InstanceUploaderTask;
+import edu.washington.cs.mystatus.odk.utilities.WebUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
