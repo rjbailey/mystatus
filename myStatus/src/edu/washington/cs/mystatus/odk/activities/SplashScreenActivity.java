@@ -12,7 +12,7 @@
  * the License.
  */
 
-package edu.washington.cs.mystatus.activities;
+package edu.washington.cs.mystatus.odk.activities;
 
 import edu.washington.cs.mystatus.R;
 

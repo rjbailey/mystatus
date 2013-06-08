@@ -13,7 +13,7 @@
  * the License.
  */
 
-package edu.washington.cs.mystatus.activities;
+package edu.washington.cs.mystatus.odk.activities;
 
 import java.io.File;
 import java.io.FileNotFoundException;

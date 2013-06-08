@@ -1,6 +1,7 @@
 package edu.washington.cs.mystatus.activities;
 
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.odk.activities.FormEntryActivity;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
 import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 import edu.washington.cs.mystatus.utilities.VersionHidingCursorAdapter;

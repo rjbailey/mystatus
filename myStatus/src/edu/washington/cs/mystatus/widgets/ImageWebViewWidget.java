@@ -22,8 +22,8 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.activities.FormEntryActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.odk.activities.FormEntryActivity;
 import edu.washington.cs.mystatus.utilities.MediaUtils;
 
 import android.app.Activity;

@@ -21,10 +21,10 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import edu.washington.cs.mystatus.R;
 
-import edu.washington.cs.mystatus.activities.FormEntryActivity;
-import edu.washington.cs.mystatus.activities.GeoPointActivity;
-import edu.washington.cs.mystatus.activities.GeoPointMapActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
+import edu.washington.cs.mystatus.odk.activities.FormEntryActivity;
+import edu.washington.cs.mystatus.odk.activities.GeoPointActivity;
+import edu.washington.cs.mystatus.odk.activities.GeoPointMapActivity;
 
 import android.app.Activity;
 import android.content.Context;

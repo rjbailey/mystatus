@@ -12,7 +12,7 @@
  * the License.
  */
 
-package edu.washington.cs.mystatus.activities;
+package edu.washington.cs.mystatus.odk.activities;
 
 import info.guardianproject.cacheword.CacheWordHandler;
 
@@ -32,6 +32,7 @@ import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.xpath.XPathTypeMismatchException;
 import edu.washington.cs.mystatus.R;
 
+import edu.washington.cs.mystatus.activities.LockScreenActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.AdvanceToNextListener;
 import edu.washington.cs.mystatus.listeners.FormLoaderListener;

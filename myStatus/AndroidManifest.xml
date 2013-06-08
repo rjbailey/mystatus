@@ -157,36 +157,36 @@
             android:theme="@style/myStatus.Track"
             android:parentActivityName="edu.washington.cs.mystatus.activities.SurveyListTabs" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.DrawActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.DrawActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.InstanceChooserList"
+            android:name="edu.washington.cs.mystatus.odk.activities.InstanceChooserList"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.InstanceChooserTabs"
+            android:name="edu.washington.cs.mystatus.odk.activities.InstanceChooserTabs"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormChooserList"
+            android:name="edu.washington.cs.mystatus.odk.activities.FormChooserList"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormManagerList"
+            android:name="edu.washington.cs.mystatus.odk.activities.FormManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormDownloadList"
+            android:name="edu.washington.cs.mystatus.odk.activities.FormDownloadList"
             android:label="@string/app_name"
             android:theme="@style/myStatus.Setup"
             android:parentActivityName="edu.washington.cs.mystatus.activities.MainActivity" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.DataManagerList"
+            android:name="edu.washington.cs.mystatus.odk.activities.DataManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FileManagerTabs"
+            android:name="edu.washington.cs.mystatus.odk.activities.FileManagerTabs"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.InstanceUploaderList"
+            android:name="edu.washington.cs.mystatus.odk.activities.InstanceUploaderList"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.InstanceUploaderActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.InstanceUploaderActivity"
             android:label="@string/app_name" />
         <activity
             android:name="edu.washington.cs.mystatus.preferences.PreferencesActivity"
@@ -195,16 +195,16 @@
             android:name="edu.washington.cs.mystatus.preferences.AdminPreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.FormHierarchyActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.FormHierarchyActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.GeoPointActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.GeoPointActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.GeoPointMapActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.GeoPointMapActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="edu.washington.cs.mystatus.activities.SplashScreenActivity"
+            android:name="edu.washington.cs.mystatus.odk.activities.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Dialog" >
         </activity>

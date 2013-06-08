@@ -12,7 +12,7 @@
  * the License.
  */
 
-package edu.washington.cs.mystatus.activities;
+package edu.washington.cs.mystatus.odk.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +20,7 @@ import java.util.Set;
 
 import edu.washington.cs.mystatus.R;
 
+import edu.washington.cs.mystatus.activities.LockScreenActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.listeners.FormDownloaderListener;
 import edu.washington.cs.mystatus.listeners.FormListDownloaderListener;

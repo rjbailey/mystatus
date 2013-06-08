@@ -1,4 +1,4 @@
-package edu.washington.cs.mystatus;
+package edu.washington.cs.mystatus.utilities;
 
 import java.util.Calendar;
 

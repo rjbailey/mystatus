@@ -6,7 +6,7 @@ import java.util.TimeZone;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.services.NotificationService;
-import edu.washington.cs.mystatus.CalendarCreator;
+import edu.washington.cs.mystatus.utilities.CalendarCreator;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;

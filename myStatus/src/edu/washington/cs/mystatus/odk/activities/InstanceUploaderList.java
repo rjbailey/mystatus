@@ -12,12 +12,13 @@
  * the License.
  */
 
-package edu.washington.cs.mystatus.activities;
+package edu.washington.cs.mystatus.odk.activities;
 
 import java.util.ArrayList;
 
 import edu.washington.cs.mystatus.R;
 
+import edu.washington.cs.mystatus.activities.LockScreenActivity;
 import edu.washington.cs.mystatus.application.MyStatus;
 import edu.washington.cs.mystatus.preferences.PreferencesActivity;
 import edu.washington.cs.mystatus.providers.InstanceProviderAPI;
