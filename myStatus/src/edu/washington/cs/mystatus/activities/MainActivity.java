@@ -6,13 +6,10 @@ import info.guardianproject.cacheword.ICacheWordSubscriber;
 import java.io.File;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,13 +17,14 @@ import android.view.View;
 
 import edu.washington.cs.mystatus.R;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.preferences.AdminPreferencesActivity;
-import edu.washington.cs.mystatus.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
-import edu.washington.cs.mystatus.providers.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.activities.FormDownloadList;
+import edu.washington.cs.mystatus.odk.preferences.AdminPreferencesActivity;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.odk.provider.InstanceProviderAPI.InstanceColumns;
+import edu.washington.cs.mystatus.odk.utilities.Base64Wrapper;
+import edu.washington.cs.mystatus.odk.utilities.FileUtils;
 import edu.washington.cs.mystatus.receivers.ScreenOnOffReceiver;
-import edu.washington.cs.mystatus.utilities.Base64Wrapper;
-import edu.washington.cs.mystatus.utilities.FileUtils;
 
 
 /**
@@ -72,7 +70,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		setupBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Setup button clicked");
+				Log.d(TAG, "Subscribe button clicked");
 				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 			}
 		});

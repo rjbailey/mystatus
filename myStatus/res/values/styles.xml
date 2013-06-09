@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <color name="background_color">#e5e5e5</color>
     <color name="track_color">#529452</color>
     <color name="setup_color">#3f9fe0</color>
     <color name="plan_color">#805180</color>
     <color name="help_color">#f3832d</color>
-
-    <style name="myStatus">
-      <item name="android:windowBackground">@color/background_color</item>
-    </style>
 
     <style name="btn_menu">
         <item name="android:layout_width">match_parent</item>

@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>GAD-7</h:title>
+    <model predicate="daysSinceLastResponse:14">
+      <submission action="https://uwmystatus.appspot.com/submission" method="form-data-post"/>
+      <instance>
+        <GAD-7 id="gad7">
+          <introduction/>
+          <nervous/>
+          <control/>
+          <worrying/>
+          <relaxing/>
+          <restless/>
+          <irritable/>
+          <afraid/>
+          <difficulty/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </GAD-7>
+      </instance>
+      <bind nodeset="/GAD-7/introduction" readonly="true()" type="string"/>
+      <bind nodeset="/GAD-7/nervous" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/control" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/worrying" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/relaxing" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/restless" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/irritable" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/afraid" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/difficulty" relevant=" /GAD-7/nervous  &gt; 0 or  /GAD-7/control  &gt; 0 or  /GAD-7/worrying  &gt; 0 or  /GAD-7/relaxing  &gt; 0 or  /GAD-7/restless  &gt; 0 or  /GAD-7/irritable  &gt; 0 or  /GAD-7/afraid  &gt; 0" required="true()" type="select1"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/GAD-7/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/GAD-7/introduction">
+      <label>Over the last 2 weeks, how often have you been bothered by any of the following problems?</label>
+      <hint>Swipe the screen to continue to the first question.</hint>
+    </input>
+    <select1 appearance="quick" ref="/GAD-7/nervous">
+      <label>Feeling nervous, anxious, or on edge</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/control">
+      <label>Not being able to stop or control worrying</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/worrying">
+      <label>Worrying too much about different things</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/relaxing">
+      <label>Trouble relaxing</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/restless">
+      <label>Being so restless that it’s hard to sit still</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/irritable">
+      <label>Becoming easily annoyed or irritable</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/afraid">
+      <label>Feeling afraid as if something awful might happen</label>
+      <item>
+        <label>Not at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Several days</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>More than half the days</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Nearly every day</label>
+        <value>3</value>
+      </item>
+    </select1>
+    <select1 appearance="quick" ref="/GAD-7/difficulty">
+      <label>How difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?</label>
+      <item>
+        <label>Not difficult at all</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Somewhat difficult</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>Very difficult</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Extremely difficult</label>
+        <value>3</value>
+      </item>
+    </select1>
+  </h:body>
+</h:html>

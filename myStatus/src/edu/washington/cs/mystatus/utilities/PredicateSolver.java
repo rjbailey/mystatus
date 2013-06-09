@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormTypes;
-import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormTypes;
+import edu.washington.cs.mystatus.odk.provider.FormsProviderAPI.FormsColumns;
 
 /**
  * PredicateSolver should parse and evaluate the predicates of all passive forms
@@ -18,6 +18,9 @@ import edu.washington.cs.mystatus.providers.FormsProviderAPI.FormsColumns;
 public class PredicateSolver {
 
     public static final String TAG = "PredicateSolver";
+
+    /** Invalid predicates currently evaluate to true. */
+    private static final boolean INVALID = true;
 
     /**
      * Evaluates the predicates of all passive forms currently flagged as not
@@ -83,83 +86,118 @@ public class PredicateSolver {
      *         valid, returns the truth value of the evaluated predicate. If the
      *         predicate or its input values are invalid, returns true.
      */
-    private static boolean evaluatePredicate(Cursor c) {
-        // TODO: Each predicate should be extracted into its own method.
-
+    public static boolean evaluatePredicate(Cursor c) {
         int formId = c.getInt(0);
         String formName = c.getString(1);
+
         Log.d(TAG, "Evaluating predicate for Form #" + formId + ": " + formName);
 
         if (c.isNull(2)) {
             Log.i(TAG, "Predicate is null.");
             return true;
         }
-
         String predicate = c.getString(2);
 
         if (c.isNull(3)) {
             Log.i(TAG, "The survey has never been filled out.");
 
             if (predicate.startsWith("daysDelayed:")) {
-                // Delayed surveys only need a response if it's been at least
-                // N days since the survey was downloaded.
-
-                Long now = Long.valueOf(System.currentTimeMillis());
-                Long subscriptionDate = c.getLong(4);
-
-                long daysToDelay;
-                try {
-                    daysToDelay = Long.valueOf(predicate.split(":")[1]);
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
-                    return true;
-                }
-
-                long millisPerDay = 24 * 60 * 60 * 1000;
-                long daysElapsed = (now - subscriptionDate) / millisPerDay;
-
-                boolean result = daysElapsed >= daysToDelay;
-                Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
-                return result;
+                return evalDaysDelayed(predicate, c.getLong(4));
             }
-            // All other surveys need a response if they've never had one.
+            // Non-delayed surveys need a response if they've never had one.
             return true;
         }
+        long lastResponseTime = c.getLong(3);
 
         if (predicate.equals("onceOnly")) {
             Log.i(TAG, "The survey is a once-only survey which has been filled out.");
             return false;
+        } else if (predicate.startsWith("daysSinceLastResponse:")) {
+            return evalDaysSinceLastResponse(predicate, lastResponseTime);
+        } else {
+            return evalMilliseconds(predicate, lastResponseTime);
+        }
+    }
+
+    /**
+     * Evaluate the predicate for a delayed survey, assuming the survey has
+     * never been filled out.
+     * 
+     * @param predicate The survey predicate, containing a number of days to
+     *        delay past the subscription date.
+     * @param subscriptionDate The date (in milliseconds since January 1, 1970
+     *        00:00:00 UTC) that the survey was subscribed to.
+     * @return <tt>true</tt> if it has been the given number of days since the
+     *         subscription date, <tt>false</tt> otherwise.
+     */
+    private static boolean evalDaysDelayed(String predicate, long subscriptionDate) {
+        long daysToDelay;
+        try {
+            daysToDelay = Long.valueOf(predicate.split(":")[1]);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
+            return INVALID;
         }
 
-        Long now = Long.valueOf(System.currentTimeMillis());
-        Long lastResponseTime = c.getLong(3);
-        
-        if (predicate.startsWith("daysSinceLastResponse:")) {
-            long daysInPeriod;
-            try {
-                daysInPeriod = Long.valueOf(predicate.split(":")[1]);
-            } catch (NumberFormatException e) {
-                Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
-                return true;
-            }
-            
-            long millisPerDay = 24 * 60 * 60 * 1000;
-            long daysElapsed = (now - lastResponseTime) / millisPerDay;
-            
-            boolean result = daysElapsed >= daysInPeriod;
-            Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
-            return result;
+        long now = System.currentTimeMillis();
+        long millisPerDay = 24 * 60 * 60 * 1000;
+        long daysElapsed = (now - subscriptionDate) / millisPerDay;
+
+        boolean result = daysElapsed >= daysToDelay;
+        Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
+        return result;
+    }
+
+    /**
+     * Evaluate the predicate for a periodic survey.
+     * 
+     * @param predicate The survey predicate, containing a number of days that
+     *        need to elapse between survey responses.
+     * @param lastResponseTime The date (in milliseconds since January 1, 1970
+     *        00:00:00 UTC) that the survey was last responded to.
+     * @return <tt>true</tt> if it has been the given number of days since the
+     *         last response date, <tt>false</tt> otherwise.
+     */
+    private static boolean evalDaysSinceLastResponse(String predicate, long lastResponseTime) {
+        long daysInPeriod;
+        try {
+            daysInPeriod = Long.valueOf(predicate.split(":")[1]);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
+            return INVALID;
         }
 
-        // simple number-of-milliseconds predicate
-        Long waitTime;
+        long now = System.currentTimeMillis();
+        long millisPerDay = 24 * 60 * 60 * 1000;
+        long daysElapsed = (now - lastResponseTime) / millisPerDay;
+
+        boolean result = daysElapsed >= daysInPeriod;
+        Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);
+        return result;
+    }
+
+    /**
+     * Evaluate the predicate for a periodic survey based on a number of
+     * milliseconds. This is still present for backward compatibility and
+     * testing purposes, and isn't likely to be useful to survey writers.
+     * 
+     * @param predicate The survey predicate, containing a number of
+     *        milliseconds that need to elapse between survey responses.
+     * @param lastResponseTime The date (in milliseconds since January 1, 1970
+     *        00:00:00 UTC) that the survey was last responded to.
+     * @return <tt>true</tt> if it has been the given number of milliseconds
+     *         since the last response date, <tt>false</tt> otherwise.
+     */
+    private static boolean evalMilliseconds(String predicate, long lastResponseTime) {
+        long waitTime;
         try {
             waitTime = Long.parseLong(predicate);
         } catch (NumberFormatException e) {
             Log.e(TAG, "Invalid predicate: \"" + predicate + "\"");
-            // always display passive forms with an invalid predicate
-            return true;
+            return INVALID;
         }
+
+        long now = System.currentTimeMillis();
 
         boolean result = (lastResponseTime + waitTime) < now;
         Log.i(TAG, "Predicate \"" + predicate + "\" evaluated to " + result);

@@ -14,7 +14,7 @@
         </intent>
     </Preference>
 
-    <edu.washington.cs.mystatus.preferences.PasswordDialogPreference
+    <edu.washington.cs.mystatus.odk.preferences.PasswordDialogPreference
         android:id="@+id/admin_pw"
         android:defaultValue=""
         android:dialogTitle="Change Admin Password"
