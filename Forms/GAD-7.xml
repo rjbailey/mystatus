@@ -1,48 +1,44 @@
 <?xml version="1.0"?>
 <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
-    <h:title>PHQ-9</h:title>
+    <h:title>GAD-7</h:title>
     <model predicate="daysSinceLastResponse:14">
       <submission action="https://uwmystatus.appspot.com/submission" method="form-data-post"/>
       <instance>
-        <PHQ-9 id="phq9">
+        <GAD-7 id="gad7">
           <introduction/>
-          <interest/>
-          <depression/>
-          <sleep/>
-          <energy/>
-          <appetite/>
-          <selfesteem/>
-          <concentration/>
-          <movement/>
-          <selfharm/>
+          <nervous/>
+          <control/>
+          <worrying/>
+          <relaxing/>
+          <restless/>
+          <irritable/>
+          <afraid/>
           <difficulty/>
           <meta>
             <instanceID/>
           </meta>
-        </PHQ-9>
+        </GAD-7>
       </instance>
-      <bind nodeset="/PHQ-9/introduction" readonly="true()" type="string"/>
-      <bind nodeset="/PHQ-9/interest" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/depression" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/sleep" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/energy" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/appetite" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/selfesteem" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/concentration" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/movement" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/selfharm" required="true()" type="select1"/>
-      <bind nodeset="/PHQ-9/difficulty" relevant=" /PHQ-9/interest  &gt; 0 or  /PHQ-9/depression  &gt; 0 or  /PHQ-9/sleep  &gt; 0 or  /PHQ-9/energy  &gt; 0 or  /PHQ-9/appetite  &gt; 0 or  /PHQ-9/selfesteem  &gt; 0 or  /PHQ-9/concentration  &gt; 0 or  /PHQ-9/movement  &gt; 0 or  /PHQ-9/selfharm  &gt; 0" required="true()" type="select1"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/PHQ-9/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/GAD-7/introduction" readonly="true()" type="string"/>
+      <bind nodeset="/GAD-7/nervous" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/control" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/worrying" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/relaxing" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/restless" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/irritable" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/afraid" required="true()" type="select1"/>
+      <bind nodeset="/GAD-7/difficulty" relevant=" /GAD-7/nervous  &gt; 0 or  /GAD-7/control  &gt; 0 or  /GAD-7/worrying  &gt; 0 or  /GAD-7/relaxing  &gt; 0 or  /GAD-7/restless  &gt; 0 or  /GAD-7/irritable  &gt; 0 or  /GAD-7/afraid  &gt; 0" required="true()" type="select1"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/GAD-7/meta/instanceID" readonly="true()" type="string"/>
     </model>
   </h:head>
   <h:body>
-    <input ref="/PHQ-9/introduction">
+    <input ref="/GAD-7/introduction">
       <label>Over the last 2 weeks, how often have you been bothered by any of the following problems?</label>
       <hint>Swipe the screen to continue to the first question.</hint>
     </input>
-    <select1 appearance="quick" ref="/PHQ-9/interest">
-      <label>Little interest or pleasure in doing things</label>
+    <select1 appearance="quick" ref="/GAD-7/nervous">
+      <label>Feeling nervous, anxious, or on edge</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -60,8 +56,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/depression">
-      <label>Feeling down, depressed, or hopeless</label>
+    <select1 appearance="quick" ref="/GAD-7/control">
+      <label>Not being able to stop or control worrying</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -79,8 +75,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/sleep">
-      <label>Trouble falling or staying asleep, or sleeping too much</label>
+    <select1 appearance="quick" ref="/GAD-7/worrying">
+      <label>Worrying too much about different things</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -98,8 +94,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/energy">
-      <label>Feeling tired or having little energy</label>
+    <select1 appearance="quick" ref="/GAD-7/relaxing">
+      <label>Trouble relaxing</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -117,8 +113,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/appetite">
-      <label>Poor appetite or overeating</label>
+    <select1 appearance="quick" ref="/GAD-7/restless">
+      <label>Being so restless that it’s hard to sit still</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -136,8 +132,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/selfesteem">
-      <label>Feeling bad about yourself or that you are a failure or have let yourself or your family down</label>
+    <select1 appearance="quick" ref="/GAD-7/irritable">
+      <label>Becoming easily annoyed or irritable</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -155,8 +151,8 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/concentration">
-      <label>Trouble concentrating on things, such as reading the newspaper or watching television</label>
+    <select1 appearance="quick" ref="/GAD-7/afraid">
+      <label>Feeling afraid as if something awful might happen</label>
       <item>
         <label>Not at all</label>
         <value>0</value>
@@ -174,45 +170,7 @@
         <value>3</value>
       </item>
     </select1>
-    <select1 appearance="quick" ref="/PHQ-9/movement">
-      <label>Moving or speaking so slowly that other people could have noticed. Or the opposite—being so fidgety and restless that you have been moving around a lot more than usual.</label>
-      <item>
-        <label>Not at all</label>
-        <value>0</value>
-      </item>
-      <item>
-        <label>Several days</label>
-        <value>1</value>
-      </item>
-      <item>
-        <label>More than half the days</label>
-        <value>2</value>
-      </item>
-      <item>
-        <label>Nearly every day</label>
-        <value>3</value>
-      </item>
-    </select1>
-    <select1 appearance="quick" ref="/PHQ-9/selfharm">
-      <label>Thoughts that you would be better off dead, or of hurting yourself.</label>
-      <item>
-        <label>Not at all</label>
-        <value>0</value>
-      </item>
-      <item>
-        <label>Several days</label>
-        <value>1</value>
-      </item>
-      <item>
-        <label>More than half the days</label>
-        <value>2</value>
-      </item>
-      <item>
-        <label>Nearly every day</label>
-        <value>3</value>
-      </item>
-    </select1>
-    <select1 appearance="quick" ref="/PHQ-9/difficulty">
+    <select1 appearance="quick" ref="/GAD-7/difficulty">
       <label>How difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?</label>
       <item>
         <label>Not difficult at all</label>
