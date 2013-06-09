@@ -1,3 +1,11 @@
+/**
+ * Creates a calendar on the Android Calendar called myStatus
+ * so that events can be added to it specifically.
+ * 
+ * @author Emily Chien (eechien@cs.washington.edu)
+ * 
+ */
+
 package edu.washington.cs.mystatus;
 
 import java.util.Calendar;
@@ -24,8 +32,6 @@ public class CalendarCreator {
 	}
 	
 	private static ContentValues buildContentValues(Calendar calendar) {
-	    //String dispName = calendar.getName();  //Calendar.getName() returns a String
-	    //String intName = INT_NAME_PREFIX + dispName;
 	    final ContentValues cv = new ContentValues();
 	    cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
 	    cv.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);

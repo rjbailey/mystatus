@@ -58,9 +58,10 @@ public class NotificationService extends Service{
 			Log.d(TAG, "Snooze requested--dismissing notification instead.");
 			NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.cancel(NOTIFICATION_ID);
+			
 		}
 		// fixed this for preventing services from restart
-		return START_NOT_STICKY;
+		return super.onStartCommand(intent, flags, startId);
 	}
 
 	/**
@@ -114,14 +115,15 @@ public class NotificationService extends Service{
 				.setSmallIcon(android.R.drawable.ic_menu_my_calendar)
 				.setContentTitle(getResources().getText(R.string.notification_title))
 				.setContentText(getResources().getText(R.string.notification_message))
-				.setContentIntent(surveyIntent)				
-				.setAutoCancel(true)
+				.setContentIntent(surveyIntent)
+				.setDefaults(Notification.DEFAULT_ALL)
+				//.setAutoCancel(true)
 
-				.setStyle(new NotificationCompat.BigTextStyle()
+				.setStyle(bigViewStyle
 						.bigText(getResources().getText(R.string.notification_message)))
-				.addAction(android.R.drawable.ic_menu_close_clear_cancel,
+				.addAction(R.drawable.remove,
 						getString(R.string.notification_dismiss), piDismiss)
-				.addAction(android.R.drawable.ic_menu_recent_history,
+				.addAction(R.drawable.snooze,
 						getString(R.string.notification_snooze), piSnooze);
 				
 		return nb.build();

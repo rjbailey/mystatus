@@ -34,6 +34,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 /**
+ * Creates the layout that displays previously added prescriptions
+ * and a button to add a new prescription.
  * 
  * @author Emily Chien (eechien@cs.washington.edu)
  *
@@ -43,8 +45,6 @@ public class ManagePrescriptionActivity extends Activity {
 
 	private final String TAG = "myStatus.ManagePrescriptionActivity";
 	
-	//private LinearLayout mPresList;
-	//private Button mManagePres; //replaced later by entries from db
 	private Button mAddNewPres;
 	private LinearLayout mCurrPres;
 	private ScreenOnOffReceiver screenReceiver;
@@ -93,6 +93,7 @@ public class ManagePrescriptionActivity extends Activity {
 		addCurrentPrescriptions();
 	}
 	
+	// dynamically adds buttons for the prescriptions already added by the user
 	private void addCurrentPrescriptions() {
 		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
 		List<String> names = helper.getBrandChemFilenames();
@@ -106,7 +107,6 @@ public class ManagePrescriptionActivity extends Activity {
 			presButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 			final String brandName = names.get(i);
 			final String chemName = names.get(i + 1);
-			//presButton.setCompoundDrawables(img, null, null, null);
 			presButton.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
 			presButton.setText(brandName + " (" + chemName + ")");
 			presButton.setOnClickListener(new OnClickListener() {
@@ -129,9 +129,9 @@ public class ManagePrescriptionActivity extends Activity {
 			
 	}
 	
+	// for making the image smaller
 	private Bitmap decodeSampledBitmapFromResource(String pathName,
 	        int reqWidth, int reqHeight) {
-
 	    // First decode with inJustDecodeBounds=true to check dimensions
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
@@ -144,6 +144,7 @@ public class ManagePrescriptionActivity extends Activity {
 	    return BitmapFactory.decodeFile(pathName, options);
 	}
 	
+	// for making the image smaller
 	private int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
 	    // Raw height and width of image
@@ -168,14 +169,12 @@ public class ManagePrescriptionActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		//screen is off and should be lock
         if (screenReceiver.wasOffBefore){

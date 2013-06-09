@@ -78,6 +78,7 @@ public class SettingsActivity extends Activity {
 		
 		setGlobalVars();
 
+		// if it hasn't already been set, first time creation
 		if (EVENT_ID == -1) {
 			createEvent();
 		}
@@ -91,6 +92,11 @@ public class SettingsActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Sets the Set and Cancel button listeners as well as the Time Picker on
+	 * the Dialog that appears when "Set time" is pressed.
+	 * @param d
+	 */
 	private void setSetCancelAndTime(final Dialog d) {
 		mCancel = (Button) d.findViewById(R.id.dialog_cancel);
 		mSet = (Button) d.findViewById(R.id.dialog_set);
@@ -114,7 +120,7 @@ public class SettingsActivity extends Activity {
 				setDAYS(mFri, 5, "fri_checked");
 				setDAYS(mSat, 6, "sat_checked");
 				
-				setHourTime();
+				setHourMin();
 				
 				updateEvent();
 				
@@ -123,7 +129,11 @@ public class SettingsActivity extends Activity {
 		});
 	}
 	
-    private void setHourTime() {
+	/**
+	 * Sets the global variables HOUR and MINUTE and puts them
+	 * in the shared preferences
+	 */
+    private void setHourMin() {
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		HOUR = mTP.getCurrentHour();
@@ -133,6 +143,9 @@ public class SettingsActivity extends Activity {
 		editor.commit();
     }
 	
+    /**
+     * Sets the checkboxes on Dialog d based on the DAYS array
+     */
 	private void setCheckBoxes(Dialog d) {
 		mSun = (CheckBox) d.findViewById(R.id.sunday);
 		mSun.setChecked(DAYS[0]);
@@ -150,6 +163,9 @@ public class SettingsActivity extends Activity {
 		mSun.setChecked(DAYS[6]);
 	}
 	
+	/**
+	 * Sets DAYS[id] based on whether dayBox is checked or not and edits the shared preferences
+	 */
 	private void setDAYS(CheckBox dayBox, final int id, final String dayString) {
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -163,6 +179,9 @@ public class SettingsActivity extends Activity {
 		editor.commit();
 	}
 	
+	/**
+	 * Sets the global variables based on the shared preferences
+	 */
 	private void setGlobalVars() {
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		DAYS = new boolean[7];
@@ -232,12 +251,12 @@ public class SettingsActivity extends Activity {
 		editor.putLong("event_id", EVENT_ID);
 		editor.commit();
 		
-		// TODO: start alarm manager for each day checked
 		Date today = new Date();
 		today.setHours(HOUR);
 		today.setMinutes(MINUTE);
 		today.setSeconds(0);
 		int[] dates = getDates(today);
+		// starts alarm manager for each day checked
 		for (int i = 0; i < 7; i++) {
 			if (dates[i] != Integer.MAX_VALUE) {
 				today.setDate(dates[i]);
@@ -268,7 +287,6 @@ public class SettingsActivity extends Activity {
 		int rows = cr.update(Uri.parse("content://com.android.calendar/events"),
 				values, Events._ID + " =? ", new String[]{Long.toString(EVENT_ID)});
 		Log.i(TAG, "Rows updated: " + rows);
-		// TODO: enable notifications for each day checked
 		Date today = new Date();
 		today.setHours(HOUR);
 		today.setMinutes(MINUTE);
@@ -340,11 +358,11 @@ public class SettingsActivity extends Activity {
 	private int getDate(Date today, boolean[] desiredDays) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
-		int todaysDate = cal.get(Calendar.DAY_OF_WEEK);
+		int todaysDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int desiredDayNum = 0;
-		// Start from todaysDate day of the week so that
+		// Start from todaysDayOfWeek day of the week so that
 		// days are not skipped when initializing the event
-		for (int i = todaysDate; i < 7; i++) {
+		for (int i = todaysDayOfWeek - 1; i < 7; i++) {
 			if (desiredDays[i]) {
 				desiredDayNum = i + 1;
 				break;
@@ -352,33 +370,37 @@ public class SettingsActivity extends Activity {
 		}
 		// if the day was not set;
 		if (desiredDayNum == 0) {
-			for (int i = 0; i < todaysDate; i++) {
+			for (int i = 0; i < todaysDayOfWeek - 1; i++) {
 				if (desiredDays[i]) {
 					desiredDayNum = i + 1;
 					break;
 				}
 			}
 		}
-		int diff = desiredDayNum - todaysDate;
+		int diff = desiredDayNum - todaysDayOfWeek;
 		return cal.get(Calendar.DATE) + diff;	
 	}
 	
+	/**
+	 * Gets the dates after today that correspond to the checked days.
+	 * If today was Tuesday July 8th and Monday was checked, would return
+	 * 14 in the Monday spot of the returned array.
+	 */
 	private int[] getDates(Date today) {
-		int x = -7; // value that 
 		int[] dates = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE};
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
-		int todaysDate = cal.get(Calendar.DAY_OF_WEEK);
+		int todaysDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		for (int i = 0; i < 7; i++) {
 			if (DAYS[i]) {
-				dates[i] = i + 1;
+				dates[i] = i + 1; // sets day to Sunday (1), Monday (2), or Tuesday(3) etc.
 			}
 		}
 		// get difference
 		for (int i = 0; i < 7; i++) {
 			if (dates[i] != Integer.MAX_VALUE) {
-				dates[i] = dates[i] - todaysDate;
+				dates[i] = dates[i] - todaysDayOfWeek;
 			}
 		}
 		// get final date

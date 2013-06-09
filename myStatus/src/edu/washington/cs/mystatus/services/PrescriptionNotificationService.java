@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 /**
+ * Notification service for prescription reminders
  * 
  * @author Emily Chien (eechien@cs.washington.edu)
  *
@@ -43,6 +44,8 @@ public class PrescriptionNotificationService extends Service {
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
+	// create a notification that only says the time it goes off
+	// user can click it to see what prescription it refers to
 	private Notification createNotification(Bundle b) {
 		int hour = b.getInt("HOUR");
 		int min = b.getInt("MINUTE");

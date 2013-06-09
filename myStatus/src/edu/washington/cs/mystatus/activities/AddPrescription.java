@@ -49,6 +49,9 @@ import android.text.InputType;
 import android.text.format.DateFormat;
 
 /**
+ * Sets up the UI for adding and editing a prescription.
+ * Starts off blank when a user is adding a new prescription.
+ * Filled out based on previous entries if editing.
  * 
  * @author Emily Chien (eechien@cs.washington.edu)
  *
@@ -108,7 +111,6 @@ public class AddPrescription extends Activity {
 				}
 			};
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,6 +124,8 @@ public class AddPrescription extends Activity {
 
 		createDirForPics();
 		setGlobalVars();
+		// if the user has taken a picture, the filename has been set,
+		// so this grabs it from the bundle
 		if (savedInstanceState != null) {
 			String filename = savedInstanceState.getString("mFile");
 			if (!filename.equals("")) {
@@ -133,6 +137,8 @@ public class AddPrescription extends Activity {
 		setArrays(savedInstanceState);
 		addListeners();
 		Bundle b = this.getIntent().getExtras();
+		// if an Intent called this activity, then a user is editing a prescription
+		// grabs the information.
 		if (b != null) {
 			String filename = b.getString("FILENAME");
 			mFile = new File(filename);
@@ -145,6 +151,8 @@ public class AddPrescription extends Activity {
 			addTimeAndQuants(false);
 		}
 		addTimeListener();
+		// only show the Delete button if there is at least one Quantity and Time entry
+		// showing
 		if (currCount > 0) {
 			createDeleteButton();
 		}
@@ -189,6 +197,7 @@ public class AddPrescription extends Activity {
 		
 	}
 	
+	// set arrays based on the bundle's extras
 	private void setArrays(Bundle b) {
 		if (b == null) {
 			hours = new int[10];
@@ -209,6 +218,7 @@ public class AddPrescription extends Activity {
 		}
 	}
 	
+	// adds listeners to the delete, add picture, cancel, and save buttons
 	private void addListeners() {
 		
 		// listener for button to delete new notification slots
@@ -291,7 +301,8 @@ public class AddPrescription extends Activity {
 							// exit
 						}
 					}
-					// TODO: add a check that all times and quantities are filled
+					
+					deleteDatabaseEntries();
 					
 					Date today = new Date();
 					today.setSeconds(0);
@@ -316,9 +327,8 @@ public class AddPrescription extends Activity {
 			}
 		});
 	}
-	
+	// listener for button to make new notification slots
 	private void addTimeListener() {
-		// listener for button to make new notification slots
 		mAddTime.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -339,6 +349,8 @@ public class AddPrescription extends Activity {
 		});
 	}
 	
+	// Add the Times and Quantities previously filled out by a user when
+	// editing a prescription based on the bundle passed as an argument
 	private void addTimeAndQuants(Bundle b) {
 		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
 		List<Double> list = helper.getQuantTime(b.getString("BRAND_NAME"), b.getString("CHEM_NAME"));
@@ -416,6 +428,9 @@ public class AddPrescription extends Activity {
 		}
 	}
 	
+	// updates the layout to add another time and quantity entry spot if isForOnClick is true
+	// otherwise this was called because the user just took a picture and it fills out what
+	// was already there
 	private void addTimeAndQuants(boolean isForOnClick) {
 		int end;
 		if (isForOnClick) {
@@ -570,6 +585,7 @@ public class AddPrescription extends Activity {
 		Log.i(TAG, "Enabled notifications");
 	}
 	
+	// disables the AlarmManager with id "id"
 	private void disableNotification(int id) {
 		Log.w(TAG, "Disabling notification " + id);
 		PendingIntent notificationIntent = PendingIntent.getService(this, id,
@@ -604,6 +620,15 @@ public class AddPrescription extends Activity {
 		int count = helper.getTotalCount();
 	}
 	
+	// delete all database entries
+	private void deleteDatabaseEntries() {
+		String brandName = mBrandName.getText().toString();
+		String chemName = mChemName.getText().toString();
+		PrescriptionOpenHelper helper = new PrescriptionOpenHelper(this);
+		helper.deleteEntries(brandName, chemName);
+	}
+	
+	// add image to the layout
 	private void insertImage() {
 		ImageView img = new ImageView(this);
 		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -614,7 +639,7 @@ public class AddPrescription extends Activity {
 		mPresTimeQuant.addView(img);
 		
 	}
-
+	
 	private Bitmap decodeSampledBitmapFromResource(String pathName,
 	        int reqWidth, int reqHeight) {
 	    // First decode with inJustDecodeBounds=true to check dimensions
@@ -628,8 +653,6 @@ public class AddPrescription extends Activity {
 	    options.inJustDecodeBounds = false;
 	    return BitmapFactory.decodeFile(pathName, options);
 	}
-	
-	
 
 	private int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -655,14 +678,12 @@ public class AddPrescription extends Activity {
 	
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		((MyStatus)getApplicationContext()).disconnectCacheWord();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		//screen is off and should be lock
         if (screenReceiver.wasOffBefore){

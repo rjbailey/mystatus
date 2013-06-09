@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Plan button clicked");
-				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
+				startActivity(new Intent(MainActivity.this, ManagePrescriptionActivity.class));
 			}
 		});
 

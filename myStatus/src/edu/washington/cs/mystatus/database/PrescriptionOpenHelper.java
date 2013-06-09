@@ -1,3 +1,9 @@
+/**
+ *  Emily Chien (eechien@cs.washington.edu)
+ *  
+ *  Database helper class to query, add and remove entries.
+ */
+
 package edu.washington.cs.mystatus.database;
 
 import java.util.ArrayList;
@@ -20,7 +26,6 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "prescriptions.db";
 	private static final String PRESCRIPTION_TABLE_NAME = "prescriptions";
-	//public static final String _ID = "_id";
 	public static final String BRAND_NAME = "brandName";
     public static final String CHEMICAL_NAME = "chemicalName";
     public static final String PICTURE_FILENAME = "pictureFilename";
@@ -31,7 +36,6 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 	
 	
 	public PrescriptionOpenHelper(Context context) {
-		//super(context, "prescriptions.db", null, DATABASE_VERSION);
 		super(new ContextWrapper(context) {
 			@Override
 			public SQLiteDatabase openOrCreateDatabase(String name, int mode,
@@ -41,13 +45,12 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 				return res;
 			}
 		}, DATABASE_NAME, null, DATABASE_VERSION);
-		//this.context = context;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + PRESCRIPTION_TABLE_NAME + " ("
-				+ "_id integer primary key, " // TODO: decide if need this
+				+ "_id integer primary key, "
 				+ BRAND_NAME + " text not null, "
 				+ CHEMICAL_NAME + " text not null, "
 				+ PICTURE_FILENAME + " text not null, "
@@ -59,13 +62,17 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// delete table and remake in full.
 		Log.w(PrescriptionOpenHelper.class.getName(),
 		        "Upgrading database from version " + oldVersion + " to "
 		            + newVersion + ", which will destroy all old data");
-		    db.execSQL("DROP TABLE IF EXISTS");
-		    onCreate(db);
+		db.execSQL("DROP TABLE IF EXISTS");
+		onCreate(db);
 	}
 	
+	/**
+	 * Adds a new row to the database that equals a new reminder.
+	 */
 	public void addNewPrescriptionNotification(String brandName, String chemName, String filename,
 			double quantity, int hour, int min, int id) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -83,6 +90,10 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * Queries the table for all of the brand and chemical names
+	 * @return a list of brand name followed by its chemical name, and repeat
+	 */
 	public List<String> getBrandChemFilenames() {
 		SQLiteDatabase db = this.getReadableDatabase();
 		String[] columns = {PrescriptionOpenHelper.BRAND_NAME,
@@ -104,6 +115,9 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 		return names;
 	}
 	
+	/**
+	 * @return the total number of rows in the table
+	 */
 	public int getTotalCount() {
 		String countQuery = "SELECT * FROM " + PRESCRIPTION_TABLE_NAME;
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -113,6 +127,10 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 		return count;
 	}
 	
+	/**
+	 * Gets all of the Quantity and Time pairs for reminders based on the
+	 * brand name and chemical name passed.
+	 */
 	public List<Double> getQuantTime(String brandName, String chemName) {
 		List<Double> list= new ArrayList<Double>();
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -134,5 +152,16 @@ public class PrescriptionOpenHelper extends SQLiteOpenHelper {
 			list.add(quant);
 		}
 		return list;
+	}
+	
+	/**
+	 * Delete all entries with the brand name and chemical name passed.
+	 */
+	public void deleteEntries(String brandName, String chemName) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		String whereClause = BRAND_NAME + " = ? AND " + CHEMICAL_NAME + " = ?";;
+		String[] whereArgs = {brandName, chemName};
+		db.delete(PRESCRIPTION_TABLE_NAME, whereClause, whereArgs);
+		db.close();
 	}
 }
