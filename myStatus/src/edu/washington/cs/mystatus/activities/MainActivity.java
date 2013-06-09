@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		setupBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Setup button clicked");
+				Log.d(TAG, "Subscribe button clicked");
 				startActivity(new Intent(MainActivity.this, FormDownloadList.class));
 			}
 		});
@@ -78,8 +78,8 @@ public class MainActivity extends Activity implements ICacheWordSubscriber {
 		planBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Plan button clicked");
-				startActivity(new Intent(MainActivity.this, GoalsActivity.class));
+				Log.d(TAG, "Schedule button clicked");
+				startActivity(new Intent(MainActivity.this, ManagePrescriptionActivity.class));
 			}
 		});
 
