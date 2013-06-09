@@ -14,8 +14,6 @@
 
 package edu.washington.cs.mystatus.odk.provider;
 
-import info.guardianproject.cacheword.CacheWordActivityHandler;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,8 +36,8 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteQueryBuilder;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -74,7 +72,7 @@ public class FormsProvider extends ContentProvider {
         private static final String MODEL_VERSION = "modelVersion";
 
         DatabaseHelper(String databaseName, Context ctx) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, ctx);
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
         }
 
 

@@ -14,21 +14,10 @@
 
 package edu.washington.cs.mystatus.odk.database;
 
-import info.guardianproject.cacheword.CacheWordHandler;
-
 import java.io.File;
-import java.lang.reflect.Method;
 
-import org.apache.commons.codec.binary.Hex;
-import org.spongycastle.crypto.signers.ECNRSigner;
-
-import edu.washington.cs.mystatus.application.MyStatus;
-import edu.washington.cs.mystatus.odk.utilities.Base64Wrapper;
-
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteDatabase.CursorFactory;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
@@ -53,7 +42,6 @@ import android.util.Log;
  */
 public abstract class ODKSQLiteOpenHelper {
     private static final String t = ODKSQLiteOpenHelper.class.getSimpleName();
-    private static final String KEY = "ODK-Secret";
 
     private final String mPath;
     private final String mName;
@@ -62,9 +50,7 @@ public abstract class ODKSQLiteOpenHelper {
 
     private SQLiteDatabase mDatabase = null;
     private boolean mIsInitializing = false;
-    // adding cache word handler for protecting
-    private CacheWordHandler mHandler;
-    private Context mContext;
+
 
     /**
      * Create a helper object to create, open, and/or manage a database. The database is not
@@ -77,7 +63,7 @@ public abstract class ODKSQLiteOpenHelper {
      * @param version number of the database (starting at 1); if the database is older,
      *            {@link #onUpgrade} will be used to upgrade the database
      */
-    public ODKSQLiteOpenHelper(String path, String name, CursorFactory factory, int version, Context ctx) {
+    public ODKSQLiteOpenHelper(String path, String name, CursorFactory factory, int version) {
         if (version < 1)
             throw new IllegalArgumentException("Version must be >= 1, was " + version);
 
@@ -85,9 +71,6 @@ public abstract class ODKSQLiteOpenHelper {
         mName = name;
         mFactory = factory;
         mNewVersion = version;
-        // initialize handler
-        mHandler = null;
-        mContext = ctx;
     }
 
 
@@ -104,16 +87,10 @@ public abstract class ODKSQLiteOpenHelper {
      * @return a read/write database object valid until {@link #close} is called
      */
     public synchronized SQLiteDatabase getWritableDatabase() {
-    	// adding if the database is locked or not
-        if (mDatabase != null && mDatabase.isOpen() && !mDatabase.isReadOnly() && !mHandler.isLocked() ) {
+        if (mDatabase != null && mDatabase.isOpen() && !mDatabase.isReadOnly()) {
             return mDatabase; // The database is already open for business
         }
-        
-        if (mHandler == null)
-        	mHandler = ((MyStatus)mContext).getCacheWordHandler();
-        if( mHandler.isLocked() ) 
-        	throw new SQLiteException("Database locked. Decryption key unavailable.");
-        
+
         if (mIsInitializing) {
             throw new IllegalStateException("getWritableDatabase called recursively");
         }
@@ -130,9 +107,9 @@ public abstract class ODKSQLiteOpenHelper {
         try {
             mIsInitializing = true;
             if (mName == null) {
-                db = SQLiteDatabase.create(null, encodeRawKey(mHandler.getEncryptionKey()));
+                db = SQLiteDatabase.create(null);
             } else {
-                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, encodeRawKey(mHandler.getEncryptionKey()), mFactory);
+                db = SQLiteDatabase.openOrCreateDatabase(mPath + File.separator + mName, mFactory);
                 // db = mContext.openOrCreateDatabase(mName, 0, mFactory);
             }
 
@@ -195,30 +172,7 @@ public abstract class ODKSQLiteOpenHelper {
         if (mIsInitializing) {
             throw new IllegalStateException("getReadableDatabase called recursively");
         }
-        
-        // if the cacheword is locked throw exception
-        if (mHandler == null)
-        	mHandler = ((MyStatus)mContext).getCacheWordHandler();
-        
-        // work around for now...
-        // @CD
-        Base64Wrapper b64w = null;
-        try {
-			 b64w = new Base64Wrapper();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-        
-        byte [] encryption_key = null;
-        if( mHandler.isLocked() ){
-        	SharedPreferences prefs = mContext.getSharedPreferences("mystatus", mContext.MODE_PRIVATE);
-        	String key = prefs.getString("encoded_key", null);
-        	if (key != null)
-        		encryption_key = b64w.decode(key);
-        }
-        	//throw new SQLiteException("Database locked. Decryption key unavailable.");
-        
+
         try {
             return getWritableDatabase();
         } catch (SQLiteException e) {
@@ -232,12 +186,7 @@ public abstract class ODKSQLiteOpenHelper {
             mIsInitializing = true;
             String path = mPath + File.separator + mName;
             // mContext.getDatabasePath(mName).getPath();
-            // allow open readable database
-            if (mHandler.isLocked() && encryption_key != null)
-            	db = SQLiteDatabase.openDatabase(path, encodeRawKey(encryption_key), mFactory, SQLiteDatabase.OPEN_READONLY);
-            else 
-            	db = SQLiteDatabase.openDatabase(path, encodeRawKey(mHandler.getEncryptionKey()), mFactory, SQLiteDatabase.OPEN_READONLY);
-            
+            db = SQLiteDatabase.openDatabase(path, mFactory, SQLiteDatabase.OPEN_READONLY);
             if (db.getVersion() != mNewVersion) {
                 throw new SQLiteException("Can't upgrade read-only database from version "
                         + db.getVersion() + " to " + mNewVersion + ": " + path);
@@ -303,57 +252,4 @@ public abstract class ODKSQLiteOpenHelper {
      */
     public void onOpen(SQLiteDatabase db) {
     }
-    
-    // ======================== HELPERS USED FOR ENCRYPT DATABASE USING SQLITE CIPHER ===========================
-    
-    /**
-     * Formats a byte sequence into the literal string format expected by
-     * SQLCipher: hex'HEX ENCODED BYTES'
-     * The key data must be 256 bits (32 bytes) wide.
-     * The key data will be formatted into a 64 character hex string with a special
-     * prefix and suffix SQLCipher uses to distinguish raw key data from a password.
-     * @link http://sqlcipher.net/sqlcipher-api/#key
-     * @param raw_key a 32 byte array
-     * @return the encoded key
-     */
-    private static String encodeRawKey(byte[] raw_key) {
-        if( raw_key.length != 32 ) 
-        	throw new IllegalArgumentException("provided key not 32 bytes (256 bits) wide");
-
-        final String kPrefix;
-        final String kSuffix;
-
-        if(sqlcipher_uses_native_key) {
-            //Log.d(TAG, "sqlcipher uses native method to set key");
-            kPrefix = "x'";
-            kSuffix = "'";
-        } else {
-            //Log.d(TAG, "sqlcipher uses PRAGMA to set key - SPECIAL HACK IN PROGRESS");
-            kPrefix = "x''";
-            kSuffix = "''";
-        }
-
-        final char[] key_chars = Hex.encodeHex(raw_key);
-        if( key_chars.length != 64 ) throw new IllegalStateException("encoded key is not 64 bytes wide");
-
-        return kPrefix + new String(key_chars) + kSuffix;
-    }
-    
-    /*
-     * Special hack for detecting whether or not we're using a new SQLCipher for Android library
-     * The old version uses the PRAGMA to set the key, which requires escaping of the single quote
-     * characters. The new version calls a native method to set the key instead.
-     *
-     * @see https://github.com/sqlcipher/android-database-sqlcipher/pull/95
-     */
-    private static final boolean sqlcipher_uses_native_key = check_sqlcipher_uses_native_key();
-    private static boolean check_sqlcipher_uses_native_key() {
-
-        for(Method method : SQLiteDatabase.class.getDeclaredMethods()) {
-            if(method.getName().equals("native_key"))
-                return true;
-        }
-        return false;
-    }
-
 }
