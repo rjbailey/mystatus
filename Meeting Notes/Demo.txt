@@ -1,16 +1,17 @@
 patients with depression oftentimes dont follow through with their appointments.
 we have developed an app that lets them self-manage their condition when that is the case.
-our method of self management is to fillbout surveys on their condition such as their mood.
-to lessen the burden to remember to take them we set up notifications to remind them.
+our method of self management is to fill out surveys on their condition such as their mood.
+to lessen the burden of remembering to take them we set up notifications to remind them.
 oh look, heres one now.
 	
 Taps notification to go to the surveys
 
-explain the survey
+The GAD-7 survey is an example that asks me about my mood over the past few weeks
 Fills out the given survey and submit
 
 because a provider will want to know whats going on with their patients even when they dont come  in for appts, 
 filled out surveys get sent to a server that collects them. providers can then log in to access the data
+herre are previous results from the gad-7 survey
 
 a patient might also want to track how theyre doing to see if theyve been improving
 for that they can go to our history page and view a table of past results. this happens to look just 
@@ -24,5 +25,4 @@ the same was with our survey notification, which doesnt say snything about what 
 but say i forgot what pill this was for, i can tap the notification and see the pic ive taken of it. great!
 
 now say i didnt see improvement from my past results and the reminder to take pills has made me feel even more down,
-i can go to the Get help page and call my physician or a friend! 
-	
+i can go to the Get help page and call my physician or a friend!
