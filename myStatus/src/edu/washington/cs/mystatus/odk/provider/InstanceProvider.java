@@ -28,11 +28,14 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -66,7 +69,7 @@ public class InstanceProvider extends ContentProvider {
     private static class DatabaseHelper extends ODKSQLiteOpenHelper {
 
         DatabaseHelper(String databaseName, Context cw) {
-            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION);
+            super(MyStatus.METADATA_PATH, databaseName, null, DATABASE_VERSION, cw);
         }
 
 

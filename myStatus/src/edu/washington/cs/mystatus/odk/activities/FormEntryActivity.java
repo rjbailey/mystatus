@@ -2002,7 +2002,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		 ((MyStatus)getApplicationContext()).connectCacheWord();
 		FormController formController = MyStatus.getInstance()
 				.getFormController();
-		MyStatus.getInstance().getActivityLogger().open();
+		MyStatus.getInstance().getActivityLogger().open(getApplicationContext());
 
 		if (mFormLoaderTask != null) {
 			mFormLoaderTask.setFormLoaderListener(this);

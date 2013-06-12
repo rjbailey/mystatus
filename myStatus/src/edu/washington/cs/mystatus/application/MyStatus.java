@@ -22,12 +22,8 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import edu.washington.cs.mystatus.R;
-import edu.washington.cs.mystatus.odk.database.ActivityLogger;
-import edu.washington.cs.mystatus.odk.logic.FormController;
-import edu.washington.cs.mystatus.odk.logic.PropertyManager;
-import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
-import edu.washington.cs.mystatus.odk.utilities.AgingCredentialsProvider;
-import edu.washington.cs.mystatus.odk.utilities.FileUtils;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.opendatakit.httpclientandroidlib.client.CookieStore;
 import org.opendatakit.httpclientandroidlib.client.CredentialsProvider;
@@ -36,7 +32,15 @@ import org.opendatakit.httpclientandroidlib.impl.client.BasicCookieStore;
 import org.opendatakit.httpclientandroidlib.protocol.BasicHttpContext;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 
+import edu.washington.cs.mystatus.odk.database.ActivityLogger;
+import edu.washington.cs.mystatus.odk.logic.FormController;
+import edu.washington.cs.mystatus.odk.logic.PropertyManager;
+import edu.washington.cs.mystatus.odk.preferences.PreferencesActivity;
+import edu.washington.cs.mystatus.odk.utilities.AgingCredentialsProvider;
+import edu.washington.cs.mystatus.odk.utilities.FileUtils;
+
 import info.guardianproject.cacheword.CacheWordActivityHandler;
+import info.guardianproject.cacheword.CacheWordHandler;
 import info.guardianproject.cacheword.ICacheWordSubscriber;
 
 import java.io.File;
@@ -206,9 +210,10 @@ public class MyStatus extends Application implements ICacheWordSubscriber{
 
         PropertyManager mgr = new PropertyManager(this);
         mActivityLogger = new ActivityLogger(
-                mgr.getSingularProperty(PropertyManager.DEVICE_ID_PROPERTY));
+                mgr.getSingularProperty(PropertyManager.DEVICE_ID_PROPERTY),this);
         
         mCacheWordHandler = new CacheWordActivityHandler(this);
+        SQLiteDatabase.loadLibs(this);
     }
     
 	public synchronized CacheWordActivityHandler getCacheWordHandler(){
